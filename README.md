@@ -7,6 +7,8 @@ The plugin is designed to be used with [Bootstrap 3 framework](http://getbootstr
 
 To see plugin in action check [DCASE2016 challenge results page](http://www.cs.tut.fi/sgn/arg/dcase2016/task-results-acoustic-scene-classification).
 
+Detailed instructions and demos see [docs](https://toni-heittola.github.io/js-datatable/).
+
 **Author**
 
 Toni Heittola (toni.heittola@gmail.com),
