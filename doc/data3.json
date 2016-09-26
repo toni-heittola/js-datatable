@@ -1,0 +1,70 @@
+[
+    {
+        "code": "Red",
+        "value1": "12",
+        "value2": "22",
+        "value3": "5",
+        "value4": "34",
+        "feature1": "square",
+        "feature2": "triangle"
+    },
+    {
+        "code": "Blue",
+        "value1": "62",
+        "value2": "42",
+        "value3": "8",
+        "value4": "64",
+        "feature1": "circle",
+        "feature2": "triangle"
+    },
+    {
+        "code": "Black",
+        "value1": "18",
+        "value2": "42",
+        "value3": "12",
+        "value4": "34",
+        "feature1": "square",
+        "feature2": "circle"
+    },
+    {
+        "code": "White",
+        "value1": "18",
+        "value2": "37",
+        "value3": "21",
+        "value4": "14",
+        "feature1": "triangle",
+        "feature2": "square"
+    },
+    {
+        "code": "Purple",
+        "value1": "12",
+        "value2": "22",
+        "value3": "18",
+        "value4": "44",
+        "feature1": "square",
+        "feature2": "circle",
+        "hline": "true",
+        "row_css": "warning"
+    },
+    {
+        "code": "Brown",
+        "value1": "42",
+        "value2": "26",
+        "value3": "48",
+        "value4": "52",
+        "feature1": "block",
+        "feature2": "pyramid"
+    },
+    {
+        "code": "Baseline",
+        "value1": "62",
+        "value2": "32",
+        "value3": "33",
+        "value4": "34",
+        "feature1": "triangle",
+        "feature2": "circle",
+        "row_css": "info",
+        "baseline": "true",
+        "hline": "true"
+    }
+]

@@ -1,0 +1,88 @@
+[
+    {
+        "code": "Red",
+        "value1": "12",
+        "value2": "22",
+        "value3": "5",
+        "value4": "34",
+        "list": "item1,item2,item3",
+        "anchor": "parameters",
+        "url": "www.google.com;Google 1,www.google.com;Google 2",
+        "ref": "http://asmp.eurasipjournals.com/content/pdf/1687-4722-2013-1.pdf;Heittola2013,http://www.cs.tut.fi/~heittolt/pubs/chime2011_heittola.pdf;Heittola2011",
+        "feature1": "square",
+        "feature2": "triangle",
+        "row_css": "danger"
+    },
+    {
+        "code": "Blue",
+        "value1": "62",
+        "value2": "42",
+        "value3": "8",
+        "value4": "64",
+        "list": "item1",
+        "ref": "http://asmp.eurasipjournals.com/content/pdf/1687-4722-2013-1.pdf;Heittola2013",
+        "feature1": "circle",
+        "feature2": "triangle",
+        "row_css": "warning"
+    },
+    {
+        "code": "Black",
+        "value1": "18",
+        "value2": "42",
+        "value3": "12",
+        "value4": "34",
+        "feature1": "square",
+        "feature2": "circle",
+        "row_css": "success"
+    },
+    {
+        "code": "White",
+        "value1": "18",
+        "value2": "37",
+        "value3": "21",
+        "value4": "14",
+        "anchor": "parameters",
+        "url": "www.google.com",
+        "feature1": "triangle",
+        "feature2": "square",
+        "row_css": "info"
+    },
+    {
+        "code": "Purple",
+        "value1": "12",
+        "value2": "22",
+        "value3": "18",
+        "value4": "44",
+        "list": "item1,item2,item3",
+        "anchor": "parameters",
+        "url": "www.google.com;Google",
+        "feature1": "square",
+        "feature2": "circle"
+    },
+    {
+        "code": "Brown",
+        "value1": "42",
+        "value2": "26",
+        "value3": "48",
+        "value4": "52",
+        "list": "item1,item2,item3",
+        "anchor": "parameters",
+        "url": "www.google.com;Google",
+        "feature1": "block",
+        "feature2": "pyramid"
+    },
+    {
+        "code": "Baseline",
+        "value1": "62",
+        "value2": "32",
+        "value3": "33",
+        "value4": "34",
+        "list": "item1,item2,item3",
+        "anchor": "parameters",
+        "url": "www.google.com;Google",
+        "feature1": "triangle",
+        "feature2": "circle",
+        "row_css": "active",
+        "baseline": "true"
+    }
+]

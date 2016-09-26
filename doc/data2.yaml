@@ -1,0 +1,48 @@
+data:
+  - code: Red
+    value1: 12
+    value2: 22
+    feature1: square
+    feature2: triangle
+    row_css: danger
+
+  - code: Blue
+    value1: 62
+    value2: 42
+    feature1: circle
+    feature2: triangle
+    row_css: warning
+
+  - code: Black
+    value1: 18
+    value2: 42
+    feature1: square
+    feature2: circle
+    row_css: success
+
+  - code: White
+    value1: 18
+    value2: 37
+    feature1: triangle
+    feature2: square
+    row_css: info
+
+  - code: Purple
+    value1: 12
+    value2: 22
+    feature1: square
+    feature2: circle
+
+  - code: Brown
+    value1: 42
+    value2: 26
+    feature1: block
+    feature2: pyramid
+
+  - code: Baseline
+    value1: 62
+    value2: 32
+    feature1: triangle
+    feature2: circle
+    baseline: true
+    row_css: active

@@ -1,0 +1,2568 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>JS-datatable examples</title>
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.rawgit.com/afeld/bootstrap-toc/v0.4.1/dist/bootstrap-toc.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/themes/prism-okaidia.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/plugins/unescaped-markup/prism-unescaped-markup.css">
+
+    <link rel="stylesheet" href="../css.min/bootstrap-table.min.css">
+    <link rel="stylesheet" href="../css.min/bootstrap-table-filter-control.min.css">
+    <link rel="stylesheet" href="../css.min/datatable.min.css">
+    <style>
+        nav[data-toggle='toc'] {
+          margin-top: 30px;
+        }
+
+        /* small screens */
+        @media (max-width: 768px) {
+          /* override the Affix plugin so that the navigation isn't sticky */
+          nav.affix[data-toggle='toc'] {
+            position: static;
+          }
+          nav[data-toggle='toc'] .nav .nav {
+            display: block;
+          }
+        }
+        p {
+            text-align: justify;
+        }
+    </style>
+</head>
+
+<body data-spy="scroll" data-target="#toc">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+                <nav id="toc" data-spy="affix" data-toggle="toc"></nav>
+            </div>
+
+            <div class="col-md-9">
+                <h1 class="page-header" id="js-table">js-datatable</h1>
+                <h2>Introduction</h2>
+                <p>
+                    <code>js-datatable</code> is an open source JQuery plugin to produce dynamic HTML tables with data visualization capabilities. The plugins was originally developed for the need of academic data visualization (<a href="http://www.cs.tut.fi/sgn/arg/dcase2016/task-results-acoustic-scene-classification">DCASE2016 evaluation campaign results</a>), and to be used with <a href="https://github.com/getpelican/pelican">Pelican</a> static page generation framework. <code>js-datatable</code> is a spin-off project, which separates core functionality into standalone JQuery-plugin. For integration with Pelican, see <code><a href="#">pelican-datatable</a></code> project.
+                </p>
+                <p>
+                    The <code>js-datatable</code> is designed to be used with <a href="http://getbootstrap.com/">Bootstrap 3 framework</a>. Dynamic table handling is implemented with <a href="http://bootstrap-table.wenzhixin.net.cn/">bootstrap-table.js</a> and data visualizations with <a href="http://www.chartjs.org/">chart.js</a>.
+                <p>
+                <p>
+To see plugin in action, check <a href="http://www.cs.tut.fi/sgn/arg/dcase2016/task-results-acoustic-scene-classification">DCASE2016 challenge results page</a>.
+                </p>
+                <h2 id="installation">Installation instructions</h2>
+                <p>To use plugin, following javascripts and css files are required:</p>
+
+                <pre><code class="language-markup">
+&lt;script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="js.min/bootstrap-table.min.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="js.min/Chart.bundle.min.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="js.min/datatable.min.js"&gt;&lt;/script&gt;
+&lt;link rel="stylesheet" href="css.min/bootstrap-table.mim.css"&gt;
+&lt;link rel="stylesheet" href="css.min/datatable.min.css"&gt;
+                </code></pre>
+
+                <p>You can use also non-minified versions in case debugging is required:</p>
+
+                <pre><code class="language-markup">
+&lt;script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="js/bootstrap-table.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="js/Chart.bundle.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="js/datatable.js"&gt;&lt;/script&gt;
+&lt;link rel="stylesheet" href="css/bootstrap-table.css"&gt;
+&lt;link rel="stylesheet" href="css/datatable.css"&gt;
+                </code></pre>
+
+                <p>Plugin is initialized automatically for <code>&lt;table&gt;</code> elements having class `datatable` set on them. Most of the parametrization is done through data-fields either inside <code>&lt;table&gt;</code>-tag or in header <code>&lt;th&gt;</code>-tags.
+                
+                <h2 id="usage">Usage</h2>
+                <p>
+                    <code>js-datatable</code> is an open source JQuery plugin to produce dynamic HTML tables with data visualization capabilities. This page gives a shot tutorial how to use the plugin and shows it in action.
+                </p>
+
+                <h3 id="usage-via-attributes">Via data attributes</h3>
+                <p><em>This is the simplest way to use the plugin.</em></p>
+
+                <p>Create <code>table</code> element with <code>class="datatable"</code>. Parameters to the plugin are given with attributes to <code>table</code> element.</p>
+                    <pre><code class="language-markup">
+&lt;table class="table datatable"
+       data-id-field="code"
+       data-sort-name="value1"
+       data-sort-order="desc"
+       data-show-chart="false"
+       data-pagination="false"
+       data-show-pagination-switch="false"&gt;
+    &lt;thead&gt;
+        &lt;tr&gt;
+            &lt;th data-field="code" data-sortable="true"&gt;Name&lt;/th&gt;
+            &lt;th data-field="value1" data-sortable="true"&gt;Value 1&lt;/th&gt;
+            &lt;th data-field="value2" data-sortable="true"&gt;Value 2&lt;/th&gt;
+        &lt;/tr&gt;
+    &lt;/thead&gt;
+    &lt;tbody&gt;
+        &lt;tr&gt;
+            &lt;td&gt;item 1&lt;/td&gt;
+            &lt;td&gt;40.4&lt;/td&gt;
+            &lt;td&gt;6.5344&lt;/td&gt;
+        &lt;/tr&gt;
+    &lt;/tbody&gt;
+&lt;/table&gt;
+                </code></pre>
+
+                More detailed examples see examples below.
+
+                <h3 id="usage-via-js">Via JavaScript</h3>
+                <p><em>In case you need customization.</em></p>
+
+                <p>In case an extensive customization is required, the datatable can be created with javascript.</p>
+                    <pre><code class="language-markup">
+&lt;table id="dynamic-table-1" class="table"
+       data-id-field="code"
+       data-sort-name="value1"
+       data-sort-order="desc"
+       data-show-chart="false"
+       data-pagination="false"
+       data-show-pagination-switch="false"&gt;
+    &lt;thead&gt;
+        &lt;tr&gt;
+            &lt;th data-field="code" data-sortable="true"&gt;Name&lt;/th&gt;
+            &lt;th data-field="value1" data-sortable="true"&gt;Value 1&lt;/th&gt;
+            &lt;th data-field="value2" data-sortable="true"&gt;Value 2&lt;/th&gt;
+        &lt;/tr&gt;
+    &lt;/thead&gt;
+    &lt;tbody&gt;
+        &lt;tr&gt;
+            &lt;td&gt;item 1&lt;/td&gt;
+            &lt;td&gt;40.4&lt;/td&gt;
+            &lt;td&gt;6.5344&lt;/td&gt;
+        &lt;/tr&gt;
+    &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;script type="text/javascript"&gt;
+        $( document ).ready(function() {
+            $('#dynamic-table-1').datatable({});
+        });
+&lt;/script&gt;
+                </code></pre>
+                <h2 id="parameters">Parameters</h2>
+                <h3>Table options</h3>
+                <table class="table datatable"
+                       data-sort-name="attribute"
+                       data-sort-order="asc"
+                       data-show-toggle="true"
+                       data-show-columns="true"
+                       data-pagination="false"
+                       data-show-pagination-switch="false">
+                    <thead>
+                        <tr>
+                            <th data-field="name" data-sortable="true" data-visible="false">Name</th>
+                            <th data-field="attribute" data-sortable="true">Attribute</th>
+                            <th data-field="js-parameter" data-sortable="true" data-visible="false">JS parameter</th>
+                            <th data-field="type" data-sortable="true" data-visible="false">Type</th>
+                            <th data-field="default" data-sortable="true">Default</th>
+                            <th data-field="description" data-sortable="true">Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>ID field</td>
+                            <td>data-id-field</td>
+                            <td>table.id_field</td>
+                            <td>String</td>
+                            <td>undefined</td>
+                            <td>Column name to be used to identify rows.</td>
+                        </tr>
+
+                        <tr>
+                            <td>Chart visualization</td>
+                            <td>data-show-chart</td>
+                            <td>show_chart</td>
+                            <td>Boolean</td>
+                            <td>false</td>
+                            <td>Controls chart visualization.</td>
+                        </tr>
+
+                        <tr>
+                            <td>Data JSON</td>
+                            <td>data-json</td>
+                            <td></td>
+                            <td>String</td>
+                            <td>undefined</td>
+                            <td>JSON file to populate the table from.</td>
+                        </tr>
+                        <tr>
+                            <td>Data YMAL</td>
+                            <td>data-yaml</td>
+                            <td></td>
+                            <td>String</td>
+                            <td>undefined</td>
+                            <td>YAML file to populate the table from.</td>
+                        </tr>
+
+                        <tr>
+                            <td>Ranking</td>
+                            <td>data-rank-mode</td>
+                            <td>rank_mode</td>
+                            <td>String</td>
+                            <td>'normal'</td>
+                            <td>Dynamic ranking mode:<ul>
+                                <li>normal</li>
+                                <li>grouped_muted</li>
+                                <li>grouped_empty</li>
+                            </ul></td>
+                        </tr>
+                        <tr>
+                            <td>Tagging</td>
+                            <td>data-tag-mode</td>
+                            <td>tag_mode</td>
+                            <td>String</td>
+                            <td>'global'</td>
+                            <td>Dynamic tagging, column values are grouped and groups are assigned a color. Modes:<ul>
+                                <li>global, all columns are pulled together before assigning a tag color.</li>
+                                <li>column, all values from a single column is pulled together before assigning a tag color.</li>
+                            </ul></td>
+                        </tr>
+                        <tr>
+                            <td>Row highlighting</td>
+                            <td>data-row-highlighting</td>
+                            <td>table.row_highlighting</td>
+                            <td>Boolean</td>
+                            <td>false</td>
+                            <td>Use row_css field in the data file to have row colors.</td>
+                        </tr>
+
+                        <tr>
+                            <td>Chart modes</td>
+                            <td>data-chart-modes</td>
+                            <td>chart_modes</td>
+                            <td>String</td>
+                            <td>'bar'</td>
+                            <td>Comma separated list of visualization modes:
+                                <ul>
+                                    <li>bar</li>
+                                    <li>scatter</li>
+                                    <li>comparison</li>
+                                </ul>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>Default char mode</td>
+                            <td>data-chart-default-mode</td>
+                            <td>chart_default_mode</td>
+                            <td>String</td>
+                            <td>'bar'</td>
+                            <td>Default visualization mode:
+                                <ul>
+                                    <li>bar</li>
+                                    <li>scatter</li>
+                                    <li>comparison</li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Bar / Show x-axis</td>
+                            <td>data-show-bar-chart-xaxis</td>
+                            <td>bar.show_bar_chart_xaxis</td>
+                            <td>Boolean</td>
+                            <td>'true'</td>
+                            <td>Show x-axis in bar visualization.</td>
+                        </tr>
+                        <tr>
+                            <td>Bar / height</td>
+                            <td>data-bar-height</td>
+                            <td>bar.height</td>
+                            <td>Number</td>
+                            <td>200</td>
+                            <td>Height of a visualization canvas.</td>
+                        </tr>
+                        <tr>
+                            <td>Bar / horizontal line</td>
+                            <td>data-bar-hline</td>
+                            <td>bar.hline.enabled</td>
+                            <td>Boolean</td>
+                            <td>false</td>
+                            <td>Show horizontal line, value got from data file. Use hline field to set.</td>
+                        </tr>
+                        <tr>
+                            <td>Scatter / height</td>
+                            <td>data-scatter-height</td>
+                            <td>scatter.height</td>
+                            <td>Number</td>
+                            <td>240</td>
+                            <td>Height of a visualization canvas.</td>
+                        </tr>
+                        <tr>
+                            <td>Scatter / x</td>
+                            <td>data-scatter-x</td>
+                            <td>scatter.x</td>
+                            <td>String</td>
+                            <td>undefined</td>
+                            <td>Id of a column used as default data source for a scatter plot.</td>
+                        </tr>
+                        <tr>
+                            <td>Scatter / y</td>
+                            <td>data-scatter-y</td>
+                            <td>scatter.y</td>
+                            <td>String</td>
+                            <td>undefined</td>
+                            <td>Id of a column used as default data source for a scatter plot.</td>
+                        </tr>
+
+                        <tr>
+                            <td>Comparison / height</td>
+                            <td>data-comparison-height</td>
+                            <td>comparison.height</td>
+                            <td>Number</td>
+                            <td>240</td>
+                            <td>Height of a visualization canvas.</td>
+                        </tr>
+                        <tr>
+                            <td>Comparison / Row id field</td>
+                            <td>data-comparison-row-id-field</td>
+                            <td>comparison.row_id_field</td>
+                            <td>String</td>
+                            <td>undefined</td>
+                            <td>Id of a column used to populate selection dropdown.</td>
+                        </tr>
+                        <tr>
+                            <td>Comparison / Sets json</td>
+                            <td>data-comparison-sets-json</td>
+                            <td>comparison.sets </td>
+                            <td>JSON</td>
+                            <td>undefined</td>
+                            <td>Comparison sets in JSON format. It should contain a list of object with following format:
+                                <pre><code class="language-json">
+{
+    "title": "title of a set",
+    "data_axis_title": "custom value for axis",
+    "fields": ["column_field1", "column_field1"],
+    "field_titles": ["custom title 1","custom title 2"]
+}
+                                </code></pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Comparison / Default set</td>
+                            <td>data-comparison-active-set</td>
+                            <td>comparison.active_set</td>
+                            <td>String</td>
+                            <td>undefined</td>
+                            <td>Preselected set.</td>
+                        </tr>
+                        <tr>
+                            <td>Comparison / Default A row</td>
+                            <td>data-comparison-a-row</td>
+                            <td>comparison.a_row</td>
+                            <td>String</td>
+                            <td>undefined</td>
+                            <td>Preselected row A</td>
+                        </tr>
+                        <tr>
+                            <td>Comparison / Default B row</td>
+                            <td>data-comparison-b-row</td>
+                            <td>comparison.b_row</td>
+                            <td>String</td>
+                            <td>undefined</td>
+                            <td>Preselected row B</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Header options</h3>
+                <table class="table datatable"
+                       data-id-field="attribute"
+                       data-sort-name="attribute"
+                       data-sort-order="desc"
+                       data-show-toggle="true"
+                       data-show-columns="true"
+                       data-pagination="false"
+                       data-show-pagination-switch="false">
+                    <thead>
+                        <tr>
+                            <th data-field="name" data-sortable="true" data-visible="false">Name</th>
+                            <th data-field="attribute" data-sortable="true">Attribute</th>
+                            <th data-field="type" data-sortable="true" data-visible="false">Type</th>
+                            <th data-field="default" data-sortable="true">Default</th>
+                            <th data-field="description" data-sortable="true">Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Tag</td>
+                            <td>data-tag</td>
+                            <td>Boolean</td>
+                            <td>undefined</td>
+                            <td>Groups values in the column and colors them.</td>
+                        </tr>
+                        <tr>
+                            <td>Chartable</td>
+                            <td>data-chartable</td>
+                            <td>Boolean</td>
+                            <td>undefined</td>
+                            <td>Can the column be select for visualization.</td>
+                        </tr>
+                        <tr>
+                            <td>Begin at zero</td>
+                            <td>data-beginatzero</td>
+                            <td>Boolean</td>
+                            <td>undefined</td>
+                            <td>0 is included in when values from column are visualized.</td>
+                        </tr>
+                        <tr>
+                            <td>Postfix</td>
+                            <td>data-postfix</td>
+                            <td>String</td>
+                            <td>''</td>
+                            <td>String to be added at the end of all values. Use for units.</td>
+                        </tr>
+                        <tr>
+                            <td>Value type</td>
+                            <td>data-value-type</td>
+                            <td>String</td>
+                            <td>undefined</td>
+                            <td>
+                                Value formatter:
+                                <ul>
+                                    <li><code>int</code> and <code>int-percentage</code>, numeric, integer</li>
+                                    <li><code>float1</code> and <code>float1-percentage</code>, numeric, float with one decimal</li>
+                                    <li><code>float2</code> and <code>float2-percentage</code>, numeric, float with two decimals</li>
+                                    <li><code>float3</code> and <code>float3-percentage</code>, numeric, float with three decimals</li>
+                                    <li><code>float4</code> and <code>float4-percentage</code>, numeric, float with four decimals</li>
+                                    <li><code>list</code>, data split <code>,</code> into rows</li>
+                                    <li><code>url</code> data in parsed into list of hrefs, format <code>[url];[url title],[url];[url title]</code></li>
+                                    <li><code>ref</code> data in parsed into list of reference hrefs, format <code>[url to reference];[reference label],[url to reference];[reference label]</code></li>
+                                    <li><code>anchor</code> data value used for href to jump to HTML link anchor. In case the link refers to collapsed item, it is opened.</li>
+                                </ul>
+                                When using percentage formatters, <code>data-postfix</code> is set automatically to <code>%</code>.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h2 id="bootstraptable-parameters">Bootstrap parameters</h2>
+                <p>Essential Bootstraptable specific parameters are collected here for completeness. For full reference, <a href="http://bootstrap-table.wenzhixin.net.cn/documentation/">see Bootstraptable.js documentation</a>.</p>
+                <h3>Table options</h3>
+                <table class="table datatable"
+                       data-sort-name="attribute"
+                       data-sort-order="asc"
+                       data-show-toggle="true"
+                       data-show-columns="true"
+                       data-pagination="false"
+                       data-show-pagination-switch="false">
+                    <thead>
+                        <tr>
+                            <th data-field="name" data-sortable="true" data-visible="false">Name</th>
+                            <th data-field="attribute" data-sortable="true">Attribute</th>
+                            <th data-field="type" data-sortable="true" data-visible="false">Type</th>
+                            <th data-field="default" data-sortable="true">Default</th>
+                            <th data-field="description" data-sortable="true">Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Sort name</td>
+                            <td>data-sort-name</td>
+                            <td>String</td>
+                            <td>undefined</td>
+                            <td>Defines which column will be sorted.</td>
+                        </tr>
+
+                        <tr>
+                            <td>Sort order</td>
+                            <td>data-sort-order</td>
+                            <td>String</td>
+                            <td>'asc'</td>
+                            <td>Defines the column sort order, can only be 'asc' or 'desc'.</td>
+                        </tr>
+
+                        <tr>
+                            <td>Sort order</td>
+                            <td>data-sort-order</td>
+                            <td>String</td>
+                            <td>'asc'</td>
+                            <td>Defines the column sort order, can only be 'asc' or 'desc'.</td>
+                        </tr>
+                        <tr>
+                            <td>Striped</td>
+                            <td>data-striped</td>
+                            <td>Boolean</td>
+                            <td>true</td>
+                            <td>True to stripe the rows.</td>
+                        </tr>
+                        <tr>
+                            <td>Pagination</td>
+                            <td>data-pagination</td>
+                            <td>Boolean</td>
+                            <td>true</td>
+                            <td>True to show a pagination toolbar on table bottom.</td>
+                        </tr>
+                        <tr>
+                            <td>Page list</td>
+                            <td>data-page-list</td>
+                            <td>Array</td>
+                            <td>[10, 25, 50, 100]</td>
+                            <td>When set pagination property, initialize the page size selecting list. If you include the 'All' option, all the records will be shown in your table.</td>
+                        </tr>
+                        <tr>
+                            <td>Show columns</td>
+                            <td>data-show-columns</td>
+                            <td>Boolean</td>
+                            <td>false</td>
+                            <td>True to show the columns drop down list.</td>
+                        </tr>
+                        <tr>
+                            <td>Show toggle</td>
+                            <td>data-show-toggle</td>
+                            <td>Boolean</td>
+                            <td>false</td>
+                            <td>True to show the toggle button to toggle table / card view. </td>
+                        </tr>
+                        <tr>
+                            <td>Show pagination switch</td>
+                            <td>data-show-pagination-switch</td>
+                            <td>Boolean</td>
+                            <td>true</td>
+                            <td>True to show the pagination switch button.</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Header options</h3>
+                <table class="table datatable"
+                       data-id-field="attribute"
+                       data-sort-name="attribute"
+                       data-sort-order="desc"
+                       data-show-toggle="true"
+                       data-show-columns="true"
+                       data-pagination="false"
+                       data-show-pagination-switch="false">
+                    <thead>
+                        <tr>
+                            <th data-field="name" data-sortable="true" data-visible="false">Name</th>
+                            <th data-field="attribute" data-sortable="true">Attribute</th>
+                            <th data-field="type" data-sortable="true" data-visible="false">Type</th>
+                            <th data-field="default" data-sortable="true">Default</th>
+                            <th data-field="description" data-sortable="true">Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Field</td>
+                            <td>data-field</td>
+                            <td>String</td>
+                            <td>undefined</td>
+                            <td>The column field name.</td>
+                        </tr>
+                        <tr>
+                            <td>Sortable</td>
+                            <td>data-sortable</td>
+                            <td>Boolean</td>
+                            <td>false</td>
+                            <td>True to allow the column can be sorted.</td>
+                        </tr>
+                        <tr>
+                            <td>Visible</td>
+                            <td>data-visible</td>
+                            <td>Boolean</td>
+                            <td>true</td>
+                            <td>False to hide the columns item.</td>
+                        </tr>
+                        <tr>
+                            <td>Formatter</td>
+                            <td>data-formatter</td>
+                            <td>Function</td>
+                            <td>undefined</td>
+                            <td>The context (this) is the column Object. The cell formatter function, take three parameters: value: the field value. row: the row record data. index: the row index.</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+
+                <h2 id="examples">Table examples</h2>
+                <p>Preferred way to deliver the data to js-datatable is to have all data in HTML table. If static page generation is used, the data can be read from data files in the generation stage. Alternative method is to use asynchronous loading (JSON or YAML files) when the data is loaded once the page is loaded and table is populated with the data. By using static content, the all data is show once page is loaded and in if javascript is turned off table is still showing some data. When using remote data source, there is a delay depending on the connection speed before the table data is populated. Modern web crawlers (e.g. google) should handle dynamic data and index it.
+                </p>
+
+                <h3 id="simple-dynamic-table-from-html" data-toc-text="Data from HTML">Simple table, data from HTML table</h3>
+                <p>Safest way to create dynamic table is to have all data in HTML table. One can also populate data
+                    This a simple dynamic table, basically same than what you would get with bootstrap-table.js alone.</p>
+                <table class="table datatable"
+                       data-id-field="code"
+                       data-sort-name="value1"
+                       data-sort-order="desc"
+                       data-pagination="false"
+                       data-show-pagination-switch="false">
+                    <thead>
+                        <tr>
+                            <th data-field="code" data-sortable="true">Name</th>
+                            <th data-field="value1" data-sortable="true">Value 1</th>
+                            <th data-field="value2" data-sortable="true">Value 2</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>item 1</td>
+                            <td>40.4</td>
+                            <td>6.5344</td>
+                        </tr>
+                        <tr>
+                            <td>item 2</td>
+                            <td>60.2</td>
+                            <td>3.232</td>
+                        </tr>
+                        <tr>
+                            <td>item 3</td>
+                            <td>20.6</td>
+                            <td>9.32</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <br>
+                <a class="btn btn-primary" role="button" data-toggle="collapse" href="#simple-dynamic-table-from-html-example" aria-expanded="false" aria-controls="simple-dynamic-table-from-html-example">
+                  <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Show code
+                </a>
+
+                <div class="collapse" id="simple-dynamic-table-from-html-example">
+                    <pre><code class="language-markup">
+&lt;table class="table datatable"
+       data-id-field="code"
+       data-sort-name="value1"
+       data-sort-order="desc"
+       data-pagination="false"
+       data-show-pagination-switch="false"&gt;
+    &lt;thead&gt;
+        &lt;tr&gt;
+            &lt;th data-field="code" data-sortable="true"&gt;Name&lt;/th&gt;
+            &lt;th data-field="value1" data-sortable="true"&gt;Value 1&lt;/th&gt;
+            &lt;th data-field="value2" data-sortable="true"&gt;Value 2&lt;/th&gt;
+        &lt;/tr&gt;
+    &lt;/thead&gt;
+    &lt;tbody&gt;
+        &lt;tr&gt;
+            &lt;td&gt;item 1&lt;/td&gt;
+            &lt;td&gt;40.4&lt;/td&gt;
+            &lt;td&gt;6.5344&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;td&gt;item 2&lt;/td&gt;
+            &lt;td&gt;60.2&lt;/td&gt;
+            &lt;td&gt;3.232&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;td&gt;item 3&lt;/td&gt;
+            &lt;td&gt;20.6&lt;/td&gt;
+            &lt;td&gt;9.32&lt;/td&gt;
+        &lt;/tr&gt;
+    &lt;/tbody&gt;
+&lt;/table&gt;
+                    </code></pre>
+                </div>
+                <br>
+
+                <h3 id="simple-dynamic-table-from-json" data-toc-text="Data from JSON">Simple table, data from remote JSON file</h3>
+                <p>This a simple dynamic table, basically same than what you would get with bootstrap-table.js alone.</p>
+                <table class="table datatable"
+                       data-json="data2.json"
+                       data-id-field="name"
+                       data-sort-name="value1"
+                       data-sort-order="desc"
+                       data-pagination="false"
+                       data-show-pagination-switch="false">
+                    <thead>
+                        <tr>
+                            <th data-field="code" data-sortable="true">Name</th>
+                            <th data-field="value1" data-sortable="true">Value 1</th>
+                            <th data-field="value2" data-sortable="true">Value 2</th>
+                        </tr>
+                    </thead>
+                </table>
+                <br>
+                <a class="btn btn-primary" role="button" data-toggle="collapse" href="#simple-dynamic-table-from-json-example" aria-expanded="false" aria-controls="simple-dynamic-table-from-json-example">
+                  <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Show code
+                </a>
+                <a class="btn btn-primary" role="button" data-toggle="collapse" href="#simple-dynamic-table-from-json-example-json" aria-expanded="false" aria-controls="simple-dynamic-table-from-json-example-json">
+                  <span class="glyphicon glyphicon-file" aria-hidden="true"></span> Show JSON
+                </a>
+                <div class="collapse" id="simple-dynamic-table-from-json-example">
+                    <pre><code class="language-markup">
+&lt;table class="table datatable"
+       data-json="data2.json"
+       data-id-field="name"
+       data-sort-name="value1"
+       data-sort-order="desc"
+       data-pagination="false"
+       data-show-pagination-switch="false"&gt;
+    &lt;thead&gt;
+        &lt;tr&gt;
+            &lt;th data-field="code" data-sortable="true"&gt;Name&lt;/th&gt;
+            &lt;th data-field="value1" data-sortable="true"&gt;Value 1&lt;/th&gt;
+            &lt;th data-field="value2" data-sortable="true"&gt;Value 2&lt;/th&gt;
+        &lt;/tr&gt;
+    &lt;/thead&gt;
+&lt;/table&gt;
+                    </code></pre>
+                </div>
+                <div class="collapse" id="simple-dynamic-table-from-json-example-json">
+                    <pre><code class="language-markup">
+[
+    {
+        "code": "Red",
+        "value1": "12",
+        "value2": "22",
+        "value3": "5",
+        "value4": "34",
+        "feature1": "square",
+        "feature2": "triangle",
+        "row_css": "danger"
+    },
+    {
+        "code": "Blue",
+        "value1": "62",
+        "value2": "42",
+        "value3": "8",
+        "value4": "64",
+        "feature1": "circle",
+        "feature2": "triangle",
+        "row_css": "warning"
+    }
+]
+                    </code></pre>
+                </div>
+                <br>
+                
+                <h3 id="simple-dynamic-table-from-yaml" data-toc-text="Data from YAML">Simple table, data from remote YAML file</h3>
+                <table class="table datatable"
+                       data-yaml="data2.yaml"
+                       data-id-field="name"
+                       data-sort-name="value1"
+                       data-sort-order="desc"
+                       data-pagination="false"
+                       data-show-pagination-switch="false">
+                    <thead>
+                        <tr>
+                            <th data-field="code" data-sortable="true">Name</th>
+                            <th data-field="value1" data-sortable="true">Value 1</th>
+                            <th data-field="value2" data-sortable="true">Value 2</th>
+                        </tr>
+                    </thead>
+                </table>
+                <br>
+                <a class="btn btn-primary" role="button" data-toggle="collapse" href="#simple-dynamic-table-from-yaml-example" aria-expanded="false" aria-controls="simple-dynamic-table-from-yaml-example">
+                  <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Show code
+                </a>
+                <a class="btn btn-primary" role="button" data-toggle="collapse" href="#simple-dynamic-table-from-json-example-yaml" aria-expanded="false" aria-controls="simple-dynamic-table-from-json-example-yaml">
+                  <span class="glyphicon glyphicon-file" aria-hidden="true"></span> Show YAML
+                </a>
+                <div class="collapse" id="simple-dynamic-table-from-yaml-example">
+                    <pre><code class="language-markup">
+&lt;table class="table datatable"
+       data-yaml="data2.yaml"
+       data-id-field="name"
+       data-sort-name="value1"
+       data-sort-order="desc"
+       data-pagination="false"
+       data-show-pagination-switch="false"&gt;
+    &lt;thead&gt;
+        &lt;tr&gt;
+            &lt;th data-field="code" data-sortable="true"&gt;Name&lt;/th&gt;
+            &lt;th data-field="value1" data-sortable="true"&gt;Value 1&lt;/th&gt;
+            &lt;th data-field="value2" data-sortable="true"&gt;Value 2&lt;/th&gt;
+        &lt;/tr&gt;
+    &lt;/thead&gt;
+&lt;/table&gt;
+                    </code></pre>
+                </div>
+                <div class="collapse" id="simple-dynamic-table-from-json-example-yaml">
+                    <pre><code class="language-yaml">
+data:
+  - code: Red
+    value1: 12
+    value2: 22
+    feature1: square
+    feature2: triangle
+    row_css: danger
+
+  - code: Blue
+    value1: 62
+    value2: 42
+    feature1: circle
+    feature2: triangle
+    row_css: warning
+                    </code></pre>
+                </div>
+                <br>
+
+                <h3 id="ranking">Ranking</h3>
+                <p>Plugin provides a few way to rank rows dynamically based on sorting:</p>
+                <ul>
+                    <li><code>normal</code>, running index</li>
+                    <table class="table datatable"
+                           data-json="data2.json"
+                           data-rank-mode="normal"
+                           data-id-field="name"
+                           data-sort-name="value1"
+                           data-sort-order="desc"
+                           data-pagination="false"
+                           data-show-pagination-switch="false">
+                        <thead>
+                            <tr>
+                                <th data-rank="true">Rank</th>
+                                <th data-field="code" data-sortable="true">Name</th>
+                                <th data-field="value1" data-sortable="true">Value 1</th>
+                                <th data-field="value2" data-sortable="true">Value 2</th>
+                            </tr>
+                        </thead>
+                    </table>
+                    <br>
+                    <a class="btn btn-primary" role="button" data-toggle="collapse" href="#simple-dynamic-table-ranking-normal-example" aria-expanded="false" aria-controls="simple-dynamic-table-ranking-normal-example">
+                      <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Show code
+                    </a>
+
+                    <div class="collapse" id="simple-dynamic-table-ranking-normal-example">
+                        <pre><code class="language-markup">
+&lt;table class="table datatable"
+       data-json="data2.json"
+       data-rank-mode="normal"
+       data-id-field="name"
+       data-sort-name="value1"
+       data-sort-order="desc"
+       data-pagination="false"
+       data-show-pagination-switch="false"&gt;
+    &lt;thead&gt;
+        &lt;tr&gt;
+            &lt;th data-rank="true"&gt;Rank&lt;/th&gt;
+            &lt;th data-field="code" data-sortable="true"&gt;Name&lt;/th&gt;
+            &lt;th data-field="value1" data-sortable="true"&gt;Value 1&lt;/th&gt;
+            &lt;th data-field="value2" data-sortable="true"&gt;Value 2&lt;/th&gt;
+        &lt;/tr&gt;
+    &lt;/thead&gt;
+&lt;/table&gt;
+                        </code></pre>
+                    </div>
+                    <br>
+
+                    <li><code>grouped_muted</code>, values are grouped so that equal values get same rank index. Only first rank index is shown normally, rest is muted.</li>
+                    <table class="table datatable"
+                           data-json="data2.json"
+                           data-rank-mode="grouped_muted"
+                           data-id-field="name"
+                           data-sort-name="value1"
+                           data-sort-order="desc"
+                           data-pagination="false"
+                           data-show-pagination-switch="false">
+                        <thead>
+                            <tr>
+                                <th data-rank="true">Rank</th>
+                                <th data-field="code" data-sortable="true">Name</th>
+                                <th data-field="value1" data-sortable="true">Value 1</th>
+                                <th data-field="value2" data-sortable="true">Value 2</th>
+                            </tr>
+                        </thead>
+                    </table>
+                    <br>
+                    <a class="btn btn-primary" role="button" data-toggle="collapse" href="#simple-dynamic-table-ranking-grouped-muted-example" aria-expanded="false" aria-controls="simple-dynamic-table-ranking-grouped-muted-example">
+                      <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Show code
+                    </a>
+
+                    <div class="collapse" id="simple-dynamic-table-ranking-grouped-muted-example">
+                        <pre><code class="language-markup">
+&lt;table class="table datatable"
+       data-json="data2.json"
+       data-rank-mode="grouped_muted"
+       data-id-field="name"
+       data-sort-name="value1"
+       data-sort-order="desc"
+       data-pagination="false"
+       data-show-pagination-switch="false"&gt;
+    &lt;thead&gt;
+        &lt;tr&gt;
+            &lt;th data-rank="true"&gt;Rank&lt;/th&gt;
+            &lt;th data-field="code" data-sortable="true"&gt;Name&lt;/th&gt;
+            &lt;th data-field="value1" data-sortable="true"&gt;Value 1&lt;/th&gt;
+            &lt;th data-field="value2" data-sortable="true"&gt;Value 2&lt;/th&gt;
+        &lt;/tr&gt;
+    &lt;/thead&gt;
+&lt;/table&gt;
+                        </code></pre>
+                    </div>
+                    <br>
+
+                    <li><code>grouped_empty</code>, values are grouped so that equal values get same rank index. Only first rank index is shown.</li>
+                    <table class="table datatable"
+                           data-json="data2.json"
+                           data-rank-mode="grouped_empty"
+                           data-id-field="name"
+                           data-sort-name="value1"
+                           data-sort-order="desc"
+                           data-pagination="false"
+                           data-show-pagination-switch="false">
+                        <thead>
+                            <tr>
+                                <th data-rank="true">Rank</th>
+                                <th data-field="code" data-sortable="true">Name</th>
+                                <th data-field="value1" data-sortable="true">Value 1</th>
+                                <th data-field="value2" data-sortable="true">Value 2</th>
+                            </tr>
+                        </thead>
+                    </table>
+                    <br>
+                    <a class="btn btn-primary" role="button" data-toggle="collapse" href="#simple-dynamic-table-ranking-grouped-empty-example" aria-expanded="false" aria-controls="simple-dynamic-table-ranking-grouped-empty-example">
+                      <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Show code
+                    </a>
+
+                    <div class="collapse" id="simple-dynamic-table-ranking-grouped-empty-example">
+                        <pre><code class="language-markup">
+&lt;table class="table datatable"
+       data-json="data2.json"
+       data-rank-mode="grouped_empty"
+       data-id-field="name"
+       data-sort-name="value1"
+       data-sort-order="desc"
+       data-pagination="false"
+       data-show-pagination-switch="false"&gt;
+    &lt;thead&gt;
+        &lt;tr&gt;
+            &lt;th data-rank="true"&gt;Rank&lt;/th&gt;
+            &lt;th data-field="code" data-sortable="true"&gt;Name&lt;/th&gt;
+            &lt;th data-field="value1" data-sortable="true"&gt;Value 1&lt;/th&gt;
+            &lt;th data-field="value2" data-sortable="true"&gt;Value 2&lt;/th&gt;
+        &lt;/tr&gt;
+    &lt;/thead&gt;
+&lt;/table&gt;
+                        </code></pre>
+                    </div>
+                    <br>
+                </ul>
+
+                <h3 id="value-formatters">Value formatters</h3>
+                <p>Value in the cells can be formated dynamically. js-datatable provides currently following formatters:
+                    <ul>
+                        <li><code>int</code> and <code>int-percentage</code>, numeric, integer</li>
+                        <li><code>float1</code> and <code>float1-percentage</code>, numeric, float with one decimal</li>
+                        <li><code>float2</code> and <code>float2-percentage</code>, numeric, float with two decimals</li>
+                        <li><code>float3</code> and <code>float3-percentage</code>, numeric, float with three decimals</li>
+                        <li><code>float4</code> and <code>float4-percentage</code>, numeric, float with four decimals</li>
+                        <li><code>list</code>, data split <code>,</code> into rows</li>
+                        <li><code>url</code> data in parsed into list of hrefs, format <code>[url];[url title],[url];[url title]</code></li>
+                        <li><code>ref</code> data in parsed into list of reference hrefs, format <code>[url to reference];[reference label],[url to reference];[reference label]</code></li>
+                        <li><code>anchor</code> data value used for href to jump to HTML link anchor. In case the link refers to collapsed item, it is opened.</li>
+                    </ul>
+                </p>
+                <table class="table datatable"
+                       data-json="data2.json"
+                       data-id-field="name"
+                       data-sort-name="value1"
+                       data-sort-order="desc"
+                       data-pagination="false"
+                       data-show-pagination-switch="false">
+                    <thead>
+                        <tr>
+                            <th data-field="code" data-sortable="true">Name</th>
+                            <th data-field="value1" data-sortable="true" data-value-type="float2-percentage">Value 1</th>
+                            <th data-field="value2" data-sortable="true" data-value-type="float4">Value 2</th>
+                            <th data-field="list" data-sortable="true" data-value-type="list">List</th>
+                            <th data-field="anchor" data-sortable="true" data-value-type="anchor">Anchor</th>
+                            <th data-field="url" data-sortable="true" data-value-type="url">URL</th>
+                            <th data-field="ref" data-sortable="true" data-value-type="ref">References</th>
+                        </tr>
+                    </thead>
+                </table>
+                <br>
+                <a class="btn btn-primary" role="button" data-toggle="collapse" href="#simple-dynamic-table-value-formatter-example" aria-expanded="false" aria-controls="simple-dynamic-table-value-formatter-example">
+                  <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Show code
+                </a>
+
+                <div class="collapse" id="simple-dynamic-table-value-formatter-example">
+                    <pre><code class="language-markup">
+&lt;table class="table datatable"
+       data-json="data2.json"
+       data-id-field="name"
+       data-sort-name="value1"
+       data-sort-order="desc"
+       data-pagination="false"
+       data-show-pagination-switch="false"&gt;
+    &lt;thead&gt;
+        &lt;tr&gt;
+            &lt;th data-field="code" data-sortable="true"&gt;Name&lt;/th&gt;
+            &lt;th data-field="value1" data-sortable="true" data-value-type="float2-percentage"&gt;Value 1&lt;/th&gt;
+            &lt;th data-field="value2" data-sortable="true" data-value-type="float4"&gt;Value 2&lt;/th&gt;
+            &lt;th data-field="list" data-sortable="true" data-value-type="list"&gt;List&lt;/th&gt;
+            &lt;th data-field="anchor" data-sortable="true" data-value-type="anchor"&gt;Anchor&lt;/th&gt;
+            &lt;th data-field="url" data-sortable="true" data-value-type="url"&gt;URL&lt;/th&gt;
+            &lt;th data-field="ref" data-sortable="true" data-value-type="ref"&gt;References&lt;/th&gt;
+        &lt;/tr&gt;
+    &lt;/thead&gt;
+&lt;/table&gt;
+                    </code></pre>
+                </div>
+                <br>
+                <h3 id="tags">Tags</h3>
+                <p>Values in columns can be grouped, and for each group a distinct background color can be assigned. Tagging mode is set by <code>data-tag-mode</code>, available modes are<ul>
+                    <li>global, all columns are pulled together before assigning a tag color.</li>
+                    <li>column, all values from a single column is pulled together before assigning a tag color.</li>
+                </ul>
+                </p>
+
+                <table class="table datatable"
+                       data-json="data2.json"
+                       data-id-field="name"
+                       data-sort-name="value1"
+                       data-sort-order="desc"
+                       data-pagination="false"
+                       data-tag-mode="global"
+                       data-show-pagination-switch="false">
+                    <thead>
+                        <tr>
+                            <th data-field="code"
+                                data-sortable="true">
+                                Name
+                            </th>
+                            <th data-align="center"
+                                data-field="value1"
+                                data-sortable="true"
+                                data-tag="true">
+                                Value 1
+                            </th>
+                            <th data-align="center"
+                                data-field="value2"
+                                data-sortable="true"
+                                data-tag="true">
+                                Value 2
+                            </th>
+                            <th class="sep-left-cell"
+                                data-align="center"
+                                data-field="feature1"
+                                data-sortable="true"
+                                data-tag="true">
+                                Feature 1
+                            </th>
+                            <th class="sep-left-cell"
+                                data-align="center"
+                                data-field="feature2"
+                                data-sortable="true"
+                                data-tag="true">
+                                Feature 2
+                            </th>
+                        </tr>
+                    </thead>
+                </table>
+                <br>
+                <a class="btn btn-primary" role="button" data-toggle="collapse" href="#simple-dynamic-table-tag-example" aria-expanded="false" aria-controls="simple-dynamic-table-tag-example">
+                  <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Show code
+                </a>
+
+                <div class="collapse" id="simple-dynamic-table-tag-example">
+                    <pre><code class="language-markup">
+&lt;table class="table datatable"
+       data-json="data2.json"
+       data-id-field="name"
+       data-sort-name="value1"
+       data-sort-order="desc"
+       data-pagination="false"
+       data-tag-mode="global"
+       data-show-pagination-switch="false"&gt;
+    &lt;thead&gt;
+        &lt;tr&gt;
+            &lt;th data-field="code"
+                data-sortable="true"&gt;
+                Name
+            &lt;/th&gt;
+            &lt;th data-align="center"
+                data-field="value1"
+                data-sortable="true"
+                data-tag="true"&gt;
+                Value 1
+            &lt;/th&gt;
+            &lt;th data-align="center"
+                data-field="value2"
+                data-sortable="true"
+                data-tag="true"&gt;
+                Value 2
+            &lt;/th&gt;
+            &lt;th class="sep-left-cell"
+                data-align="center"
+                data-field="feature1"
+                data-sortable="true"
+                data-tag="true"&gt;
+                Feature 1
+            &lt;/th&gt;
+            &lt;th class="sep-left-cell"
+                data-align="center"
+                data-field="feature2"
+                data-sortable="true"
+                data-tag="true"&gt;
+                Feature 2
+            &lt;/th&gt;
+        &lt;/tr&gt;
+    &lt;/thead&gt;
+&lt;/table&gt;
+                    </code></pre>
+                </div>
+                <br>
+
+                <h3 id="filtering">Filtering</h3>
+                <p>Column based filtering.</p>
+                <table class="table datatable"
+                       data-json="data2.json"
+                       data-id-field="name"
+                       data-sort-name="value1"
+                       data-sort-order="desc"
+                       data-filter-control="true"
+                       data-filter-show-clear="true"
+                    >
+                    <thead>
+                        <tr>
+                            <th data-field="code"
+                                data-sortable="true">
+                                Name
+                            </th>
+                            <th data-align="center"
+                                data-field="value1"
+                                data-sortable="true">
+                                Value 1
+                            </th>
+                            <th data-align="center"
+                                data-field="value2"
+                                data-sortable="true">
+                                Value 2
+                            </th>
+                            <th class="sep-left-cell"
+                                data-align="center"
+                                data-field="feature1"
+                                data-sortable="true"
+                                data-filter-control="select">
+                                Feature 1
+                            </th>
+                            <th class="sep-left-cell"
+                                data-align="center"
+                                data-field="feature2"
+                                data-sortable="true"
+                                data-filter-control="select">
+                                Feature 2
+                            </th>
+                        </tr>
+                    </thead>
+                </table>
+                <br>
+                <a class="btn btn-primary" role="button" data-toggle="collapse" href="#simple-dynamic-table-filtering-example" aria-expanded="false" aria-controls="simple-dynamic-table-filtering-example">
+                  <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Show code
+                </a>
+
+                <div class="collapse" id="simple-dynamic-table-filtering-example">
+                    <pre><code class="language-markup">
+&lt;table class="table datatable"
+       data-json="data2.json"
+       data-id-field="name"
+       data-sort-name="value1"
+       data-sort-order="desc"
+       data-filter-control="true"
+       data-filter-show-clear="true"
+    &gt;
+    &lt;thead&gt;
+        &lt;tr&gt;
+            &lt;th data-field="code"
+                data-sortable="true"&gt;
+                Name
+            &lt;/th&gt;
+            &lt;th data-align="center"
+                data-field="value1"
+                data-sortable="true"&gt;
+                Value 1
+            &lt;/th&gt;
+            &lt;th data-align="center"
+                data-field="value2"
+                data-sortable="true"&gt;
+                Value 2
+            &lt;/th&gt;
+            &lt;th class="sep-left-cell"
+                data-align="center"
+                data-field="feature1"
+                data-sortable="true"
+                data-filter-control="select"&gt;
+                Feature 1
+            &lt;/th&gt;
+            &lt;th class="sep-left-cell"
+                data-align="center"
+                data-field="feature2"
+                data-sortable="true"
+                data-filter-control="select"&gt;
+                Feature 2
+            &lt;/th&gt;
+        &lt;/tr&gt;
+    &lt;/thead&gt;
+&lt;/table&gt;
+                    </code></pre>
+                </div>
+                <br>
+
+                <h3 id="row-color">Row highlighting</h3>
+                <p>To assign colors to rows, use <code>data-row-css="info"</code>. In case of dynamic data population, add <code>"row_css": "info"</code> field in JSON data structure or <code>row_css: info</code> in YAML data structure. Possible colors are:
+                <ul>
+                    <li><code>active</code></li>
+                    <li><code>success</code></li>
+                    <li><code>info</code></li>
+                    <li><code>warning</code></li>
+                    <li><code>danger</code></li>
+                </ul>
+                </p>
+                <table class="table datatable"
+                       data-json="data2.json"
+                       data-rank-mode="grouped_muted"
+                       data-row-highlighting="true"
+                       data-id-field="name"
+                       data-sort-name="value1"
+                       data-sort-order="desc"
+                       data-pagination="false"
+                       data-show-pagination-switch="false">
+                    <thead>
+                        <tr>
+                            <th data-rank="true">Rank</th>
+                            <th data-field="code" data-sortable="true">Name</th>
+                            <th data-field="value1" data-sortable="true">Value 1</th>
+                            <th data-field="value2" data-sortable="true">Value 2</th>
+                        </tr>
+                    </thead>
+                </table>
+                <br>
+                <a class="btn btn-primary" role="button" data-toggle="collapse" href="#simple-dynamic-table-row-color-example" aria-expanded="false" aria-controls="simple-dynamic-table-row-color-example">
+                  <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Show code
+                </a>
+                <a class="btn btn-primary" role="button" data-toggle="collapse" href="#simple-dynamic-table-row-color-example-json" aria-expanded="false" aria-controls="simple-dynamic-table-row-color-example-json">
+                  <span class="glyphicon glyphicon-file" aria-hidden="true"></span> Show JSON
+                </a>
+                <div class="collapse" id="simple-dynamic-table-row-color-example">
+                    <pre><code class="language-markup">
+&lt;table class="table datatable"
+       data-json="data2.json"
+       data-rank-mode="grouped_muted"
+       data-row-highlighting="true"
+       data-id-field="name"
+       data-sort-name="value1"
+       data-sort-order="desc"
+       data-pagination="false"
+       data-show-pagination-switch="false"
+    &gt;
+    &lt;thead&gt;
+        &lt;tr&gt;
+            &lt;th data-field="code"
+                data-sortable="true"&gt;
+                Name
+            &lt;/th&gt;
+            &lt;th data-align="center"
+                data-field="value1"
+                data-sortable="true"&gt;
+                Value 1
+            &lt;/th&gt;
+            &lt;th data-align="center"
+                data-field="value2"
+                data-sortable="true"&gt;
+                Value 2
+            &lt;/th&gt;
+            &lt;th class="sep-left-cell"
+                data-align="center"
+                data-field="feature1"
+                data-sortable="true"
+                data-filter-control="select"&gt;
+                Feature 1
+            &lt;/th&gt;
+            &lt;th class="sep-left-cell"
+                data-align="center"
+                data-field="feature2"
+                data-sortable="true"
+                data-filter-control="select"&gt;
+                Feature 2
+            &lt;/th&gt;
+        &lt;/tr&gt;
+    &lt;/thead&gt;
+&lt;/table&gt;
+                    </code></pre>
+                </div>
+                <div class="collapse" id="simple-dynamic-table-row-color-example-json">
+                    <pre><code class="language-markup">
+[
+    {
+        "code": "Red",
+        "value1": "12",
+        "value2": "22",
+        "value3": "5",
+        "value4": "34",
+        "feature1": "square",
+        "feature2": "triangle",
+        "row_css": "danger"
+    },
+    {
+        "code": "Blue",
+        "value1": "62",
+        "value2": "42",
+        "value3": "8",
+        "value4": "64",
+        "feature1": "circle",
+        "feature2": "triangle",
+        "row_css": "warning"
+    }
+]
+                    </code></pre>
+                </div>
+                <br>
+                <br>
+
+                <h3 id="multiline-headers">Multiline headers</h3>
+                <p>With js-datatable, you can use multiple row in <code>thead</code> normally, you just need to use <code>rowspan</code> and <code>colspan</code> attributes correctly. Example using multiple header rows.</p>
+                
+                <table class="table datatable"
+                       data-json="data2.json"
+                       data-id-field="name"
+                       data-sort-name="value1"
+                       data-sort-order="desc"
+                       data-filter-control="true"
+                       data-filter-show-clear="true"
+                    >
+                    <thead>
+                        <tr>
+                            <th rowspan="2" data-field="code"
+                                data-sortable="true">
+                                Name
+                            </th>
+                            <th colspan="2" class="sep-left-cell">
+                                Values
+                            </th>
+                            <th colspan="2" class="sep-left-cell">
+                                Features
+                            </th>
+                        </tr>
+                        <tr>
+                            <th class="sep-left-cell"
+                                data-align="center"
+                                data-field="value1"
+                                data-sortable="true">
+                                1
+                            </th>
+                            <th data-align="center"
+                                data-field="value2"
+                                data-sortable="true">
+                                2
+                            </th>
+                            <th class="sep-left-cell"
+                                data-align="center"
+                                data-field="feature1"
+                                data-sortable="true"
+                                data-tag="true"
+                                data-filter-control="select">
+                                1
+                            </th>
+                            <th class="sep-left-cell"
+                                data-align="center"
+                                data-field="feature2"
+                                data-sortable="true"
+                                data-tag="true"
+                                data-filter-control="select">
+                                2
+                            </th>
+                        </tr>
+                    </thead>
+                </table>
+                <br>
+                <a class="btn btn-primary" role="button" data-toggle="collapse" href="#simple-dynamic-table-header-example" aria-expanded="false" aria-controls="simple-dynamic-table-header-example">
+                  <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Show code
+                </a>
+
+                <div class="collapse" id="simple-dynamic-table-header-example">
+                    <pre><code class="language-markup">
+&lt;table class="table datatable"
+       data-json="data2.json"
+       data-id-field="name"
+       data-sort-name="value1"
+       data-sort-order="desc"
+       data-filter-control="true"
+       data-filter-show-clear="true"
+    &gt;
+    &lt;thead&gt;
+        &lt;tr&gt;
+            &lt;th rowspan="2" data-field="code"
+                data-sortable="true"&gt;
+                Name
+            &lt;/th&gt;
+            &lt;th colspan="2" class="sep-left-cell"&gt;
+                Values
+            &lt;/th&gt;
+            &lt;th colspan="2" class="sep-left-cell"&gt;
+                Features
+            &lt;/th&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;th class="sep-left-cell"
+                data-align="center"
+                data-field="value1"
+                data-sortable="true"&gt;
+                1
+            &lt;/th&gt;
+            &lt;th data-align="center"
+                data-field="value2"
+                data-sortable="true"&gt;
+                2
+            &lt;/th&gt;
+            &lt;th class="sep-left-cell"
+                data-align="center"
+                data-field="feature1"
+                data-sortable="true"
+                data-tag="true"
+                data-filter-control="select"&gt;
+                1
+            &lt;/th&gt;
+            &lt;th class="sep-left-cell"
+                data-align="center"
+                data-field="feature2"
+                data-sortable="true"
+                data-tag="true"
+                data-filter-control="select"&gt;
+                2
+            &lt;/th&gt;
+        &lt;/tr&gt;
+    &lt;/thead&gt;
+&lt;/table&gt;
+                    </code></pre>
+                </div>
+                <br>
+
+                <h2 id="visualization">Visualization examples</h2>
+
+                <h3 id="visualization-bar">Bar</h3>
+
+                <table
+                        class="datatable table"
+                        data-json="data2.json"
+                        data-show-chart="true"
+                        data-id-field="code"
+                        data-rank-mode="grouped_muted"
+                        data-chart-modes="bar"
+                        data-show-bar-chart-xaxis="true"
+                        data-sort-name="value1"
+                        data-sort-order="desc"
+                        data-pagination="false"
+                        data-show-pagination-switch="false"
+                    >
+                    <thead>
+                        <tr>
+                            <th data-sortable="false" data-rank="true">
+                                <span class="text-muted">Rank</span>
+                            </th>
+                            <th class="sep-left-cell"
+                                data-chartable="false"
+                                data-field="code"
+                                data-sortable="true"
+                                data-visible="true">
+                                System
+                            </th>
+                            <th class="sep-left-cell"
+                                data-align="center"
+                                data-beginatzero="false"
+                                data-chartable="true"
+                                data-field="value1"
+                                data-sortable="true"
+                                data-visible="true">
+                                Value 1
+                            </th>
+                            <th class="sep-left-cell"
+                                data-align="center"
+                                data-beginatzero="false"
+                                data-chartable="true"
+                                data-field="value2"
+                                data-sortable="true"
+                                data-visible="true">
+                                Value 2
+                            </th>
+                        </tr>
+                    </thead>
+                </table>
+                <br>
+                <a class="btn btn-primary" role="button" data-toggle="collapse" href="#visualization-bar-example" aria-expanded="false" aria-controls="visualization-bar-example">
+                  <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Show code
+                </a>
+
+                <div class="collapse" id="visualization-bar-example">
+                    <pre><code class="language-markup">
+&lt;table
+        class="datatable table"
+        data-json="data2.json"
+        data-show-chart="true"
+        data-id-field="code"
+        data-rank-mode="grouped_muted"
+        data-chart-modes="bar"
+        data-show-bar-chart-xaxis="true"
+        data-sort-name="value1"
+        data-sort-order="desc"
+        data-pagination="false"
+        data-show-pagination-switch="false"
+    &gt;
+    &lt;thead&gt;
+        &lt;tr&gt;
+            &lt;th data-sortable="false" data-rank="true"&gt;
+                &lt;span class="text-muted"&gt;Rank&lt;/span&gt;
+            &lt;/th&gt;
+            &lt;th class="sep-left-cell"
+                data-chartable="false"
+                data-field="code"
+                data-sortable="true"
+                data-visible="true"&gt;
+                System
+            &lt;/th&gt;
+            &lt;th class="sep-left-cell"
+                data-align="center"
+                data-beginatzero="false"
+                data-chartable="true"
+                data-field="value1"
+                data-sortable="true"
+                data-visible="true"&gt;
+                Value 1
+            &lt;/th&gt;
+            &lt;th class="sep-left-cell"
+                data-align="center"
+                data-beginatzero="false"
+                data-chartable="true"
+                data-field="value2"
+                data-sortable="true"
+                data-visible="true"&gt;
+                Value 2
+            &lt;/th&gt;
+        &lt;/tr&gt;
+    &lt;/thead&gt;
+&lt;/table&gt;
+                    </code></pre>
+                </div>
+                <br>
+
+                <h3 id="visualization-scatter">Scatter</h3>
+                <p>Two dimensional data visualisation. Visualized columns can be selected from dropdown menus. Default columns for scatter chart are set with <code>data-scatter-x</code> and <code>data-scatter-y</code> attributes.</p>
+                <table
+                        class="datatable table"
+                        data-json="data2.json"
+                        data-show-chart="true"
+                        data-id-field="code"
+                        data-rank-mode="grouped_muted"
+                        data-chart-modes="scatter"
+                        data-scatter-x="value1"
+                        data-scatter-y="value2"
+                        data-sort-name="value1"
+                        data-sort-order="desc"
+                        data-pagination="false"
+                        data-show-pagination-switch="false"
+                    >
+                    <thead>
+                        <tr>
+                            <th data-sortable="false" data-rank="true">
+                                <span class="text-muted">Rank</span>
+                            </th>
+                            <th class="sep-left-cell"
+                                data-chartable="false"
+                                data-field="code"
+                                data-sortable="true"
+                                data-visible="true">
+                                System
+                            </th>
+                            <th class="sep-left-cell"
+                                data-align="center"
+                                data-beginatzero="false"
+                                data-chartable="true"
+                                data-field="value1"
+                                data-sortable="true"
+                                data-visible="true">
+                                Value 1
+                            </th>
+                            <th class="sep-left-cell"
+                                data-align="center"
+                                data-beginatzero="false"
+                                data-chartable="true"
+                                data-field="value2"
+                                data-sortable="true"
+                                data-visible="true">
+                                Value 2
+                            </th>
+                        </tr>
+                    </thead>
+                </table>
+                <br>
+                <a class="btn btn-primary" role="button" data-toggle="collapse" href="#visualization-scatter-example" aria-expanded="false" aria-controls="visualization-scatter-example">
+                  <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Show code
+                </a>
+
+                <div class="collapse" id="visualization-scatter-example">
+                    <pre><code class="language-markup">
+&lt;table
+    class="datatable table"
+    data-json="data2.json"
+    data-show-chart="true"
+    data-id-field="code"
+    data-rank-mode="grouped_muted"
+    data-chart-modes="scatter"
+    data-scatter-x="value1"
+    data-scatter-y="value2"
+    data-sort-name="value1"
+    data-sort-order="desc"
+    data-pagination="false"
+    data-show-pagination-switch="false"
+    &gt;
+    &lt;thead&gt;
+        &lt;tr&gt;
+            &lt;th data-sortable="false" data-rank="true"&gt;
+                &lt;span class="text-muted"&gt;Rank&lt;/span&gt;
+            &lt;/th&gt;
+            &lt;th class="sep-left-cell"
+                data-chartable="false"
+                data-field="code"
+                data-sortable="true"
+                data-visible="true"&gt;
+                System
+            &lt;/th&gt;
+            &lt;th class="sep-left-cell"
+                data-align="center"
+                data-beginatzero="false"
+                data-chartable="true"
+                data-field="value1"
+                data-sortable="true"
+                data-visible="true"&gt;
+                Value 1
+            &lt;/th&gt;
+            &lt;th class="sep-left-cell"
+                data-align="center"
+                data-beginatzero="false"
+                data-chartable="true"
+                data-field="value2"
+                data-sortable="true"
+                data-visible="true"&gt;
+                Value 2
+            &lt;/th&gt;
+        &lt;/tr&gt;
+    &lt;/thead&gt;
+&lt;/table&gt;
+                    </code></pre>
+                </div>
+                <br>
+
+
+                <h3 id="visualization-comparison">Comparison</h3>
+                <p>Grouped bar chart to ease the comparison of multiple one dimensional values. Visualized row are selected from dropdown menus.
+User can setup multiple comparison sets, collection of columns to provide different view to the data.
+Comparison sets are set with <code>data-comparison-sets-json</code> attribute, and default comparison setup is set with <code>data-comparison-active-set</code> attribute. Default rows for comparison are set with <code>data-comparison-a-row</code> and <code>data-comparison-b-row</code> attributes.</p>
+                <table
+                        class="datatable table"
+                        data-json="data2.json"
+                        data-show-chart="true"
+                        data-id-field="code"
+                        data-rank-mode="grouped_muted"
+                        data-chart-modes="comparison"
+                        data-comparison-row-id-field="code"
+                        data-comparison-sets-json='[{"title": "All values","data_axis_title": "Value axis", "fields": ["value1", "value2", "value3", "value4"], "field_titles": ["custom title 1","custom title 2","custom title 3","custom title 4"]},{"title": "Sub comparison 1","data_axis_title": "Value", "fields": ["value1", "value2"]},{"title": "Sub comparison 2", "data_axis_title": "Accuracy", "fields": ["value3", "value4"]}]'
+                        data-comparison-active-set="All values"
+                        data-comparison-a-row="Red"
+                        data-comparison-b-row="Blue"
+
+                        data-sort-name="value1"
+                        data-sort-order="desc"
+                        data-pagination="false"
+                        data-show-pagination-switch="false"
+                    >
+                    <thead>
+                        <tr>
+                            <th data-sortable="false" data-rank="true">
+                                <span class="text-muted">Rank</span>
+                            </th>
+                            <th class="sep-left-cell"
+                                data-chartable="false"
+                                data-field="code"
+                                data-sortable="true"
+                                data-visible="true">
+                                System
+                            </th>
+                            <th class="sep-left-cell"
+                                data-align="center"
+                                data-beginatzero="false"
+                                data-chartable="true"
+                                data-field="value1"
+                                data-sortable="true"
+                                data-visible="true">
+                                Value 1
+                            </th>
+                            <th class="sep-left-cell"
+                                data-align="center"
+                                data-beginatzero="false"
+                                data-chartable="true"
+                                data-field="value2"
+                                data-sortable="true"
+                                data-visible="true">
+                                Value 2
+                            </th>
+                            <th class="sep-left-cell"
+                                data-align="center"
+                                data-beginatzero="false"
+                                data-chartable="true"
+                                data-field="value3"
+                                data-sortable="true"
+                                data-visible="true">
+                                Value 3
+                            </th>
+                            <th class="sep-left-cell"
+                                data-align="center"
+                                data-beginatzero="false"
+                                data-chartable="true"
+                                data-field="value4"
+                                data-sortable="true"
+                                data-visible="true">
+                                Value 4
+                            </th>
+                        </tr>
+                    </thead>
+                </table>
+                <br>
+                <a class="btn btn-primary" role="button" data-toggle="collapse" href="#visualization-comparison-example" aria-expanded="false" aria-controls="visualization-comparison-example">
+                  <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Show code
+                </a>
+
+                <div class="collapse" id="visualization-comparison-example">
+                    <pre><code class="language-markup">
+&lt;table
+        class="datatable table"
+        data-json="data2.json"
+        data-show-chart="true"
+        data-id-field="code"
+        data-rank-mode="grouped_muted"
+        data-chart-modes="comparison"
+        data-comparison-row-id-field="code"
+        data-comparison-sets-json='[{"title": "All values","data_axis_title": "Value axis", "fields": ["value1", "value2", "value3", "value4"], "field_titles": ["custom title 1","custom title 2","custom title 3","custom title 4"]},{"title": "Sub comparison 1","data_axis_title": "Value", "fields": ["value1", "value2"]},{"title": "Sub comparison 2", "data_axis_title": "Accuracy", "fields": ["value3", "value4"]}]'
+        data-comparison-active-set="All values"
+        data-comparison-a-row="Red"
+        data-comparison-b-row="Blue"
+    
+        data-sort-name="value1"
+        data-sort-order="desc"
+        data-pagination="false"
+        data-show-pagination-switch="false"
+    &gt;
+    &lt;thead&gt;
+        &lt;tr&gt;
+            &lt;th data-sortable="false" data-rank="true"&gt;
+                &lt;span class="text-muted"&gt;Rank&lt;/span&gt;
+            &lt;/th&gt;
+            &lt;th class="sep-left-cell"
+                data-chartable="false"
+                data-field="code"
+                data-sortable="true"
+                data-visible="true"&gt;
+                System
+            &lt;/th&gt;
+            &lt;th class="sep-left-cell"
+                data-align="center"
+                data-beginatzero="false"
+                data-chartable="true"
+                data-field="value1"
+                data-sortable="true"
+                data-visible="true"&gt;
+                Value 1
+            &lt;/th&gt;
+            &lt;th class="sep-left-cell"
+                data-align="center"
+                data-beginatzero="false"
+                data-chartable="true"
+                data-field="value2"
+                data-sortable="true"
+                data-visible="true"&gt;
+                Value 2
+            &lt;/th&gt;
+            &lt;th class="sep-left-cell"
+                data-align="center"
+                data-beginatzero="false"
+                data-chartable="true"
+                data-field="value3"
+                data-sortable="true"
+                data-visible="true"&gt;
+                Value 3
+            &lt;/th&gt;
+            &lt;th class="sep-left-cell"
+                data-align="center"
+                data-beginatzero="false"
+                data-chartable="true"
+                data-field="value4"
+                data-sortable="true"
+                data-visible="true"&gt;
+                Value 4
+            &lt;/th&gt;
+        &lt;/tr&gt;
+    &lt;/thead&gt;
+&lt;/table&gt;
+                    </code></pre>
+                </div>
+                <br>
+
+
+                <h3 id="visualization-multiple">Multiple visualization types</h3>
+                <table
+                        class="datatable table"
+                        data-json="data2.json"
+                        data-show-chart="true"
+                        data-id-field="code"
+                        data-rank-mode="grouped_muted"
+                        data-chart-modes="bar,scatter,comparison"
+                        data-chart-default-mode="scatter"
+
+                        data-scatter-x="value1"
+                        data-scatter-y="value2"
+
+                        data-comparison-row-id-field="code"
+                        data-comparison-sets-json='[{"title": "All values","data_axis_title": "Value axis", "fields": ["value1", "value2", "value3", "value4"], "field_titles": ["custom title 1","custom title 2","custom title 3","custom title 4"]},{"title": "Sub comparison 1","data_axis_title": "Value", "fields": ["value1", "value2"]},{"title": "Sub comparison 2", "data_axis_title": "Accuracy", "fields": ["value3", "value4"]}]'
+                        data-comparison-active-set="All values"
+                        data-comparison-a-row="Red"
+                        data-comparison-b-row="Blue"
+
+                        data-sort-name="value1"
+                        data-sort-order="desc"
+                        data-pagination="false"
+                        data-show-pagination-switch="false"
+                    >
+                    <thead>
+                        <tr>
+                            <th data-sortable="false" data-rank="true">
+                                <span class="text-muted">Rank</span>
+                            </th>
+                            <th class="sep-left-cell"
+                                data-chartable="false"
+                                data-field="code"
+                                data-sortable="true"
+                                data-visible="true">
+                                System
+                            </th>
+                            <th class="sep-left-cell"
+                                data-align="center"
+                                data-beginatzero="false"
+                                data-chartable="true"
+                                data-field="value1"
+                                data-sortable="true"
+                                data-visible="true">
+                                Value 1
+                            </th>
+                            <th class="sep-left-cell"
+                                data-align="center"
+                                data-beginatzero="false"
+                                data-chartable="true"
+                                data-field="value2"
+                                data-sortable="true"
+                                data-visible="true">
+                                Value 2
+                            </th>
+                            <th class="sep-left-cell"
+                                data-align="center"
+                                data-beginatzero="false"
+                                data-chartable="true"
+                                data-field="value3"
+                                data-sortable="true"
+                                data-visible="true">
+                                Value 3
+                            </th>
+                            <th class="sep-left-cell"
+                                data-align="center"
+                                data-beginatzero="false"
+                                data-chartable="true"
+                                data-field="value4"
+                                data-sortable="true"
+                                data-visible="true">
+                                Value 4
+                            </th>
+                        </tr>
+                    </thead>
+                </table>
+                <br>
+                <a class="btn btn-primary" role="button" data-toggle="collapse" href="#visualization-multiple-example" aria-expanded="false" aria-controls="visualization-multiple-example">
+                  <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Show code
+                </a>
+
+                <div class="collapse" id="visualization-multiple-example">
+                    <pre><code class="language-markup">
+&lt;table
+        class="datatable table"
+        data-json="data2.json"
+        data-show-chart="true"
+        data-id-field="code"
+        data-rank-mode="grouped_muted"
+        data-chart-modes="bar,scatter,comparison"
+        data-chart-default-mode="scatter"
+
+        data-scatter-x="value1"
+        data-scatter-y="value2"
+
+        data-comparison-row-id-field="code"
+        data-comparison-sets-json='[{"title": "All values","data_axis_title": "Value axis", "fields": ["value1", "value2", "value3", "value4"], "field_titles": ["custom title 1","custom title 2","custom title 3","custom title 4"]},{"title": "Sub comparison 1","data_axis_title": "Value", "fields": ["value1", "value2"]},{"title": "Sub comparison 2", "data_axis_title": "Accuracy", "fields": ["value3", "value4"]}]'
+        data-comparison-active-set="All values"
+        data-comparison-a-row="Red"
+        data-comparison-b-row="Blue"
+
+        data-sort-name="value1"
+        data-sort-order="desc"
+        data-pagination="false"
+        data-show-pagination-switch="false"
+    &gt;
+    &lt;thead&gt;
+        &lt;tr&gt;
+            &lt;th data-sortable="false" data-rank="true"&gt;
+                &lt;span class="text-muted"&gt;Rank&lt;/span&gt;
+            &lt;/th&gt;
+            &lt;th class="sep-left-cell"
+                data-chartable="false"
+                data-field="code"
+                data-sortable="true"
+                data-visible="true"&gt;
+                System
+            &lt;/th&gt;
+            &lt;th class="sep-left-cell"
+                data-align="center"
+                data-beginatzero="false"
+                data-chartable="true"
+                data-field="value1"
+                data-sortable="true"
+                data-visible="true"&gt;
+                Value 1
+            &lt;/th&gt;
+            &lt;th class="sep-left-cell"
+                data-align="center"
+                data-beginatzero="false"
+                data-chartable="true"
+                data-field="value2"
+                data-sortable="true"
+                data-visible="true"&gt;
+                Value 2
+            &lt;/th&gt;
+            &lt;th class="sep-left-cell"
+                data-align="center"
+                data-beginatzero="false"
+                data-chartable="true"
+                data-field="value3"
+                data-sortable="true"
+                data-visible="true"&gt;
+                Value 3
+            &lt;/th&gt;
+            &lt;th class="sep-left-cell"
+                data-align="center"
+                data-beginatzero="false"
+                data-chartable="true"
+                data-field="value4"
+                data-sortable="true"
+                data-visible="true"&gt;
+                Value 4
+            &lt;/th&gt;
+        &lt;/tr&gt;
+    &lt;/thead&gt;
+&lt;/table&gt;
+                    </code></pre>
+                </div>
+                <br>
+
+
+                <h3 id="visualization-baseline">Horizontal line</h3>
+                <p>In some cases there is a need to draw horizontal line at certain row value in the bar chart. To enable this feature use <code>data-bar-hline="true"</code> attribute and mark row with <code>data-hline="true"</code>. In case of dynamic data population, add <code>"hline": "true"</code> field in JSON data structure or <code>hline: true</code> in YAML data structure. Color for the line is taken from <code>row_css</code> field (see <a href="#row-color">more</a>).</p>
+                <table
+                        class="datatable table"
+                        data-json="data3.json"
+                        data-show-chart="true"
+                        data-id-field="code"
+                        data-rank-mode="grouped_muted"
+                        data-row-highlighting="true"
+                        data-chart-modes="bar,scatter,comparison"
+                        data-chart-default-mode="bar"
+                        data-bar-baseline="false"
+                        data-bar-hline="true"
+
+                        data-scatter-x="value1"
+                        data-scatter-y="value2"
+
+                        data-comparison-row-id-field="code"
+                        data-comparison-sets-json='[{"title": "All values","data_axis_title": "Value axis", "fields": ["value1", "value2", "value3", "value4"], "field_titles": ["custom title 1","custom title 2","custom title 3","custom title 4"]},{"title": "Sub comparison 1","data_axis_title": "Value", "fields": ["value1", "value2"]},{"title": "Sub comparison 2", "data_axis_title": "Accuracy", "fields": ["value3", "value4"]}]'
+                        data-comparison-active-set="All values"
+                        data-comparison-a-row="Red"
+                        data-comparison-b-row="Blue"
+
+                        data-sort-name="value1"
+                        data-sort-order="desc"
+                        data-pagination="false"
+                        data-show-pagination-switch="false"
+                    >
+                    <thead>
+                        <tr>
+                            <th data-sortable="false" data-rank="true">
+                                <span class="text-muted">Rank</span>
+                            </th>
+                            <th class="sep-left-cell"
+                                data-chartable="false"
+                                data-field="code"
+                                data-sortable="true"
+                                data-visible="true">
+                                System
+                            </th>
+                            <th class="sep-left-cell"
+                                data-align="center"
+                                data-beginatzero="false"
+                                data-chartable="true"
+                                data-field="value1"
+                                data-sortable="true"
+                                data-visible="true">
+                                Value 1
+                            </th>
+                            <th class="sep-left-cell"
+                                data-align="center"
+                                data-beginatzero="false"
+                                data-chartable="true"
+                                data-field="value2"
+                                data-sortable="true"
+                                data-visible="true">
+                                Value 2
+                            </th>
+                            <th class="sep-left-cell"
+                                data-align="center"
+                                data-beginatzero="false"
+                                data-chartable="true"
+                                data-field="value3"
+                                data-sortable="true"
+                                data-visible="true">
+                                Value 3
+                            </th>
+                            <th class="sep-left-cell"
+                                data-align="center"
+                                data-beginatzero="false"
+                                data-chartable="true"
+                                data-field="value4"
+                                data-sortable="true"
+                                data-visible="true">
+                                Value 4
+                            </th>
+                        </tr>
+                    </thead>
+                </table>
+                <br>
+                <a class="btn btn-primary" role="button" data-toggle="collapse" href="#visualization-baseline-example" aria-expanded="false" aria-controls="visualization-baseline-example">
+                  <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Show code
+                </a>
+
+                <div class="collapse" id="visualization-baseline-example">
+                    <pre><code class="language-markup">
+&lt;table
+        class="datatable table"
+        data-json="data3.json"
+        data-show-chart="true"
+        data-id-field="code"
+        data-rank-mode="grouped_muted"
+        data-chart-modes="bar,scatter,comparison"
+        data-chart-default-mode="scatter"
+
+        data-scatter-x="value1"
+        data-scatter-y="value2"
+
+        data-comparison-row-id-field="code"
+        data-comparison-sets-json='[{"title": "All values","data_axis_title": "Value axis", "fields": ["value1", "value2", "value3", "value4"], "field_titles": ["custom title 1","custom title 2","custom title 3","custom title 4"]},{"title": "Sub comparison 1","data_axis_title": "Value", "fields": ["value1", "value2"]},{"title": "Sub comparison 2", "data_axis_title": "Accuracy", "fields": ["value3", "value4"]}]'
+        data-comparison-active-set="All values"
+        data-comparison-a-row="Red"
+        data-comparison-b-row="Blue"
+
+        data-sort-name="value1"
+        data-sort-order="desc"
+        data-pagination="false"
+        data-show-pagination-switch="false"
+    &gt;
+    &lt;thead&gt;
+        &lt;tr&gt;
+            &lt;th data-sortable="false" data-rank="true"&gt;
+                &lt;span class="text-muted"&gt;Rank&lt;/span&gt;
+            &lt;/th&gt;
+            &lt;th class="sep-left-cell"
+                data-chartable="false"
+                data-field="code"
+                data-sortable="true"
+                data-visible="true"&gt;
+                System
+            &lt;/th&gt;
+            &lt;th class="sep-left-cell"
+                data-align="center"
+                data-beginatzero="false"
+                data-chartable="true"
+                data-field="value1"
+                data-sortable="true"
+                data-visible="true"&gt;
+                Value 1
+            &lt;/th&gt;
+            &lt;th class="sep-left-cell"
+                data-align="center"
+                data-beginatzero="false"
+                data-chartable="true"
+                data-field="value2"
+                data-sortable="true"
+                data-visible="true"&gt;
+                Value 2
+            &lt;/th&gt;
+            &lt;th class="sep-left-cell"
+                data-align="center"
+                data-beginatzero="false"
+                data-chartable="true"
+                data-field="value3"
+                data-sortable="true"
+                data-visible="true"&gt;
+                Value 3
+            &lt;/th&gt;
+            &lt;th class="sep-left-cell"
+                data-align="center"
+                data-beginatzero="false"
+                data-chartable="true"
+                data-field="value4"
+                data-sortable="true"
+                data-visible="true"&gt;
+                Value 4
+            &lt;/th&gt;
+        &lt;/tr&gt;
+    &lt;/thead&gt;
+&lt;/table&gt;
+                    </code></pre>
+                </div>
+                <br>
+
+
+                <h3 id="visualization-row-highlighting">Row highlighting</h3>
+                <p>If <code>data-row-highlighting</code> is enabled, row colors are relayed onto bar and scatter visualizations. </p>
+                <table
+                        class="datatable table"
+                        data-json="data2.json"
+                        data-show-chart="true"
+                        data-id-field="code"
+                        data-rank-mode="grouped_muted"
+                        data-row-highlighting="true"
+                        data-chart-modes="bar,scatter,comparison"
+                        data-chart-default-mode="bar"
+                        data-bar-baseline="true"
+
+                        data-scatter-x="value1"
+                        data-scatter-y="value2"
+
+                        data-comparison-row-id-field="code"
+                        data-comparison-sets-json='[{"title": "All values","data_axis_title": "Value axis", "fields": ["value1", "value2", "value3", "value4"], "field_titles": ["custom title 1","custom title 2","custom title 3","custom title 4"]},{"title": "Sub comparison 1","data_axis_title": "Value", "fields": ["value1", "value2"]},{"title": "Sub comparison 2", "data_axis_title": "Accuracy", "fields": ["value3", "value4"]}]'
+                        data-comparison-active-set="All values"
+                        data-comparison-a-row="Red"
+                        data-comparison-b-row="Blue"
+
+                        data-sort-name="value1"
+                        data-sort-order="desc"
+                        data-pagination="false"
+                        data-show-pagination-switch="false"
+                    >
+                    <thead>
+                        <tr>
+                            <th data-sortable="false" data-rank="true">
+                                <span class="text-muted">Rank</span>
+                            </th>
+                            <th class="sep-left-cell"
+                                data-chartable="false"
+                                data-field="code"
+                                data-sortable="true"
+                                data-visible="true">
+                                System
+                            </th>
+                            <th class="sep-left-cell"
+                                data-align="center"
+                                data-beginatzero="false"
+                                data-chartable="true"
+                                data-field="value1"
+                                data-sortable="true"
+                                data-visible="true">
+                                Value 1
+                            </th>
+                            <th class="sep-left-cell"
+                                data-align="center"
+                                data-beginatzero="false"
+                                data-chartable="true"
+                                data-field="value2"
+                                data-sortable="true"
+                                data-visible="true">
+                                Value 2
+                            </th>
+                            <th class="sep-left-cell"
+                                data-align="center"
+                                data-beginatzero="false"
+                                data-chartable="true"
+                                data-field="value3"
+                                data-sortable="true"
+                                data-visible="true">
+                                Value 3
+                            </th>
+                            <th class="sep-left-cell"
+                                data-align="center"
+                                data-beginatzero="false"
+                                data-chartable="true"
+                                data-field="value4"
+                                data-sortable="true"
+                                data-visible="true">
+                                Value 4
+                            </th>
+                        </tr>
+                    </thead>
+                </table>
+                <br>
+                <a class="btn btn-primary" role="button" data-toggle="collapse" href="#visualization-row-highlighting-example" aria-expanded="false" aria-controls="visualization-row-highlighting-example">
+                  <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Show code
+                </a>
+
+                <div class="collapse" id="visualization-row-highlighting-example">
+                    <pre><code class="language-markup">
+&lt;table
+        class="datatable table"
+        data-json="data2.json"
+        data-show-chart="true"
+        data-id-field="code"
+        data-rank-mode="grouped_muted"
+        data-row-highlighting="true"
+        data-chart-modes="bar,scatter,comparison"
+        data-chart-default-mode="scatter"
+
+        data-scatter-x="value1"
+        data-scatter-y="value2"
+
+        data-comparison-row-id-field="code"
+        data-comparison-sets-json='[{"title": "All values","data_axis_title": "Value axis", "fields": ["value1", "value2", "value3", "value4"], "field_titles": ["custom title 1","custom title 2","custom title 3","custom title 4"]},{"title": "Sub comparison 1","data_axis_title": "Value", "fields": ["value1", "value2"]},{"title": "Sub comparison 2", "data_axis_title": "Accuracy", "fields": ["value3", "value4"]}]'
+        data-comparison-active-set="All values"
+        data-comparison-a-row="Red"
+        data-comparison-b-row="Blue"
+
+        data-sort-name="value1"
+        data-sort-order="desc"
+        data-pagination="false"
+        data-show-pagination-switch="false"
+    &gt;
+    &lt;thead&gt;
+        &lt;tr&gt;
+            &lt;th data-sortable="false" data-rank="true"&gt;
+                &lt;span class="text-muted"&gt;Rank&lt;/span&gt;
+            &lt;/th&gt;
+            &lt;th class="sep-left-cell"
+                data-chartable="false"
+                data-field="code"
+                data-sortable="true"
+                data-visible="true"&gt;
+                System
+            &lt;/th&gt;
+            &lt;th class="sep-left-cell"
+                data-align="center"
+                data-beginatzero="false"
+                data-chartable="true"
+                data-field="value1"
+                data-sortable="true"
+                data-visible="true"&gt;
+                Value 1
+            &lt;/th&gt;
+            &lt;th class="sep-left-cell"
+                data-align="center"
+                data-beginatzero="false"
+                data-chartable="true"
+                data-field="value2"
+                data-sortable="true"
+                data-visible="true"&gt;
+                Value 2
+            &lt;/th&gt;
+            &lt;th class="sep-left-cell"
+                data-align="center"
+                data-beginatzero="false"
+                data-chartable="true"
+                data-field="value3"
+                data-sortable="true"
+                data-visible="true"&gt;
+                Value 3
+            &lt;/th&gt;
+            &lt;th class="sep-left-cell"
+                data-align="center"
+                data-beginatzero="false"
+                data-chartable="true"
+                data-field="value4"
+                data-sortable="true"
+                data-visible="true"&gt;
+                Value 4
+            &lt;/th&gt;
+        &lt;/tr&gt;
+    &lt;/thead&gt;
+&lt;/table&gt;
+                    </code></pre>
+                </div>
+                <br>
+
+                <h2 id="customization">Customization</h2>
+                <p>This is an example how datatable is created from javascript, and customized.</p>
+                <table
+                        id="js-customization-example"
+                        class="table"
+                        data-json="data3.json"
+                        data-show-chart="true"
+                        data-id-field="code"
+                        data-rank-mode="grouped_muted"
+                        data-row-highlighting="true"
+                        data-chart-modes="bar,scatter,comparison"
+                        data-chart-default-mode="bar"
+                        data-bar-baseline="true"
+
+                        data-scatter-x="value1"
+                        data-scatter-y="value2"
+
+                        data-comparison-row-id-field="code"
+                        data-comparison-sets-json='[{"title": "All values","data_axis_title": "Value axis", "fields": ["value1", "value2", "value3", "value4"], "field_titles": ["custom title 1","custom title 2","custom title 3","custom title 4"]},{"title": "Sub comparison 1","data_axis_title": "Value", "fields": ["value1", "value2"]},{"title": "Sub comparison 2", "data_axis_title": "Accuracy", "fields": ["value3", "value4"]}]'
+                        data-comparison-active-set="All values"
+                        data-comparison-a-row="Red"
+                        data-comparison-b-row="Blue"
+
+                        data-sort-name="value1"
+                        data-sort-order="desc"
+                        data-pagination="false"
+                        data-show-pagination-switch="false"
+                    >
+                    <thead>
+                        <tr>
+                            <th data-sortable="false" data-rank="true">
+                                <span class="text-muted">Rank</span>
+                            </th>
+                            <th class="sep-left-cell"
+                                data-chartable="false"
+                                data-field="code"
+                                data-sortable="true"
+                                data-visible="true">
+                                System
+                            </th>
+                            <th class="sep-left-cell"
+                                data-align="center"
+                                data-beginatzero="false"
+                                data-chartable="true"
+                                data-field="value1"
+                                data-sortable="true"
+                                data-visible="true">
+                                Value 1
+                            </th>
+                            <th class="sep-left-cell"
+                                data-align="center"
+                                data-beginatzero="false"
+                                data-chartable="true"
+                                data-field="value2"
+                                data-sortable="true"
+                                data-visible="true">
+                                Value 2
+                            </th>
+                            <th class="sep-left-cell"
+                                data-align="center"
+                                data-beginatzero="false"
+                                data-chartable="true"
+                                data-field="value3"
+                                data-sortable="true"
+                                data-visible="true">
+                                Value 3
+                            </th>
+                            <th class="sep-left-cell"
+                                data-align="center"
+                                data-beginatzero="false"
+                                data-chartable="true"
+                                data-field="value4"
+                                data-sortable="true"
+                                data-visible="true">
+                                Value 4
+                            </th>
+                        </tr>
+                    </thead>
+                </table>
+                <br>
+                <a class="btn btn-primary" role="button" data-toggle="collapse" href="#customization-example-html" aria-expanded="false" aria-controls="customization-example-html">
+                  <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Show HTML
+                </a>
+                <a class="btn btn-primary" role="button" data-toggle="collapse" href="#customization-example-js" aria-expanded="false" aria-controls="customization-example-js">
+                  <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Show JavaScript
+                </a>
+                <div class="collapse" id="customization-example-html">
+                    <pre><code class="language-markup">
+&lt;table
+        id="js-customization-example"
+        class="table"
+        data-json="data3.json"
+        data-show-chart="true"
+        data-id-field="code"
+        data-rank-mode="grouped_muted"
+        data-chart-modes="bar,scatter,comparison"
+        data-chart-default-mode="scatter"
+
+        data-scatter-x="value1"
+        data-scatter-y="value2"
+
+        data-comparison-row-id-field="code"
+        data-comparison-sets-json='[{"title": "All values","data_axis_title": "Value axis", "fields": ["value1", "value2", "value3", "value4"], "field_titles": ["custom title 1","custom title 2","custom title 3","custom title 4"]},{"title": "Sub comparison 1","data_axis_title": "Value", "fields": ["value1", "value2"]},{"title": "Sub comparison 2", "data_axis_title": "Accuracy", "fields": ["value3", "value4"]}]'
+        data-comparison-active-set="All values"
+        data-comparison-a-row="Red"
+        data-comparison-b-row="Blue"
+
+        data-sort-name="value1"
+        data-sort-order="desc"
+        data-pagination="false"
+        data-show-pagination-switch="false"
+    &gt;
+    &lt;thead&gt;
+        &lt;tr&gt;
+            &lt;th data-sortable="false" data-rank="true"&gt;
+                &lt;span class="text-muted"&gt;Rank&lt;/span&gt;
+            &lt;/th&gt;
+            &lt;th class="sep-left-cell"
+                data-chartable="false"
+                data-field="code"
+                data-sortable="true"
+                data-visible="true"&gt;
+                System
+            &lt;/th&gt;
+            &lt;th class="sep-left-cell"
+                data-align="center"
+                data-beginatzero="false"
+                data-chartable="true"
+                data-field="value1"
+                data-sortable="true"
+                data-visible="true"&gt;
+                Value 1
+            &lt;/th&gt;
+            &lt;th class="sep-left-cell"
+                data-align="center"
+                data-beginatzero="false"
+                data-chartable="true"
+                data-field="value2"
+                data-sortable="true"
+                data-visible="true"&gt;
+                Value 2
+            &lt;/th&gt;
+            &lt;th class="sep-left-cell"
+                data-align="center"
+                data-beginatzero="false"
+                data-chartable="true"
+                data-field="value3"
+                data-sortable="true"
+                data-visible="true"&gt;
+                Value 3
+            &lt;/th&gt;
+            &lt;th class="sep-left-cell"
+                data-align="center"
+                data-beginatzero="false"
+                data-chartable="true"
+                data-field="value4"
+                data-sortable="true"
+                data-visible="true"&gt;
+                Value 4
+            &lt;/th&gt;
+        &lt;/tr&gt;
+    &lt;/thead&gt;
+&lt;/table&gt;
+                    </code></pre>
+                </div>
+                <div class="collapse" id="customization-example-js">
+                    <pre><code class="language-javascript">
+$( document ).ready(function() {
+    $('#js-customization-example').datatable({
+        bar: {
+            height: 440,
+        },
+        scatter: {
+            height: 400,
+        },
+        comparison: {
+            height: 400,
+        },
+        icon: {
+            bar: '<span class="glyphicon glyphicon-align-left"></span>',
+            scatter: '<span class="glyphicon glyphicon-th-large"></span>',
+            comparison: '<span class="glyphicon glyphicon-align-left"></span>',
+            off: '<span class="glyphicon glyphicon-off"></span>',
+            caret: '<span class="caret"></span>',
+            chartable: '<i aria-hidden="true" class="fa fa-bar-chart text-muted"></i>'
+        },
+        label: {
+            bar: 'Custom Bar',
+            scatter: 'Custom Scatter',
+            comparison: 'Custom Comparison',
+            off: 'Off',
+            select_x_axis: 'Select data field for X-axis',
+            select_y_axis: 'Select data field for Y-axis',
+            select_set: 'Select set',
+            select_a_row: 'Select row A',
+            select_b_row: 'Select row B',
+        },
+        button_css:{
+            bar: 'btn btn-primary selector-button',
+            scatter: 'btn btn-danger selector-button',
+            comparison: 'btn btn-warning selector-button',
+            off: 'btn btn-default selector-button',
+        },
+    });
+});
+                    </code></pre>
+                </div>
+                <br>
+
+                <br>
+                <br>
+                <br>
+            </div> <!-- col -->
+        </div> <!-- row -->
+    </div> <!-- container -->
+
+    <!-- JavaScript -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v0.4.1/dist/bootstrap-toc.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/prism.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/components/prism-javascript.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/components/prism-markup.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/components/prism-json.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/components/prism-yaml.min.js"></script>
+
+    <script type="text/javascript" src="../js.min/bootstrap-table.min.js"></script>
+    <script type="text/javascript" src="../js.min/bootstrap-table-filter-control.min.js"></script>
+
+    <script type="text/javascript" src="../js.min/Chart.bundle.min.js"></script>
+    <script type="text/javascript" src="../js.min/js-yaml.min.js"></script>
+
+    <script type="text/javascript" src="../js.min/datatable.min.js"></script>
+    <script type="text/javascript">
+        $( document ).ready(function() {
+            $('#js-customization-example').datatable({
+                bar: {
+                    height: 440,
+                },
+                scatter: {
+                    height: 400,
+                },
+                comparison: {
+                    height: 400,
+                },
+                icon: {
+                    bar: '<span class="glyphicon glyphicon-align-left"></span>',
+                    scatter: '<span class="glyphicon glyphicon-th-large"></span>',
+                    comparison: '<span class="glyphicon glyphicon-align-left"></span>',
+                    off: '<span class="glyphicon glyphicon-off"></span>',
+                    caret: '<span class="caret"></span>',
+                    chartable: '<span class="glyphicon glyphicon-stats"></span>'
+                },
+                label: {
+                    bar: 'Custom Bar',
+                    scatter: 'Custom Scatter',
+                    comparison: 'Custom Comparison',
+                    off: 'Off',
+                    select_x_axis: 'Select data field for X-axis',
+                    select_y_axis: 'Select data field for Y-axis',
+                    select_set: 'Select set',
+                    select_a_row: 'Select row A',
+                    select_b_row: 'Select row B',
+                },
+                button_css:{
+                    bar: 'btn btn-primary selector-button',
+                    scatter: 'btn btn-danger selector-button',
+                    comparison: 'btn btn-warning selector-button',
+                    off: 'btn btn-default selector-button',
+                },
+            });
+        });
+    </script>
+</body>
+</html>

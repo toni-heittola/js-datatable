@@ -1,0 +1,62 @@
+data:
+  - code: Red
+    accuracy_eval: 74.4
+    accuracy_dev: 74.1
+
+  - code: Blue
+    accuracy_eval: 84.1
+    accuracy_dev: 79.2
+
+  - code: White
+    accuracy_eval: 83.1
+    accuracy_dev: 89.3
+
+  - code: Purple
+    accuracy_eval: 80.0
+    accuracy_dev: 67.5
+
+  - code: Black
+    accuracy_eval: 87.7
+    accuracy_dev: 86.2
+
+  - code: Baseline
+    accuracy_eval: 77.2
+    accuracy_dev: 72.5
+    row_css: info
+    baseline: true
+
+  - code: Green
+    accuracy_eval: 76.4
+    accuracy_dev: 80.0
+
+  - code: Pink
+    accuracy_eval: 73.1
+    accuracy_dev: 75.0
+
+  - code: Grey
+    accuracy_eval: 62.8
+    accuracy_dev: 59.0
+
+  - code: Lime
+    accuracy_eval: 88.7
+    accuracy_dev: 80.8
+
+  - code: Cyan
+    accuracy_eval: 88.7
+    accuracy_dev:
+
+  - code: Brown
+    accuracy_eval: 83.3
+    accuracy_dev: 79.5
+
+  - code: Yellow
+    accuracy_eval: 89.7
+    accuracy_dev: 89.9
+
+  - code: Beige
+    accuracy_eval: 76.2
+    accuracy_dev:
+
+  - code: Red
+    accuracy_eval: 56.2
+    accuracy_dev: 78.8
