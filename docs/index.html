@@ -14,9 +14,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/themes/prism-okaidia.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/plugins/unescaped-markup/prism-unescaped-markup.css">
 
-    <link rel="stylesheet" href="css/bootstrap-table.min.css">
-    <link rel="stylesheet" href="css/bootstrap-table-filter-control.min.css">
-    <link rel="stylesheet" href="css/datatable.min.css">
+    <link rel="stylesheet" href="https://raw.githubusercontent.com/toni-heittola/js-datatable/master/css.min/bootstrap-table.min.css">
+    <link rel="stylesheet" href="https://raw.githubusercontent.com/toni-heittola/js-datatable/master/css.min/bootstrap-table-filter-control.min.css">
+    <link rel="stylesheet" href="https://raw.githubusercontent.com/toni-heittola/js-datatable/master/css.min/datatable.min.css">
     <style>
         nav[data-toggle='toc'] {
           margin-top: 30px;
@@ -39,6 +39,7 @@
 </head>
 
 <body data-spy="scroll" data-target="#toc">
+    <a href="https://github.com/toni-heittola/js-datatable"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/652c5b9acfaddf3a9c326fa6bde407b87f7be0f4/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6f72616e67655f6666373630302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png"></a>
     <div class="container">
         <div class="row">
             <div class="col-md-3">
@@ -82,6 +83,8 @@ To see plugin in action, check <a href="http://www.cs.tut.fi/sgn/arg/dcase2016/t
 
                 <p>Plugin is initialized automatically for <code>&lt;table&gt;</code> elements having class `datatable` set on them. Most of the parametrization is done through data-fields either inside <code>&lt;table&gt;</code>-tag or in header <code>&lt;th&gt;</code>-tags.
 
+                <h3 id="download">Download</h3>
+                <a class="btn btn-success" href="https://github.com/toni-heittola/js-datatable/releases/latest">Download latest release</a>
                 <h2 id="usage">Usage</h2>
                 <p>
                     <code>js-datatable</code> is an open source JQuery plugin to produce dynamic HTML tables with data visualization capabilities. This page gives a shot tutorial how to use the plugin and shows it in action.
@@ -2517,24 +2520,24 @@ $( document ).ready(function() {
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/components/prism-json.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/components/prism-yaml.min.js"></script>
 
-    <script type="text/javascript" src="js/bootstrap-table.min.js"></script>
-    <script type="text/javascript" src="js/bootstrap-table-filter-control.min.js"></script>
+    <script type="text/javascript" src="https://raw.githubusercontent.com/toni-heittola/js-datatable/master/js.min/bootstrap-table.min.js"></script>
+    <script type="text/javascript" src="https://raw.githubusercontent.com/toni-heittola/js-datatable/master/js.min/bootstrap-table-filter-control.min.js"></script>
 
-    <script type="text/javascript" src="js/Chart.bundle.min.js"></script>
-    <script type="text/javascript" src="js/js-yaml.min.js"></script>
+    <script type="text/javascript" src="https://raw.githubusercontent.com/toni-heittola/js-datatable/master/js.min/Chart.bundle.min.js"></script>
+    <script type="text/javascript" src="https://raw.githubusercontent.com/toni-heittola/js-datatable/master/js.min/js-yaml.min.js"></script>
 
-    <script type="text/javascript" src="js/datatable.min.js"></script>
+    <script type="text/javascript" src="https://raw.githubusercontent.com/toni-heittola/js-datatable/master/js.min/datatable.min.js"></script>
     <script type="text/javascript">
         $( document ).ready(function() {
             $('#js-customization-example').datatable({
                 bar: {
-                    height: 440,
+                    height: 440
                 },
                 scatter: {
-                    height: 400,
+                    height: 400
                 },
                 comparison: {
-                    height: 400,
+                    height: 400
                 },
                 icon: {
                     bar: '<span class="glyphicon glyphicon-align-left"></span>',
@@ -2553,14 +2556,14 @@ $( document ).ready(function() {
                     select_y_axis: 'Select data field for Y-axis',
                     select_set: 'Select set',
                     select_a_row: 'Select row A',
-                    select_b_row: 'Select row B',
+                    select_b_row: 'Select row B'
                 },
                 button_css:{
                     bar: 'btn btn-primary selector-button',
                     scatter: 'btn btn-danger selector-button',
                     comparison: 'btn btn-warning selector-button',
-                    off: 'btn btn-default selector-button',
-                },
+                    off: 'btn btn-default selector-button'
+                }
             });
         });
     </script>
