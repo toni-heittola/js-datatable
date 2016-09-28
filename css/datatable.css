@@ -9,10 +9,10 @@
     background-color: #FCF8E3 !important;
 }
 
-.sm-cell{
+td.sm-cell{
     font-size: 80%;
 }
-.xs-cell{
+td.xs-cell{
     font-size: 60%;
 }
 
