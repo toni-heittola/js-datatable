@@ -650,7 +650,11 @@ $( document ).ready(function() {
                 }
 
                 // Off button
-                toolbar_html += '<label class="'+this.options.button_css.off+'" data-mode="off">';
+                var active = '';
+                if(this.options.chart_default_mode == 'off'){
+                    active = ' active ';
+                }
+                toolbar_html += '<label class="'+this.options.button_css.off+active+'" data-mode="off">';
                 toolbar_html += '<input autocomplete="off" checked data-mode="off" name="options" type="radio" value="off">'+this.options.icon.off+' '+this.options.label.off+'</input>';
                 toolbar_html += '</label>';
                 toolbar_html += '</div>';
