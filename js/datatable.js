@@ -428,9 +428,10 @@ $( document ).ready(function() {
 
             // Post-process options
             this.options.chart_modes = this.options.chart_modes.split(',');
-            if(this.options.chart_modes.length == 1 &&  this.options.chart_modes[0] != this.options.chart_default_mode){
+            if(this.options.chart_modes.length == 1 && this.options.chart_modes[0] != this.options.chart_default_mode && this.options.chart_default_mode != 'off'){
                 this.options.chart_default_mode = this.options.chart_modes[0];
             }
+
             // Initialization flag
             this.rank_init = true;
             this.comparison_init = true;
@@ -2046,55 +2047,6 @@ function valueFormatter_list(value, row, index){
         return value;
     }
 }
-/*
-function valueFormatter_url(value, row, index){
-    var links = new Array();
-    if(value.trim()){
-        var items = value.split(',');
-        if(items.length > 0){
-            for(var i=0;i<items.length;i++){
-                var link_parts = items[i].split(';');
-                if(link_parts.length == 1){
-                    links.push('<a href="' + link_parts[0] + '"><span class="glyphicon glyphicon-new-window" aria-hidden="true"></span></a>');
-                }else if(link_parts.length == 2){
-                    links.push('<a href="' + link_parts[0] + '"><span class="glyphicon glyphicon-new-window" aria-hidden="true"></span> '+link_parts[1]+'</a>');
-                }else{
-                    links.push(items[i]);
-                }
-            }
-        }
-    }
-    return links.join('<br>');
-}
-
-function valueFormatter_ref(value, row, index){
-    var links = new Array();
-    if(value.trim()){
-        var items = value.split(',');
-        if(items.length > 0){
-            for(var i=0;i<items.length;i++){
-                var link_parts = items[i].split(';');
-                if(link_parts.length == 1){
-                    links.push('<a href="' + link_parts[0] + '"><span class="glyphicon glyphicon-file" aria-hidden="true"></span></a>');
-                }else if(link_parts.length == 2){
-                    links.push('<a href="' + link_parts[0] + '">['+link_parts[1]+']</a>');
-                }else{
-                    links.push(items[i]);
-                }
-            }
-        }
-    }
-    return links.join('<br>');
-}
-
-function valueFormatter_anchor(value, row, index){
-    if(value.trim()){
-        return '<a href="javascript:void(0)" onclick="$(\'#collapse-'+value+'\').collapse(\'show\');window.location.hash=\''+value+'\';return false;"><span class="glyphicon glyphicon-expand" aria-hidden="true"></span></a>'
-    }else{
-        return value;
-    }
-}
-*/
 
 function runningFormatter(value, row, index){
     // Cell formatter for normal ranking
