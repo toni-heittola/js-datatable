@@ -9,9 +9,9 @@
 // Released under the MIT license
 //
 // ========================================
-$( document ).ready(function() {
-    $('table.datatable').each(function(){
-        $(this).datatable();
+jQuery( document ).ready(function() {
+    jQuery('table.datatable').each(function(){
+        jQuery(this).datatable();
     });
 });
 
@@ -28,7 +28,7 @@ $( document ).ready(function() {
 
     // Define the commands that can be used in this plugin
     var commands = {
-        getRank: getRank,
+        getRank: getRank
     };
 
     var Plugin = function (element, options, name) {
@@ -48,7 +48,7 @@ $( document ).ready(function() {
             animation: {
                 duration: 100,
                 show_speed: 200,
-                hide_speed: 200,
+                hide_speed: 200
             },
             table: {
                 id_field: 'id',
@@ -61,7 +61,7 @@ $( document ).ready(function() {
                 show_columns: true,
                 show_pagination_switch: true,
 
-                striped: true,
+                striped: true
             },
             bar: {
                 height: 240,
@@ -69,7 +69,7 @@ $( document ).ready(function() {
                 hline: {
                     enabled: false,
                     strokeStyle: 'rgba(112, 187, 225 ,0.5)',
-                    lineWidth: 2,
+                    lineWidth: 2
                 },
                 colors: {
                     valid: ['active', 'success', 'info', 'warning', 'danger'],
@@ -133,11 +133,11 @@ $( document ).ready(function() {
                             hover: 'rgba(217, 83, 79, 0.8)'
                         }
                     },
-                    background: 'rgba(251, 85, 85, 0.8)',
+                    background: 'rgba(251, 85, 85, 0.8)'
                 },
                 tooltips: {
                     titleFontSize: 18,
-                    bodyFontSize: 14,
+                    bodyFontSize: 14
                 }
             },
             scatter: {
@@ -204,17 +204,17 @@ $( document ).ready(function() {
                             hover: 'rgba(217, 83, 79, 0.8)'
                         }
                     },
-                    background: 'rgba(251, 85, 85, 0.8)',
+                    background: 'rgba(251, 85, 85, 0.8)'
                 },
                 tooltips: {
                     titleFontSize: 18,
-                    bodyFontSize: 14,
+                    bodyFontSize: 14
                 },
                 point: {
                     borderWidth: 2,
                     radius: {
                         normal: 5,
-                        hover: 10,
+                        hover: 10
                     }
                 },
                 x: null,
@@ -232,24 +232,24 @@ $( document ).ready(function() {
                 a_color: '#43ac6a',
                 b_color: '#f04124', //#b67102',
                 colors: {
-                    background: 'rgba(251, 85, 85, 0.8)',
+                    background: 'rgba(251, 85, 85, 0.8)'
                 },
                 tooltips: {
                     titleFontSize: 18,
-                    bodyFontSize: 14,
-                },
+                    bodyFontSize: 14
+                }
             },
             element: {
                 chart_mode_selector: '#chart_selector',
                 bar: {
                     div: '#bar_div',
-                    canvas: '#bar_canvas',
+                    canvas: '#bar_canvas'
                 },
                 scatter: {
                     div: '#scatter_div',
                     canvas: 'scatter_canvas',
                     selector_x_menu: '#scatter_selector_x_menu',
-                    selector_y_menu: '#scatter_selector_y_menu',
+                    selector_y_menu: '#scatter_selector_y_menu'
                 },
                 comparison:{
                     div: '#comparison_div',
@@ -262,7 +262,7 @@ $( document ).ready(function() {
                     selector_a_menu: '#comparison_selector_a_menu',
 
                     selector_b_button: '#comparison_selector_b_button',
-                    selector_b_menu: '#comparison_selector_b_menu',
+                    selector_b_menu: '#comparison_selector_b_menu'
                 }
             },
             icon: {
@@ -274,7 +274,7 @@ $( document ).ready(function() {
                 chartable: '<span class="glyphicon glyphicon-stats text-muted"></span>',
                 url: '<span class="glyphicon glyphicon-new-window" aria-hidden="true"></span>',
                 ref: '<span class="glyphicon glyphicon-file" aria-hidden="true"></span>',
-                anchor: '<span class="glyphicon glyphicon-expand" aria-hidden="true"></span>',
+                anchor: '<span class="glyphicon glyphicon-expand" aria-hidden="true"></span>'
             },
             label: {
                 bar: 'Bar',
@@ -285,13 +285,13 @@ $( document ).ready(function() {
                 select_y_axis: 'Select data field for Y-axis',
                 select_set: 'Select set',
                 select_a_row: 'Select row A',
-                select_b_row: 'Select row B',
+                select_b_row: 'Select row B'
             },
             button_css:{
                 bar: 'btn btn-info selector-button',
                 scatter: 'btn btn-info selector-button',
                 comparison: 'btn btn-info selector-button',
-                off: 'btn btn-default selector-button',
+                off: 'btn btn-default selector-button'
             },
             tags: {
                 css: [
@@ -325,8 +325,8 @@ $( document ).ready(function() {
                         'label label-tag label-info',
                         'label label-tag label-warning',
                         'label label-tag label-danger'
-                    ],
-            },
+                    ]
+            }
         },
         init: function (element, options, name) {
             this.name = name;                                             // Name of the plugin
@@ -442,9 +442,9 @@ $( document ).ready(function() {
             this.chart_update = false;
             this.chart_init = true;
 
-            this.bar_chart;
-            this.scatter_chart;
-            this.comparison_chart;
+            this.bar_chart = null;
+            this.scatter_chart = null;
+            this.comparison_chart = null;
 
             this.chart_mode = this.options.chart_default_mode;
 
@@ -522,7 +522,7 @@ $( document ).ready(function() {
                         break;
                     case 'url':
                         window['valueFormatter_url'+this.uniqueId] = function (value, row, index){
-                            var links = new Array();
+                            var links = [];
                             if(value.trim()){
                                 var items = value.split(',');
                                 if(items.length > 0){
@@ -540,12 +540,12 @@ $( document ).ready(function() {
                                 }
                             }
                             return links.join('<br>');
-                        }
+                        };
                         $(this).attr('data-formatter','valueFormatter_url'+this.uniqueId);
                         break;
                     case 'ref':
                         window['valueFormatter_ref'+this.uniqueId] = function (value, row, index){
-                            var links = new Array();
+                            var links = [];
                             if(value.trim()){
                                 var items = value.split(',');
                                 if(items.length > 0){
@@ -563,7 +563,7 @@ $( document ).ready(function() {
                                 }
                             }
                             return links.join('<br>');
-                        }
+                        };
                         $(this).attr('data-formatter','valueFormatter_ref'+this.uniqueId);
                         break;
                     case 'anchor':
@@ -573,7 +573,7 @@ $( document ).ready(function() {
                             }else{
                                 return value;
                             }
-                        }
+                        };
 
                         $(this).attr('data-formatter','valueFormatter_anchor'+this.uniqueId);
                         break;
@@ -667,7 +667,7 @@ $( document ).ready(function() {
 
                 // Bar
                 if(this.options.chart_modes.indexOf('bar') > -1){
-                    var bar_div = '<div id="bar_div'+this.uniqueId+'" style="display:none;"><canvas id="bar_chart'+this.uniqueId+'"></canvas></div>'
+                    var bar_div = '<div id="bar_div'+this.uniqueId+'" style="display:none;"><canvas id="bar_chart'+this.uniqueId+'"></canvas></div>';
                     this.options.element.bar.div = '#bar_div'+this.uniqueId;
                     this.options.element.bar.canvas = '#bar_chart'+this.uniqueId;
                     $($div).append(bar_div);
@@ -681,8 +681,8 @@ $( document ).ready(function() {
                     scatter_div += '<div class="btn-group">';
                     // X-selector
                     scatter_div += '<div class="btn-group">';
-                    scatter_div += '<div class="dropdown">'
-                    scatter_div += '<button aria-expanded="false" aria-haspopup="true" class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="scatter_selector_x'+this.uniqueId+'" type="button">X '+this.options.icon.caret+'</button>'
+                    scatter_div += '<div class="dropdown">';
+                    scatter_div += '<button aria-expanded="false" aria-haspopup="true" class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="scatter_selector_x'+this.uniqueId+'" type="button">X '+this.options.icon.caret+'</button>';
                     scatter_div += '<ul aria-labelledby="scatter_selector_x'+this.uniqueId+'" class="dropdown-menu" id="scatter_selector_x_menu'+this.uniqueId+'" role="menu">';
                     scatter_div += '<li class="dropdown-header">'+this.options.label.select_x_axis+'</li>';
                     $(this.element).find('thead tr th[data-chartable="true"]').each(function(){
@@ -704,15 +704,15 @@ $( document ).ready(function() {
                             selected = '1';
                         }
                         scatter_div += '<li'+active+'><a data-field="'+field+'" data-postfix="'+postfix+'" data-reversed="'+reversed+'" data-selected="'+selected+'" href="#" onclick="return false;">'+$.trim($(this).text())+'</a></li>'
-                    })
+                    });
                     scatter_div += '</ul>';
                     scatter_div += '</div>';
                     scatter_div += '</div>';
 
                     // Y-selector
                     scatter_div += '<div class="btn-group">';
-                    scatter_div += '<div class="dropdown">'
-                    scatter_div += '<button aria-expanded="false" aria-haspopup="true" class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="scatter_selector_y'+this.uniqueId+'" type="button">Y '+this.options.icon.caret+'</button>'
+                    scatter_div += '<div class="dropdown">';
+                    scatter_div += '<button aria-expanded="false" aria-haspopup="true" class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="scatter_selector_y'+this.uniqueId+'" type="button">Y '+this.options.icon.caret+'</button>';
                     scatter_div += '<ul aria-labelledby="scatter_selector_y'+this.uniqueId+'" class="dropdown-menu" id="scatter_selector_y_menu'+this.uniqueId+'" role="menu">';
                     scatter_div += '<li class="dropdown-header">'+this.options.label.select_y_axis+'</li>';
                     $(this.element).find('thead tr th[data-chartable="true"]').each(function(){
@@ -734,7 +734,7 @@ $( document ).ready(function() {
                             selected = '1';
                         }
                         scatter_div += '<li'+active+'><a data-field="'+field+'" data-postfix="'+postfix+'" data-reversed="'+reversed+'" data-selected="'+selected+'" href="#" onclick="return false;">'+$.trim($(this).text())+'</a></li>'
-                    })
+                    });
                     scatter_div += '</ul>';
                     scatter_div += '</div>';
                     scatter_div += '</div>';
@@ -838,13 +838,13 @@ $( document ).ready(function() {
                     this.options.element.comparison.div = '#comparison_div'+this.uniqueId;
                     this.options.element.comparison.canvas = '#comparison_chart'+this.uniqueId;
 
-                    this.options.element.comparison.selector_set_button = '#comparison_selector_set'+this.uniqueId
+                    this.options.element.comparison.selector_set_button = '#comparison_selector_set'+this.uniqueId;
                     this.options.element.comparison.selector_set_menu = '#comparison_selector_set_menu'+this.uniqueId;
 
-                    this.options.element.comparison.selector_a_button = '#comparison_selector_a'+this.uniqueId
+                    this.options.element.comparison.selector_a_button = '#comparison_selector_a'+this.uniqueId;
                     this.options.element.comparison.selector_a_menu = '#comparison_selector_a_menu'+this.uniqueId;
 
-                    this.options.element.comparison.selector_b_button = '#comparison_selector_b'+this.uniqueId
+                    this.options.element.comparison.selector_b_button = '#comparison_selector_b'+this.uniqueId;
                     this.options.element.comparison.selector_b_menu = '#comparison_selector_b_menu'+this.uniqueId;
 
                     //$(comparison_div).insertBefore(this.element);
@@ -858,7 +858,7 @@ $( document ).ready(function() {
                         });
                         $(this).data('selected', 1);
                         $(this).parent().addClass('active');
-                        $(self.options.element.comparison.selector_set_button).html($(this).text()+' '+self.options.icon.caret)
+                        $(self.options.element.comparison.selector_set_button).html($(this).text()+' '+self.options.icon.caret);
                         self.updateComparison();
                     });
 
@@ -870,7 +870,7 @@ $( document ).ready(function() {
                         });
                         $(this).data('selected', 1);
                         $(this).parent().addClass('active');
-                        $(self.options.element.comparison.selector_a_button).html($(this).text()+' '+self.options.icon.caret)
+                        $(self.options.element.comparison.selector_a_button).html($(this).text()+' '+self.options.icon.caret);
 
                         self.updateComparison();
                     });
@@ -883,7 +883,7 @@ $( document ).ready(function() {
                         });
                         $(this).data('selected', 1);
                         $(this).parent().addClass('active');
-                        $(self.options.element.comparison.selector_b_button).html($(this).text()+' '+self.options.icon.caret)
+                        $(self.options.element.comparison.selector_b_button).html($(this).text()+' '+self.options.icon.caret);
                         self.updateComparison();
                     });
                 }
@@ -961,7 +961,6 @@ $( document ).ready(function() {
                 var json_datafile = $(element).data('json');
                 jQuery.ajax({
                     type: 'GET',
-                    dataType: 'text',
                     mimeType: "application/json; charset=utf-8",
                     url: json_datafile,
                     dataType: 'json',
@@ -990,7 +989,7 @@ $( document ).ready(function() {
                             }
                             $.each(self.field_meta, function(header_key, header_val){
                                 $($row).append($('<td></td>').text(val[header_val.field]));
-                            })
+                            });
                             $($tbody).append($row);
                         });
                         $($tbody).insertAfter($thead);
@@ -1037,7 +1036,7 @@ $( document ).ready(function() {
                                 }
                                 $.each(self.field_meta, function(header_key, header_val){
                                     $($row).append($('<td></td>').text(val[header_val.field]));
-                                })
+                                });
                                 $($tbody).append($row);
                             });
                             $($tbody).insertAfter($thead);
@@ -1072,8 +1071,8 @@ $( document ).ready(function() {
                     tag: null,
                     filter_control: null,
                     formatter: null,
-                    postfix: null,
-                }
+                    postfix: null
+                };
                 if(typeof $(this).data('field') !== 'undefined' ){
                     meta.field = $(this).data('field');
                 }
@@ -1222,8 +1221,8 @@ $( document ).ready(function() {
 
             for (var i = 0; i < table_data.length; i++) {
                 // Go through the table data and collect values and colors for bar plot.
+                var label = table_data[i][this.options.table.id_field].trim().replace(/<(?:.|\n)*?>/gm, '').replace('_',' ');
 
-                var label = table_data[i][this.options.table.id_field].trim().replace('_',' ');
                 // Make sure labels are unique, if overlapping labels add whitespaces at the end.
                 if(labels.indexOf(label) > -1){
                     var num_of_occurances = 0;
@@ -1282,13 +1281,13 @@ $( document ).ready(function() {
                             borderWidth: 2,
                             hoverBackgroundColor: bg_hover_colors,
                             hoverBorderColor: border_hover_colors,
-                            data: data,
+                            data: data
                         }
                     ],
                     hline_index: this.hline_index,
                     hline_value: this.hline_value,
                     hline_color: this.hline_color,
-                    hline_enabled: this.options.bar.hline.enabled,
+                    hline_enabled: this.options.bar.hline.enabled
                 };
                 var chart_options = {
                     scales: {
@@ -1297,32 +1296,32 @@ $( document ).ready(function() {
                             stacked: false,
                             ticks: {
                                 autoSkip: false,
-                                maxRotation: 90,
-                            },
+                                maxRotation: 90
+                            }
                         }],
                         yAxes: [{
                             stacked: false,
                             type: 'linear',
                             ticks: {
-                                beginAtZero: begin_at_zero,
+                                beginAtZero: begin_at_zero
                             },
                             scaleLabel: {
                                 display: true,
                                 labelString: value_label,
-                                fontColor: 'black',
-                            },
-                        }],
+                                fontColor: 'black'
+                            }
+                        }]
                     },
                     maintainAspectRatio: true,
                     responsive: true,
                     animation: {
-                        duration: 100,
+                        duration: 100
                     },
                     title:{
-                        display: false,
+                        display: false
                     },
                     legend: {
-                        display: false,
+                        display: false
                     },
                     tooltips: {
                         enabled: true,
@@ -1335,17 +1334,17 @@ $( document ).ready(function() {
                             },
                             label: function(tooltipItem, data){
                                 return value_label + ': ' + data.datasets[0].data[tooltipItem.index] + value_postfix;
-                            },
+                            }
                         }
                     },
                     chartArea: {
-                        backgroundColor: this.options.bar.colors.background,
-                    },
+                        backgroundColor: this.options.bar.colors.background
+                    }
                 };
                 this.bar_chart = new Chart(chart_ctx, {
                     type: 'bar',
                     data: chart_data,
-                    options: chart_options,
+                    options: chart_options
                 });
             }else{
                 if($(this.options.element.bar.div).is(":visible")){
@@ -1431,13 +1430,13 @@ $( document ).ready(function() {
                 maintainAspectRatio: true,
                 responsive: true,
                 animation: {
-                    duration: this.options.animation.duration,
+                    duration: this.options.animation.duration
                 },
                 title:{
-                    display: false,
+                    display: false
                 },
                 legend: {
-                    display: false,
+                    display: false
                 },
                 tooltips: {
                     enabled: true,
@@ -1454,38 +1453,38 @@ $( document ).ready(function() {
                             return [x_label + ': ' + value['x'] + x_postfix,
                                     y_label + ': ' + value['y'] + y_postfix
                                     ];
-                        },
-                    },
+                        }
+                    }
                 },
                 scales: {
                     xAxes: [{
                         position: 'bottom',
                         type: 'linear',
                         ticks: {
-                            reverse: x_scale_reverse,
+                            reverse: x_scale_reverse
                         },
                         scaleLabel: {
                             display: true,
                             labelString: x_label,
-                            fontColor: 'black',
+                            fontColor: 'black'
                         }
                     }],
                     yAxes: [{
                         position: 'left',
                         type: 'linear',
                         ticks: {
-                            reverse: y_scale_reverse,
+                            reverse: y_scale_reverse
                         },
                         scaleLabel: {
                             display: true,
                             labelString: y_label,
-                            fontColor: 'black',
+                            fontColor: 'black'
                         }
-                    }],
+                    }]
                 },
                 showLines: false,
                 chartArea: {
-                    backgroundColor: this.options.scatter.colors.background,
+                    backgroundColor: this.options.scatter.colors.background
                 }
             };
             var chart_data = {
@@ -1498,13 +1497,13 @@ $( document ).ready(function() {
                     pointHoverBackgroundColor: bg_hover_colors,
                     pointHoverBorderColor: border_hover_colors,
                     pointRadius: point_radius,
-                    pointHoverRadius: point_hover_radius,
+                    pointHoverRadius: point_hover_radius
                 }]
             };
             this.scatter_chart = new Chart(chart_ctx, {
                 type: 'line',
                 data: chart_data,
-                options: chart_options,
+                options: chart_options
             });
         },
 
@@ -1606,7 +1605,7 @@ $( document ).ready(function() {
                     'field': field_name,
                     'title': title,
                     'chartable': chartable,
-                    'value_postfix': value_postfix,
+                    'value_postfix': value_postfix
                 });
             }
 
@@ -1625,8 +1624,8 @@ $( document ).ready(function() {
                 data_b = data_b[0];
             }
             var labels = [];
-            var set_a_data = []
-            var set_b_data = []
+            var set_a_data = [];
+            var set_b_data = [];
             for (var field_id = 0; field_id < set_fields.length; field_id++){
                 if(set_fields[field_id].chartable){
                     labels.push(set_fields[field_id].title);
@@ -1638,12 +1637,12 @@ $( document ).ready(function() {
                 {
                     label: a_label,
                     data: set_a_data,
-                    backgroundColor: this.options.comparison.a_color,
+                    backgroundColor: this.options.comparison.a_color
                 },
                 {
                     label: b_label,
                     data: set_b_data,
-                    backgroundColor: this.options.comparison.b_color,
+                    backgroundColor: this.options.comparison.b_color
                 }
             ];
 
@@ -1651,20 +1650,20 @@ $( document ).ready(function() {
                 $(this.options.element.comparison.div).show(0);
                 var chart_data = {
                     labels: labels,
-                    datasets:datasets,
+                    datasets:datasets
                 };
                 var chart_options = {
                     maintainAspectRatio: true,
                     responsive: true,
                     animation: {
-                        duration: this.options.animation.duration,
+                        duration: this.options.animation.duration
                     },
                     title:{
-                        display: false,
+                        display: false
                     },
                     legend: {
                         display: false,
-                        position: 'bottom',
+                        position: 'bottom'
                     },
                     scales: {
                         xAxes: [{
@@ -1672,22 +1671,22 @@ $( document ).ready(function() {
                             stacked: false,
                             ticks: {
                                 autoSkip: false,
-                                maxRotation: 90,
-                            },
+                                maxRotation: 90
+                            }
                         }],
 
                         yAxes: [{
                             stacked: false,
                             type: 'linear',
                             ticks: {
-                                beginAtZero: true,
+                                beginAtZero: true
                             },
                             scaleLabel: {
                                 display: true,
                                 labelString: set.data_axis_title,
-                                fontColor: 'black',
-                            },
-                        }],
+                                fontColor: 'black'
+                            }
+                        }]
                     },
 
                     tooltips: {
@@ -1702,13 +1701,13 @@ $( document ).ready(function() {
                         }
                     },
                     chartArea: {
-                        backgroundColor: this.options.comparison.colors.background,
-                    },
+                        backgroundColor: this.options.comparison.colors.background
+                    }
                 };
                 this.comparison_chart = new Chart(chart_ctx, {
                     type: this.options.comparison.type,
                     data: chart_data,
-                    options: chart_options,
+                    options: chart_options
                 });
             }else{
                 if($(this.options.element.comparison.div).is(":visible")){
@@ -1769,7 +1768,7 @@ $( document ).ready(function() {
 
             if(this.options.tag_mode =='global'){
                 var map = {};
-                var values = new Object();
+                var values = {};
                 $.each(this.field_meta, function(index, meta){
                     if(meta.tag){
                         $(self.element).find('tbody tr').each(function(){
@@ -1780,10 +1779,10 @@ $( document ).ready(function() {
                             values[value]++;
                         });
                     }
-                })
+                });
                 var sortable = [];
                 for (var value_group in values){
-                    sortable.push([value_group, values[value_group]])
+                    sortable.push([value_group, values[value_group]]);
                     sortable.sort(
                         function(a, b) {
                             return b[1] - a[1]
@@ -1807,7 +1806,7 @@ $( document ).ready(function() {
                 var map = {};
                 $.each(this.field_meta, function(index, meta){
                     if(meta.tag){
-                        var values = new Object();
+                        var values = {};
                         $(self.element).find('tbody tr').each(function(){
                             var value = $(this).find('td').eq(index).text().trim();
                             if(!(value in values)){
@@ -1817,7 +1816,7 @@ $( document ).ready(function() {
                         });
                         var sortable = [];
                         for (var value_group in values){
-                            sortable.push([value_group, values[value_group]])
+                            sortable.push([value_group, values[value_group]]);
                             sortable.sort(
                                 function(a, b) {
                                     return b[1] - a[1]
@@ -1922,7 +1921,7 @@ $( document ).ready(function() {
 function valueSorter(a, b){
     // Value sorter which makes sure empty cells are last always.
     if(a.trim()){
-        a_float = parseFloat(a.replace('%',''));
+        var a_float = parseFloat(a.replace('%',''));
         if(!isNaN(a_float)){
            a = a_float;
         }
@@ -1930,7 +1929,7 @@ function valueSorter(a, b){
         a = 0;
     }
     if(b.trim()){
-        b_float = parseFloat(b.replace('%',''))
+        var b_float = parseFloat(b.replace('%',''));
         if(!isNaN(b_float)){
             b = b_float;
         }
