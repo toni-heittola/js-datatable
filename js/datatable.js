@@ -28,7 +28,8 @@ jQuery( document ).ready(function() {
 
     // Define the commands that can be used in this plugin
     var commands = {
-        getRank: getRank
+        getRank: getRank,
+        updateChart: updateChart,
     };
 
     var Plugin = function (element, options, name) {
@@ -1885,6 +1886,10 @@ jQuery( document ).ready(function() {
         }else{
             return '';
         }
+    }
+
+    function updateChart(){
+        $(this).data(pluginName).updateChart();
     }
 
     $.fn[pluginName] = function (options) {
