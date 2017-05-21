@@ -211,10 +211,25 @@
                 var uniqueValues = {};
                 for (var i = 0; i < z; i++) {
                     //Added a new value
-                    var fieldValue = data[i][field],
-                        formattedValue = $.fn.bootstrapTable.utils.calculateObjectValue(that.header, that.header.formatters[j], [fieldValue, data[i], i], fieldValue);
+                    // Added for js-datatable
+                    var fieldValue = data[i][field].trim();
+                    var $fieldValue = $(fieldValue);
 
-                    uniqueValues[formattedValue] = fieldValue;
+                    var fieldValueArray = [];
+                    if($fieldValue.length){
+                        $fieldValue.each(function( index ) {
+                            fieldValueArray.push($(this).text().trim());
+                        });
+                    }else{
+                        var comma = fieldValue.split(',');
+                        comma.forEach(function (item) {
+                            fieldValueArray.push(item.trim());
+                        });
+                    }
+                    fieldValueArray.forEach(function (item) {
+                        var formattedValue = $.fn.bootstrapTable.utils.calculateObjectValue(that.header, that.header.formatters[j], [item, data[i], i], item);
+                        uniqueValues[formattedValue] = item;
+                    });
                 }
                 
                 for (var key in uniqueValues) {
@@ -566,7 +581,7 @@
             for (var key in fp) {
                 var thisColumn = that.columns[$.fn.bootstrapTable.utils.getFieldIndex(that.columns, key)];
                 var fval = fp[key].toLowerCase();
-                var value = item[key];
+                var value = item[key].replace(/<(?:.|\n)*?>/gm, '');
 
                 // Fix #142: search use formated data
                 if (thisColumn && thisColumn.searchFormatter) {
@@ -574,7 +589,6 @@
                     that.header.formatters[$.inArray(key, that.header.fields)],
                     [value, item, i], value);
                 }
-
                 if (thisColumn.filterStrictSearch) {
                     if (!($.inArray(key, that.header.fields) !== -1 &&
                         (typeof value === 'string' || typeof value === 'number') &&
@@ -595,6 +609,7 @@
                     }
                 }
             }
+
             return true;
         }) : this.data;
     };
