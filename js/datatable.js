@@ -3,9 +3,9 @@
 // ========================================
 //
 // datatable.js
-// Version: 0.2.5
+// Version: 0.2.6
 //
-// Copyright 2015-2016 Toni Heittola (toni.heittola@gmail.com)
+// Copyright 2015-2017 Toni Heittola (toni.heittola@gmail.com)
 // Released under the MIT license
 //
 // ========================================
@@ -43,6 +43,7 @@ jQuery( document ).ready(function() {
             show_chart: false,
             chart_modes: 'bar',
             chart_default_mode: 'bar',
+            list_separator: ',',
             css: {
                 active: 'active'
             },
@@ -63,6 +64,9 @@ jQuery( document ).ready(function() {
                 show_pagination_switch: true,
 
                 striped: true
+            },
+            chart: {
+                position: 'top'
             },
             bar: {
                 height: 240,
@@ -363,6 +367,9 @@ jQuery( document ).ready(function() {
             if(typeof $(element).data('tag-mode') !== 'undefined'){
                 attributes.tag_mode = $(element).data('tag-mode');
             }
+            if(typeof $(element).data('chart-position') !== 'undefined'){
+                attributes.chart.position = $(element).data('chart-position');
+            }
             // bar
             if(typeof $(element).data('bar-height') !== 'undefined'){
                 attributes.bar.height = $(element).data('bar-height');
@@ -610,8 +617,7 @@ jQuery( document ).ready(function() {
                         }
                     }
                 });
-                var $div = $('<div>', {id: 'datatable_visualization'+this.uniqueId, 'class': 'datatable'});
-                $($div).insertBefore(this.element);
+
                 // Create toolbar html and add it to the DOM
                 var toolbar_html = '';
 
@@ -662,9 +668,7 @@ jQuery( document ).ready(function() {
                 toolbar_html += '</div>';
                 toolbar_html += '</div>';
 
-                $(toolbar_html).insertBefore(this.element);
-                $(this.element).attr('data-toolbar', '#datatable_toolbar'+this.uniqueId);
-                this.options.element.chart_mode_selector = '#chart_mode_selector'+this.uniqueId;
+                var $div = $('<div>', {id: 'datatable_visualization'+this.uniqueId, 'class': 'datatable'});
 
                 // Bar
                 if(this.options.chart_modes.indexOf('bar') > -1){
@@ -672,7 +676,6 @@ jQuery( document ).ready(function() {
                     this.options.element.bar.div = '#bar_div'+this.uniqueId;
                     this.options.element.bar.canvas = '#bar_chart'+this.uniqueId;
                     $($div).append(bar_div);
-                    //$(bar_div).insertBefore(this.element);
                 }
 
                 // Scatter
@@ -747,7 +750,6 @@ jQuery( document ).ready(function() {
                     this.options.element.scatter.canvas = '#scatter_chart'+this.uniqueId;
                     this.options.element.scatter.selector_x_menu = '#scatter_selector_x_menu'+this.uniqueId;
                     this.options.element.scatter.selector_y_menu = '#scatter_selector_y_menu'+this.uniqueId;
-                    //$(scatter_div).insertBefore(this.element);
                     $($div).append(scatter_div);
 
                     // X
@@ -848,7 +850,6 @@ jQuery( document ).ready(function() {
                     this.options.element.comparison.selector_b_button = '#comparison_selector_b'+this.uniqueId;
                     this.options.element.comparison.selector_b_menu = '#comparison_selector_b_menu'+this.uniqueId;
 
-                    //$(comparison_div).insertBefore(this.element);
                     $($div).append(comparison_div);
 
                     // Set selector
@@ -888,6 +889,19 @@ jQuery( document ).ready(function() {
                         self.updateComparison();
                     });
                 }
+
+                if(this.options.chart.position == 'top'){
+                    $(toolbar_html).appendTo($div);
+                    $div.insertBefore(this.$element);
+                    //$(toolbar_html).insertBefore(this.element);
+                }else if(this.options.chart.position == 'bottom'){
+                    $div.insertAfter(this.$element);
+                    $(toolbar_html).prependTo($div);
+
+                    //$(toolbar_html).insertAfter(this.element);
+                }
+                this.$element.attr('data-toolbar', '#datatable_toolbar'+this.uniqueId);
+                this.options.element.chart_mode_selector = '#chart_mode_selector'+this.uniqueId;
             }
 
             // Event handlers
@@ -1222,7 +1236,7 @@ jQuery( document ).ready(function() {
 
             for (var i = 0; i < table_data.length; i++) {
                 // Go through the table data and collect values and colors for bar plot.
-                var label = table_data[i][this.options.table.id_field].trim().replace(/<(?:.|\n)*?>/gm, '').replace('_',' ');
+                var label = $(table_data[i][this.options.table.id_field]).text().trim().replace(/<(?:.|\n)*?>/gm, '').replace('_',' ');
 
                 // Make sure labels are unique, if overlapping labels add whitespaces at the end.
                 if(labels.indexOf(label) > -1){
@@ -1397,7 +1411,7 @@ jQuery( document ).ready(function() {
             var point_radius = [];
             var point_hover_radius = [];
             for (var i = 0; i < table_data.length; i++) {
-                labels.push(table_data[i][this.options.table.id_field].replace(/<(?:.|\n)*?>/gm, ''));
+                labels.push($(table_data[i][this.options.table.id_field]).text().replace(/<(?:.|\n)*?>/gm, ''));
                 if (table_data[i].hasOwnProperty('_class') && typeof table_data[i]['_class'] !== 'undefined'){
                     if(this.options.scatter.colors.valid.indexOf(table_data[i]['_class']) > -1){
                         border_colors.push(this.options.scatter.colors[table_data[i]['_class']].border.normal);
@@ -1766,7 +1780,6 @@ jQuery( document ).ready(function() {
 
         updateTags: function(){
             var self = this;
-
             if(this.options.tag_mode =='global'){
                 var map = {};
                 var values = {};
@@ -1774,10 +1787,12 @@ jQuery( document ).ready(function() {
                     if(meta.tag){
                         $(self.element).find('tbody tr').each(function(){
                             var value = $(this).find('td').eq(index).text().trim();
-                            if(!(value in values)){
-                                values[value] = 0;
-                            }
-                            values[value]++;
+                            value.split(',').forEach(function (item) {
+                                if(!(item in values)){
+                                    values[item] = 0;
+                                }
+                                values[item]++;
+                            });
                         });
                     }
                 });
@@ -1793,14 +1808,18 @@ jQuery( document ).ready(function() {
                 $.each(sortable, function(i, val){
                     map[val[0]] = i;
                 });
+
                 $.each(this.field_meta, function(index, meta){
                     if(meta.tag){
                         $(self.element).find('tbody tr').each(function(){
                             var value = $(this).find('td').eq(index).text().trim();
-                            var tag_css = self.options.tags.css[map[value]];
-                            $(this).find('td').eq(index).html('<span class="'+tag_css+'">'+value+'</span>');
+                            var html = '';
+                            value.split(',').forEach(function (item) {
+                                var tag_css = self.options.tags.css[map[item]];
+                                html += '<span class="'+tag_css+'">'+item+'</span>';
+                            });
+                            $(this).find('td').eq(index).html(html);
                         })
-
                     }
                 })
             }else if(this.options.tag_mode =='column'){
@@ -1810,10 +1829,12 @@ jQuery( document ).ready(function() {
                         var values = {};
                         $(self.element).find('tbody tr').each(function(){
                             var value = $(this).find('td').eq(index).text().trim();
-                            if(!(value in values)){
-                                values[value] = 0;
-                            }
-                            values[value]++;
+                            value.split(',').forEach(function (item) {
+                                if (!(item in values)) {
+                                    values[item] = 0;
+                                }
+                                values[item]++;
+                            });
                         });
                         var sortable = [];
                         for (var value_group in values){
@@ -1829,8 +1850,13 @@ jQuery( document ).ready(function() {
                         });
                         $(self.element).find('tbody tr').each(function(){
                             var value = $(this).find('td').eq(index).text().trim();
-                            var tag_css = self.options.tags.css[map[value]];
-                            $(this).find('td').eq(index).html('<span class="'+tag_css+'">'+value+'</span>');
+                            var html = '';
+                            value.split(',').forEach(function (item) {
+                                var tag_css = self.options.tags.css[map[item]];
+                                html += '<span class="'+tag_css+'">'+item+'</span>';
+
+                            })
+                            $(this).find('td').eq(index).html(html);
                         })
                     }
                 })
