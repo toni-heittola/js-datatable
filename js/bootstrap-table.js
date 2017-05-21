@@ -1265,13 +1265,12 @@
                         value = item;
                         var props = key.split('.');
                         for (var prop_index = 0; prop_index < props.length; prop_index++) {
-                            value = value[props[prop_index]];
+                            value = value[props[prop_index]].replace(/<(?:.|\n)*?>/gm, ''); // Remove HMTL content
                         }
 
                         // Fix #142: respect searchForamtter boolean
                         if (column && column.searchFormatter) {
-                            value = calculateObjectValue(column,
-                                that.header.formatters[j], [value, item, i], value);
+                            value = calculateObjectValue(column, that.header.formatters[j], [value, item, i], value);
                         }
                     } else {
                         value = item[key];
