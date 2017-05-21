@@ -71,9 +71,10 @@ table.datatable .hidden{
 /* Tag colors */
 .label-tag{
     font-weight: normal;
-    color: black;
-    font-size:105%;
+    color: black !important;
+    font-size:1em;
     display:block;
+    margin: 3px;
 }
 .label-tag-default{
     background-color: rgba(34, 34, 34, 0.3); /* #4D4D4D gray */
@@ -122,4 +123,12 @@ table.datatable .hidden{
 }
 .label-tag15{
     background-color: rgba(109, 109, 109, 0.3); /* #6D6D6D gray */
+}
+
+.no-filter-control {
+    height: 34px;
+}
+
+.filter-control {
+    margin: 0 2px 2px 2px;
 }
