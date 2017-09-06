@@ -1961,7 +1961,7 @@ function valueSorter(a, b){
            a = a_float;
         }
     }else{
-        a = 0;
+        a = -Infinity;
     }
     if(b.trim()){
         var b_float = parseFloat(b.replace('%',''));
@@ -1969,7 +1969,7 @@ function valueSorter(a, b){
             b = b_float;
         }
     }else{
-        b = 0;
+        b = -Infinity;
     }
     if(a < b){return -1;}
     if(a > b){return 1;}
