@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>JS-datatable examples</title>
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.rawgit.com/afeld/bootstrap-toc/v0.4.1/dist/bootstrap-toc.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/themes/prism-okaidia.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/plugins/unescaped-markup/prism-unescaped-markup.css">
+
+    <link rel="stylesheet" href="../css.min/bootstrap-table.min.css">
+    <link rel="stylesheet" href="../css.min/bootstrap-table-filter-control.min.css">
+    <link rel="stylesheet" href="../css/datatable.css">
+    <style>
+        nav[data-toggle='toc'] {
+            margin-top: 30px;
+        }
+
+        /* small screens */
+        @media (max-width: 768px) {
+            /* override the Affix plugin so that the navigation isn't sticky */
+            nav.affix[data-toggle='toc'] {
+                position: static;
+            }
+            nav[data-toggle='toc'] .nav .nav {
+                display: block;
+            }
+        }
+        p {
+            text-align: justify;
+        }
+    </style>
+</head>
+
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <nav id="toc" data-spy="affix" data-toggle="toc"></nav>
+        </div>
+        <div class="col-md-9">
+            <h1 class="page-header" id="js-table">js-datatable development tests</h1>
+
+            <h2 id="filtering">Filtering</h2>
+            <p>Column based filtering.</p>
+            <table class="table datatable"
+                   data-json="data4.json"
+                   data-id-field="name"
+                   data-sort-name="value1"
+                   data-sort-order="desc"
+                   data-rank-mode="grouped_muted"
+                   data-tag-mode="global"
+                   data-filter-control="true"
+                   data-filter-show-clear="true"
+            >
+                <thead>
+                <tr>
+                    <th data-field="code"
+                        data-sortable="true">
+                        Name
+                    </th>
+                    <th data-align="center"
+                        data-field="value1"
+                        data-sortable="true">
+                        Value 1
+                    </th>
+                    <th data-align="center"
+                        data-field="value2"
+                        data-reversed="true"
+                        data-sortable="true">
+                        Value 2
+                    </th>
+                    <th class="sep-left-cell"
+                        data-align="center"
+                        data-field="feature1"
+                        data-sortable="true"
+                        data-filter-control="select">
+                        Feature 1
+                    </th>
+                    <th class="sep-left-cell"
+                        data-align="center"
+                        data-field="feature2"
+                        data-sortable="true"
+                        data-filter-control="select">
+                        Feature 2
+                    </th>
+                    <th class="sep-left-cell"
+                        data-align="center"
+                        data-field="list"
+                        data-tag="false"
+                        data-value-type="list2"
+                        data-sortable="true"
+                        data-filter-control="select">
+                        List
+                    </th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+    <!-- JavaScript -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v0.4.1/dist/bootstrap-toc.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/prism.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/components/prism-javascript.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/components/prism-markup.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/components/prism-json.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/components/prism-yaml.min.js"></script>
+
+    <script type="text/javascript" src="../js/bootstrap-table.js"></script>
+    <script type="text/javascript" src="../js/bootstrap-table-filter-control.js"></script>
+
+    <script type="text/javascript" src="../js.min/Chart.bundle.min.js"></script>
+    <script type="text/javascript" src="../js.min/js-yaml.min.js"></script>
+
+    <script type="text/javascript" src="../js/datatable.js"></script>
+
+</body>
+</html>
