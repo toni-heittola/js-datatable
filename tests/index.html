@@ -52,14 +52,16 @@
             <p>Column based filtering.</p>
             <table class="table datatable"
                    data-json="data4.json"
-                   data-id-field="name"
+                   data-id-field="code"
                    data-sort-name="value1"
                    data-sort-order="desc"
                    data-rank-mode="grouped_muted"
                    data-tag-mode="global"
+                   data-show-chart="true"
+                   data-chart-modes="bar"
+                   data-show-bar-chart-xaxis="true"
                    data-filter-control="true"
-                   data-filter-show-clear="true"
-            >
+                   data-filter-show-clear="true">
                 <thead>
                 <tr>
                     <th data-field="code"
@@ -68,12 +70,14 @@
                     </th>
                     <th data-align="center"
                         data-field="value1"
+                        data-chartable="true"
                         data-sortable="true">
                         Value 1
                     </th>
                     <th data-align="center"
                         data-field="value2"
                         data-reversed="true"
+                        data-chartable="true"
                         data-sortable="true">
                         Value 2
                     </th>

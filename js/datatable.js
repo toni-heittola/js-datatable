@@ -1240,7 +1240,7 @@ jQuery( document ).ready(function() {
 
             for (var i = 0; i < table_data.length; i++) {
                 // Go through the table data and collect values and colors for bar plot.
-                var label = $(table_data[i][this.options.table.id_field]).text().trim().replace(/<(?:.|\n)*?>/gm, '').replace('_',' ');
+                var label = $("<div/>").html(table_data[i][this.options.table.id_field]).text().trim().replace(/<(?:.|\n)*?>/gm, '').replace('_',' ');
 
                 // Make sure labels are unique, if overlapping labels add whitespaces at the end.
                 if(labels.indexOf(label) > -1){
@@ -1983,7 +1983,7 @@ function valueSorterReverse(a, b){
             a = a_float;
         }
     }else{
-        a = 100000;
+        a = Infinity;
     }
     if(b.trim()){
         var b_float = parseFloat(b.replace('%',''));
@@ -1991,7 +1991,7 @@ function valueSorterReverse(a, b){
             b = b_float;
         }
     }else{
-        b = 100000;
+        b = Infinity;
     }
     if(a < b){return -1;}
     if(a > b){return 1;}
