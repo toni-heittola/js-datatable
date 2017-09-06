@@ -757,7 +757,7 @@ jQuery( document ).ready(function() {
                     $($div).append(scatter_div);
 
                     // X
-                    $(this.options.element.scatter.selector_x_menu + ' li a').click(function(e) {
+                    $(document).on("click", this.options.element.scatter.selector_x_menu + ' li a', function() {
                         $(self.options.element.scatter.selector_x_menu + ' li a').each(function(){
                             $(this).data('selected',0);
                             $(this).parent().removeClass('active');
@@ -768,7 +768,7 @@ jQuery( document ).ready(function() {
                     });
 
                     // Y
-                    $(this.options.element.scatter.selector_y_menu + ' li a').click(function(e) {
+                    $(document).on("click", this.options.element.scatter.selector_y_menu + ' li a', function() {
                         $(self.options.element.scatter.selector_y_menu + ' li a').each(function(){
                             $(this).data('selected',0);
                             $(this).parent().removeClass('active');
