@@ -1415,7 +1415,7 @@ jQuery( document ).ready(function() {
             var point_radius = [];
             var point_hover_radius = [];
             for (var i = 0; i < table_data.length; i++) {
-                labels.push($(table_data[i][this.options.table.id_field]).text().replace(/<(?:.|\n)*?>/gm, ''));
+                labels.push($("<div/>").html(table_data[i][this.options.table.id_field]).text().replace(/<(?:.|\n)*?>/gm, ''));
                 if (table_data[i].hasOwnProperty('_class') && typeof table_data[i]['_class'] !== 'undefined'){
                     if(this.options.scatter.colors.valid.indexOf(table_data[i]['_class']) > -1){
                         border_colors.push(this.options.scatter.colors[table_data[i]['_class']].border.normal);
