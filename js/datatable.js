@@ -481,6 +481,10 @@ jQuery( document ).ready(function() {
             $(this.element).find('thead tr th[data-sortable="true"]').each(function(){
                 $(this).attr('data-sorter', 'valueSorter');
             });
+            // Add default sorter for columns marked sortable
+            $(this.element).find('thead tr th[data-reversed="true"]').each(function(){
+                $(this).attr('data-sorter', 'valueSorterReverse');
+            });
 
             // Add chartable icon for columns marked chartable
             $(this.element).find('thead tr th[data-chartable="true"]').each(function(){
@@ -1966,6 +1970,28 @@ function valueSorter(a, b){
         }
     }else{
         b = 0;
+    }
+    if(a < b){return -1;}
+    if(a > b){return 1;}
+    return 0;
+}
+function valueSorterReverse(a, b){
+    // Value sorter which makes sure empty cells are last always in case of reversed sort order.
+    if(a.trim()){
+        var a_float = parseFloat(a.replace('%',''));
+        if(!isNaN(a_float)){
+            a = a_float;
+        }
+    }else{
+        a = 100000;
+    }
+    if(b.trim()){
+        var b_float = parseFloat(b.replace('%',''));
+        if(!isNaN(b_float)){
+            b = b_float;
+        }
+    }else{
+        b = 100000;
     }
     if(a < b){return -1;}
     if(a > b){return 1;}
