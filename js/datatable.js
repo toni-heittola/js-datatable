@@ -857,7 +857,7 @@ jQuery( document ).ready(function() {
                     $($div).append(comparison_div);
 
                     // Set selector
-                    $(this.options.element.comparison.selector_set_menu).on('click', ' li a', function(e) {
+                    $(document).on("click", this.options.element.comparison.selector_set_menu + ' li a', function() {
                         $(self.options.element.comparison.selector_set_menu + ' li a').each(function(){
                             $(this).data('selected',0);
                             $(this).parent().removeClass('active');
@@ -869,7 +869,7 @@ jQuery( document ).ready(function() {
                     });
 
                     // Row selector, A
-                    $(this.options.element.comparison.selector_a_menu).on('click', 'li a', function(e) {
+                    $(document).on("click", this.options.element.comparison.selector_a_menu + ' li a', function() {
                         $(self.options.element.comparison.selector_a_menu + ' li a').each(function(){
                             $(this).data('selected',0);
                             $(this).parent().removeClass('active');
@@ -877,12 +877,11 @@ jQuery( document ).ready(function() {
                         $(this).data('selected', 1);
                         $(this).parent().addClass('active');
                         $(self.options.element.comparison.selector_a_button).html($(this).text()+' '+self.options.icon.caret);
-
                         self.updateComparison();
                     });
 
                     // Row selector, B
-                    $(this.options.element.comparison.selector_b_menu).on('click', 'li a', function(e) {
+                    $(document).on("click", this.options.element.comparison.selector_b_menu + ' li a', function() {
                         $(self.options.element.comparison.selector_b_menu + ' li a').each(function(){
                             $(this).data('selected',0);
                             $(this).parent().removeClass('active');
@@ -1205,6 +1204,7 @@ jQuery( document ).ready(function() {
             }
         },
         updateBar: function () {
+            var self = this;
             if (this.bar_chart){
                 this.bar_chart.destroy();
             }
@@ -1225,7 +1225,7 @@ jQuery( document ).ready(function() {
             if(typeof header.data('postfix') !== 'undefined'){
                 value_postfix = header.data('postfix');
             }
-            var value_label = header.text().trim();
+            var value_label = this.stripHTML(header).trim();
 
             var labels = [];
             var data = [];
@@ -1240,7 +1240,7 @@ jQuery( document ).ready(function() {
 
             for (var i = 0; i < table_data.length; i++) {
                 // Go through the table data and collect values and colors for bar plot.
-                var label = $("<div/>").html(table_data[i][this.options.table.id_field]).text().trim().replace(/<(?:.|\n)*?>/gm, '').replace('_',' ');
+                var label = this.stripHTML(table_data[i][this.options.table.id_field]).trim().replace(/<(?:.|\n)*?>/gm, '').replace('_',' ');
 
                 // Make sure labels are unique, if overlapping labels add whitespaces at the end.
                 if(labels.indexOf(label) > -1){
@@ -1372,6 +1372,7 @@ jQuery( document ).ready(function() {
             }
         },
         updateScatter: function () {
+            var self = this;
             if (this.scatter_chart){
                 this.scatter_chart.destroy();
             }
@@ -1415,7 +1416,7 @@ jQuery( document ).ready(function() {
             var point_radius = [];
             var point_hover_radius = [];
             for (var i = 0; i < table_data.length; i++) {
-                labels.push($("<div/>").html(table_data[i][this.options.table.id_field]).text().replace(/<(?:.|\n)*?>/gm, ''));
+                labels.push(this.stripHTML(table_data[i][this.options.table.id_field]).replace(/<(?:.|\n)*?>/gm, ''));
                 if (table_data[i].hasOwnProperty('_class') && typeof table_data[i]['_class'] !== 'undefined'){
                     if(this.options.scatter.colors.valid.indexOf(table_data[i]['_class']) > -1){
                         border_colors.push(this.options.scatter.colors[table_data[i]['_class']].border.normal);
@@ -1562,7 +1563,6 @@ jQuery( document ).ready(function() {
         },
         updateComparison: function () {
             var self = this;
-
             if (this.comparison_chart){
                 this.comparison_chart.destroy();
             }
@@ -1906,6 +1906,9 @@ jQuery( document ).ready(function() {
             if (this.options.debug) {
                 console.log(string);
             }
+        },
+        stripHTML: function(element) {
+            return $("<div/>").html(element).text();
         }
     };
 
