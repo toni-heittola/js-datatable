@@ -48,6 +48,84 @@
         <div class="col-md-9">
             <h1 class="page-header" id="js-table">js-datatable development tests</h1>
 
+            <h2 id="visualization-baseline">Horizontal line</h2>
+            <table
+                    class="datatable table"
+                    data-json="data4.json"
+                    data-show-chart="true"
+                    data-id-field="code"
+                    data-rank-mode="grouped_muted"
+                    data-row-highlighting="true"
+                    data-chart-modes="bar,scatter,comparison"
+                    data-chart-default-mode="bar"
+                    data-bar-baseline="false"
+                    data-bar-hline="true"
+
+                    data-scatter-x="value1"
+                    data-scatter-y="value2"
+
+                    data-comparison-row-id-field="code"
+                    data-comparison-sets-json='[{"title": "All values","data_axis_title": "Value axis", "fields": ["value1", "value2", "value3", "value4"], "field_titles": ["custom title 1","custom title 2","custom title 3","custom title 4"]},{"title": "Sub comparison 1","data_axis_title": "Value", "fields": ["value1", "value2"]},{"title": "Sub comparison 2", "data_axis_title": "Accuracy", "fields": ["value3", "value4"]}]'
+                    data-comparison-active-set="All values"
+                    data-comparison-a-row="Red"
+                    data-comparison-b-row="Blue"
+
+                    data-sort-name="value1"
+                    data-sort-order="desc"
+                    data-pagination="false"
+                    data-show-pagination-switch="false"
+            >
+                <thead>
+                <tr>
+                    <th data-sortable="false" data-rank="true">
+                        <span class="text-muted">Rank</span>
+                    </th>
+                    <th class="sep-left-cell"
+                        data-chartable="false"
+                        data-field="code"
+                        data-sortable="true"
+                        data-visible="true">
+                        System
+                    </th>
+                    <th class="sep-left-cell"
+                        data-align="center"
+                        data-beginatzero="false"
+                        data-chartable="true"
+                        data-field="value1"
+                        data-sortable="true"
+                        data-visible="true">
+                        Value 1
+                    </th>
+                    <th class="sep-left-cell"
+                        data-align="center"
+                        data-beginatzero="false"
+                        data-chartable="true"
+                        data-field="value2"
+                        data-sortable="true"
+                        data-visible="true">
+                        Value 2
+                    </th>
+                    <th class="sep-left-cell"
+                        data-align="center"
+                        data-beginatzero="false"
+                        data-chartable="true"
+                        data-field="value3"
+                        data-sortable="true"
+                        data-visible="true">
+                        Value 3
+                    </th>
+                    <th class="sep-left-cell"
+                        data-align="center"
+                        data-beginatzero="false"
+                        data-chartable="true"
+                        data-field="value4"
+                        data-sortable="true"
+                        data-visible="true">
+                        Value 4
+                    </th>
+                </tr>
+                </thead>
+            </table>
 
             <h2 id="visualization-comparison">Comparison</h2>
             <table
@@ -209,7 +287,7 @@
     <script type="text/javascript" src="../js/bootstrap-table.js"></script>
     <script type="text/javascript" src="../js/bootstrap-table-filter-control.js"></script>
 
-    <script type="text/javascript" src="../js.min/Chart.bundle.min.js"></script>
+    <script type="text/javascript" src="../js/Chart.bundle.js"></script>
     <script type="text/javascript" src="../js.min/js-yaml.min.js"></script>
 
     <script type="text/javascript" src="../js/datatable.js"></script>

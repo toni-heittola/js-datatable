@@ -75,7 +75,7 @@
     },
     {
         "code": "Baseline",
-        "value1": "62",
+        "value1": "23",
         "value2": "32",
         "value3": "33",
         "value4": "34",
@@ -85,6 +85,7 @@
         "feature1": "triangle",
         "feature2": "circle",
         "row_css": "active",
-        "baseline": "true"
+        "baseline": "true",
+        "hline": "true"
     }
 ]
