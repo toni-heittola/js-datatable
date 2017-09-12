@@ -1225,7 +1225,7 @@ jQuery( document ).ready(function() {
             if(typeof header.data('postfix') !== 'undefined'){
                 value_postfix = header.data('postfix');
             }
-            var value_label = this.stripHTML(header).trim();
+            var value_label = header.text().trim();
 
             var labels = [];
             var data = [];
@@ -1240,8 +1240,8 @@ jQuery( document ).ready(function() {
 
             for (var i = 0; i < table_data.length; i++) {
                 // Go through the table data and collect values and colors for bar plot.
-                var label = this.stripHTML(table_data[i][this.options.table.id_field]).trim().replace(/<(?:.|\n)*?>/gm, '').replace('_',' ');
-
+                //var label = this.stripHTML(table_data[i][this.options.table.id_field]).trim().replace(/<(?:.|\n)*?>/gm, '').replace('_',' ');
+                var label = $("<div/>").html(table_data[i][this.options.table.id_field]).text().trim().replace(/<(?:.|\n)*?>/gm, '').replace('_',' ');
                 // Make sure labels are unique, if overlapping labels add whitespaces at the end.
                 if(labels.indexOf(label) > -1){
                     var num_of_occurances = 0;
@@ -1416,7 +1416,8 @@ jQuery( document ).ready(function() {
             var point_radius = [];
             var point_hover_radius = [];
             for (var i = 0; i < table_data.length; i++) {
-                labels.push(this.stripHTML(table_data[i][this.options.table.id_field]).replace(/<(?:.|\n)*?>/gm, ''));
+                labels.push($("<div/>").html(table_data[i][this.options.table.id_field]).text().replace(/<(?:.|\n)*?>/gm, ''));
+                //labels.push(this.stripHTML(table_data[i][this.options.table.id_field]).replace(/<(?:.|\n)*?>/gm, ''));
                 if (table_data[i].hasOwnProperty('_class') && typeof table_data[i]['_class'] !== 'undefined'){
                     if(this.options.scatter.colors.valid.indexOf(table_data[i]['_class']) > -1){
                         border_colors.push(this.options.scatter.colors[table_data[i]['_class']].border.normal);
