@@ -529,6 +529,18 @@ jQuery( document ).ready(function() {
                     case 'float4-percentage':
                         $(this).attr('data-formatter','valueFormatter_float4_percentage');
                         break;
+                    case 'float1-percentage-interval':
+                        $(this).attr('data-formatter','valueFormatter_float1_percentage_with_interval');
+                        break;
+                    case 'float2-percentage-interval':
+                        $(this).attr('data-formatter','valueFormatter_float2_percentage_with_interval');
+                        break;
+                    case 'float3-percentage-interval':
+                        $(this).attr('data-formatter','valueFormatter_float3_percentage_with_interval');
+                        break;
+                    case 'float4-percentage-interval':
+                        $(this).attr('data-formatter','valueFormatter_float4_percentage_with_interval');
+                        break;
                     case 'float1-error':
                         $(this).attr('data-formatter','valueFormatter_float1_error');
                         break;
@@ -2141,6 +2153,54 @@ function valueFormatter_float4_error(value, row, index){
     }
 }
 
+function valueFormatter_float1_percentage_with_interval(value, row, index){
+    // Cell formatter for percentage values
+    if(isNumericWithInterval(value)){
+        // We have data in format [value] ([interval1] - [interval2])
+        var numbers = value.match(/[+-]?\d+(?:\.\d+)/g);
+        return parseFloat(numbers[0]).toFixed(1) + ' % (' + parseFloat(numbers[1]).toFixed(1) + ' - ' + parseFloat(numbers[2]).toFixed(1) + ')';
+    }else if($.isNumeric(value)){
+        return parseFloat(value).toFixed(1) + ' %';
+    }else{
+        return value;
+    }
+}
+function valueFormatter_float2_percentage_with_interval(value, row, index){
+    // Cell formatter for percentage values
+    if(isNumericWithInterval(value)){
+        // We have data in format [value] ([interval1] - [interval2])
+        var numbers = value.match(/[+-]?\d+(?:\.\d+)/g);
+        return parseFloat(numbers[0]).toFixed(2) + ' % (' + parseFloat(numbers[1]).toFixed(2) + ' - ' + parseFloat(numbers[2]).toFixed(2) + ')';
+    }else if($.isNumeric(value)){
+        return parseFloat(value).toFixed(2) + ' %';
+    }else{
+        return value;
+    }
+}
+function valueFormatter_float3_percentage_with_interval(value, row, index){
+    // Cell formatter for percentage values
+    if(isNumericWithInterval(value)){
+        // We have data in format [value] ([interval1] - [interval2])
+        var numbers = value.match(/[+-]?\d+(?:\.\d+)/g);
+        return parseFloat(numbers[0]).toFixed(3) + ' % (' + parseFloat(numbers[1]).toFixed(3) + ' - ' + parseFloat(numbers[2]).toFixed(3) + ')';
+    }else if($.isNumeric(value)){
+        return parseFloat(value).toFixed(3) + ' %';
+    }else{
+        return value;
+    }
+}
+function valueFormatter_float4_percentage_with_interval(value, row, index){
+    // Cell formatter for percentage values
+    if(isNumericWithInterval(value)){
+        // We have data in format [value] ([interval1] - [interval2])
+        var numbers = value.match(/[+-]?\d+(?:\.\d+)/g);
+        return parseFloat(numbers[0]).toFixed(4) + ' % (' + parseFloat(numbers[1]).toFixed(4) + ' - ' + parseFloat(numbers[2]).toFixed(4) + ')';
+    }else if($.isNumeric(value)){
+        return parseFloat(value).toFixed(4) + ' %';
+    }else{
+        return value;
+    }
+}
 
 function valueFormatter_list(value, row, index){
     var items = value.split(',');
@@ -2154,4 +2214,15 @@ function valueFormatter_list(value, row, index){
 function runningFormatter(value, row, index){
     // Cell formatter for normal ranking
     return (index+1);
+}
+
+function isNumericWithInterval(value) {
+    // Check if value has format [value] ([interval1] - [interval2])
+    var regex = /[+-]?\d+(?:\.\d+)\s+\([+-]?\d+(?:\.\d+)\s+-\s+[+-]?\d+(?:\.\d+)\)/g;
+    var patt = new RegExp(regex);
+    if (patt.test(value)) {
+        return true;
+    }else{
+        return false;
+    }
 }
