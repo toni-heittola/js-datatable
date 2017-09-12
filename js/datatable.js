@@ -529,6 +529,18 @@ jQuery( document ).ready(function() {
                     case 'float4-percentage':
                         $(this).attr('data-formatter','valueFormatter_float4_percentage');
                         break;
+                    case 'float1-error':
+                        $(this).attr('data-formatter','valueFormatter_float1_error');
+                        break;
+                    case 'float2-error':
+                        $(this).attr('data-formatter','valueFormatter_float2_error');
+                        break;
+                    case 'float3-error':
+                        $(this).attr('data-formatter','valueFormatter_float3_error');
+                        break;
+                    case 'float4-error':
+                        $(this).attr('data-formatter','valueFormatter_float4_error');
+                        break;
                     case 'list':
                         $(this).attr('data-formatter','valueFormatter_list');
                         break;
@@ -2071,7 +2083,6 @@ function valueFormatter_float1_percentage(value, row, index){
         return value;
     }
 }
-
 function valueFormatter_float2_percentage(value, row, index){
     // Cell formatter for percentage values
     if($.isNumeric(value)){
@@ -2080,7 +2091,6 @@ function valueFormatter_float2_percentage(value, row, index){
         return value;
     }
 }
-
 function valueFormatter_float3_percentage(value, row, index){
     // Cell formatter for percentage values
     if($.isNumeric(value)){
@@ -2089,7 +2099,6 @@ function valueFormatter_float3_percentage(value, row, index){
         return value;
     }
 }
-
 function valueFormatter_float4_percentage(value, row, index){
     // Cell formatter for percentage values
     if($.isNumeric(value)){
@@ -2098,6 +2107,40 @@ function valueFormatter_float4_percentage(value, row, index){
         return value;
     }
 }
+
+function valueFormatter_float1_error(value, row, index){
+    // Cell formatter for percentage values
+    if($.isNumeric(value)){
+        return '±' + parseFloat(value).toFixed(1);
+    }else{
+        return value;
+    }
+}
+function valueFormatter_float2_error(value, row, index){
+    // Cell formatter for percentage values
+    if($.isNumeric(value)){
+        return '±' + parseFloat(value).toFixed(2);
+    }else{
+        return value;
+    }
+}
+function valueFormatter_float3_error(value, row, index){
+    // Cell formatter for percentage values
+    if($.isNumeric(value)){
+        return '±' + parseFloat(value).toFixed(3);
+    }else{
+        return value;
+    }
+}
+function valueFormatter_float4_error(value, row, index){
+    // Cell formatter for percentage values
+    if($.isNumeric(value)){
+        return '±' + parseFloat(value).toFixed(4);
+    }else{
+        return value;
+    }
+}
+
 
 function valueFormatter_list(value, row, index){
     var items = value.split(',');
