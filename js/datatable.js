@@ -2182,7 +2182,7 @@ function valueFormatter_float1_percentage_with_interval_muted(value, row, index)
     if(isNumericWithInterval(value)){
         // We have data in format [value] ([interval1] - [interval2])
         var numbers = value.match(/[+-]?\d+(?:\.\d+)/g);
-        return parseFloat(numbers[0]).toFixed(1) + ' % <span class="text-muted">(' + parseFloat(numbers[1]).toFixed(1) + ' - ' + parseFloat(numbers[2]).toFixed(1) + ')</span>';
+        return parseFloat(numbers[0]).toFixed(1) + ' % <small class="text-muted">(' + parseFloat(numbers[1]).toFixed(1) + ' - ' + parseFloat(numbers[2]).toFixed(1) + ')</small>';
     }else if($.isNumeric(value)){
         return parseFloat(value).toFixed(1) + ' %';
     }else{
@@ -2206,7 +2206,7 @@ function valueFormatter_float2_percentage_with_interval_muted(value, row, index)
     if(isNumericWithInterval(value)){
         // We have data in format [value] ([interval1] - [interval2])
         var numbers = value.match(/[+-]?\d+(?:\.\d+)/g);
-        return parseFloat(numbers[0]).toFixed(2) + ' % <span class="text-muted">(' + parseFloat(numbers[1]).toFixed(2) + ' - ' + parseFloat(numbers[2]).toFixed(2) + ')</span>';
+        return parseFloat(numbers[0]).toFixed(2) + ' % <small class="text-muted">(' + parseFloat(numbers[1]).toFixed(2) + ' - ' + parseFloat(numbers[2]).toFixed(2) + ')</small>';
     }else if($.isNumeric(value)){
         return parseFloat(value).toFixed(2) + ' %';
     }else{
@@ -2230,7 +2230,7 @@ function valueFormatter_float3_percentage_with_interval_muted(value, row, index)
     if(isNumericWithInterval(value)){
         // We have data in format [value] ([interval1] - [interval2])
         var numbers = value.match(/[+-]?\d+(?:\.\d+)/g);
-        return parseFloat(numbers[0]).toFixed(3) + ' % <span class="text-muted">(' + parseFloat(numbers[1]).toFixed(3) + ' - ' + parseFloat(numbers[2]).toFixed(3) + ')</span>';
+        return parseFloat(numbers[0]).toFixed(3) + ' % <small class="text-muted">(' + parseFloat(numbers[1]).toFixed(3) + ' - ' + parseFloat(numbers[2]).toFixed(3) + ')</small>';
     }else if($.isNumeric(value)){
         return parseFloat(value).toFixed(3) + ' %';
     }else{
@@ -2254,7 +2254,7 @@ function valueFormatter_float4_percentage_with_interval_muted(value, row, index)
     if(isNumericWithInterval(value)){
         // We have data in format [value] ([interval1] - [interval2])
         var numbers = value.match(/[+-]?\d+(?:\.\d+)/g);
-        return parseFloat(numbers[0]).toFixed(4) + ' % <span class="text-muted">(' + parseFloat(numbers[1]).toFixed(4) + ' - ' + parseFloat(numbers[2]).toFixed(4) + ')</span>';
+        return parseFloat(numbers[0]).toFixed(4) + ' % <small class="text-muted">(' + parseFloat(numbers[1]).toFixed(4) + ' - ' + parseFloat(numbers[2]).toFixed(4) + ')</small>';
     }else if($.isNumeric(value)){
         return parseFloat(value).toFixed(4) + ' %';
     }else{
