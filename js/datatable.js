@@ -1262,6 +1262,9 @@ jQuery( document ).ready(function() {
                 value_postfix = header.data('postfix');
             }
             var value_label = header.text().trim();
+            if(typeof header.data('bar-chart-yaxis-label') !== 'undefined'){
+                var value_label = $("<div/>").html(header.data('bar-chart-yaxis-label')).text().trim();
+            }
 
             var labels = [];
             var data = [];
