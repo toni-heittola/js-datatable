@@ -315,21 +315,37 @@ jQuery( document ).ready(function() {
                         'label label-tag label-tag13',
                         'label label-tag label-tag14',
                         'label label-tag label-tag15',
-                        'label label-tag label-tag-default',
-                        'label label-tag label-tag-default',
-                        'label label-tag label-tag-default',
-                        'label label-tag label-tag-default',
-                        'label label-tag label-tag-default',
-                        'label label-tag label-tag-default',
-                        'label label-tag label-default',
-                        'label label-tag label-default',
-                        'label label-tag label-default',
-                        'label label-tag label-default',
                         'label label-tag label-primary',
                         'label label-tag label-success',
                         'label label-tag label-info',
                         'label label-tag label-warning',
-                        'label label-tag label-danger'
+                        'label label-tag label-danger',
+                        'label label-tag label-tag-default',
+                        'label label-tag label-tag-default',
+                        'label label-tag label-tag-default',
+                        'label label-tag label-tag-default',
+                        'label label-tag label-tag-default',
+                        'label label-tag label-tag-default',
+                        'label label-tag label-tag-default',
+                        'label label-tag label-tag-default',
+                        'label label-tag label-tag-default',
+                        'label label-tag label-tag-default',
+                        'label label-tag label-tag-default',
+                        'label label-tag label-tag-default',
+                        'label label-tag label-tag-default',
+                        'label label-tag label-tag-default',
+                        'label label-tag label-tag-default',
+                        'label label-tag label-tag-default',
+                        'label label-tag label-tag-default',
+                        'label label-tag label-tag-default',
+                        'label label-tag label-tag-default',
+                        'label label-tag label-tag-default',
+                        'label label-tag label-tag-default',
+                        'label label-tag label-default',
+                        'label label-tag label-default',
+                        'label label-tag label-default',
+                        'label label-tag label-default',
+                        'label label-tag label-tag-default'
                     ]
             }
         },
@@ -1878,7 +1894,11 @@ jQuery( document ).ready(function() {
                             var html = '';
                             value.split(',').forEach(function (item) {
                                 var tag_css = self.options.tags.css[map[item]];
+                                if(tag_css == undefined){
+                                    var tag_css = self.options.tags.css[self.options.tags.css.length-1];
+                                }
                                 html += '<span class="'+tag_css+'">'+item+'</span>';
+
                             });
                             $(this).find('td').eq(index).html(html);
                         })
@@ -1915,8 +1935,10 @@ jQuery( document ).ready(function() {
                             var html = '';
                             value.split(',').forEach(function (item) {
                                 var tag_css = self.options.tags.css[map[item]];
+                                if(tag_css == undefined){
+                                    var tag_css = self.options.tags.css[self.options.tags.css.length-1];
+                                }
                                 html += '<span class="'+tag_css+'">'+item+'</span>';
-
                             })
                             $(this).find('td').eq(index).html(html);
                         })
