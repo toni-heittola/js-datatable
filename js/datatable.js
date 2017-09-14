@@ -741,13 +741,17 @@ jQuery( document ).ready(function() {
                         if(typeof $(this).data('field') !== 'undefined'){
                             var field = $(this).data('field');
                         }
+                        var axis_label = '';
+                        if(typeof $(this).data('axis-label') !== 'undefined'){
+                            axis_label = $("<div/>").html($(this).data('axis-label')).text();
+                        }
                         var active = '';
                         var selected = '0';
                         if(field == self.options.scatter.x){
                             active = ' class="active" ';
                             selected = '1';
                         }
-                        scatter_div += '<li'+active+'><a data-field="'+field+'" data-postfix="'+postfix+'" data-reversed="'+reversed+'" data-selected="'+selected+'" href="#" onclick="return false;">'+$.trim($(this).text())+'</a></li>'
+                        scatter_div += '<li'+active+'><a data-field="'+field+'" data-postfix="'+postfix+'" data-reversed="'+reversed+'" data-axis-label="'+axis_label+'" data-selected="'+selected+'" href="#" onclick="return false;">'+$.trim($(this).text())+'</a></li>'
                     });
                     scatter_div += '</ul>';
                     scatter_div += '</div>';
@@ -771,13 +775,17 @@ jQuery( document ).ready(function() {
                         if(typeof $(this).data('field') !== 'undefined'){
                             var field = $(this).data('field');
                         }
+                        var axis_label = '';
+                        if(typeof $(this).data('axis-label') !== 'undefined'){
+                            axis_label = $("<div/>").html($(this).data('axis-label')).text();
+                        }
                         var active = '';
                         var selected = '0';
                         if(field == self.options.scatter.y){
                             active = ' class="active" ';
                             selected = '1';
                         }
-                        scatter_div += '<li'+active+'><a data-field="'+field+'" data-postfix="'+postfix+'" data-reversed="'+reversed+'" data-selected="'+selected+'" href="#" onclick="return false;">'+$.trim($(this).text())+'</a></li>'
+                        scatter_div += '<li'+active+'><a data-field="'+field+'" data-postfix="'+postfix+'" data-reversed="'+reversed+'" data-axis-label="'+axis_label+'" data-selected="'+selected+'" href="#" onclick="return false;">'+$.trim($(this).text())+'</a></li>'
                     });
                     scatter_div += '</ul>';
                     scatter_div += '</div>';
@@ -1262,8 +1270,8 @@ jQuery( document ).ready(function() {
                 value_postfix = header.data('postfix');
             }
             var value_label = header.text().trim();
-            if(typeof header.data('bar-chart-yaxis-label') !== 'undefined'){
-                var value_label = $("<div/>").html(header.data('bar-chart-yaxis-label')).text().trim();
+            if(typeof header.data('axis-label') !== 'undefined'){
+                var value_label = $("<div/>").html(header.data('axis-label')).text().trim();
             }
 
             var labels = [];
@@ -1428,7 +1436,12 @@ jQuery( document ).ready(function() {
                     x_field = $(this).data('field');
                     x_postfix = ' '+$(this).data('postfix');
                     x_scale_reverse = $(this).data('reversed');
-                    x_label = $(this).text();
+
+                    if($(this).data('axis-label')){
+                        x_label = $(this).data('axis-label');
+                    }else{
+                        x_label = $(this).text();
+                    }
                     return false;
                 }
             });
@@ -1437,7 +1450,12 @@ jQuery( document ).ready(function() {
                     y_field = $(this).data('field');
                     y_postfix = ' '+$(this).data('postfix');
                     y_scale_reverse = $(this).data('reversed');
-                    y_label = $(this).text();
+
+                    if($(this).data('axis-label')){
+                        y_label = $(this).data('axis-label');
+                    }else{
+                        y_label = $(this).text();
+                    }
                     return false;
                 }
             });
