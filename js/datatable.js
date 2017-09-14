@@ -1894,11 +1894,11 @@ jQuery( document ).ready(function() {
                             var value = $(this).find('td').eq(index).text().trim();
                             var html = '';
                             value.split(',').forEach(function (item) {
-                                var tag_css = self.options.tags.css[map[item]];
+                                var tag_css = self.options.tags.css[map[item.trim()]];
                                 if(tag_css == undefined){
                                     var tag_css = self.options.tags.css[self.options.tags.css.length-1];
                                 }
-                                html += '<span class="'+tag_css+'">'+item+'</span>';
+                                html += '<span class="'+tag_css+'">'+item.trim()+'</span>';
 
                             });
                             $(this).find('td').eq(index).html(html);
@@ -1936,11 +1936,11 @@ jQuery( document ).ready(function() {
                             var value = $(this).find('td').eq(index).text().trim();
                             var html = '';
                             value.split(',').forEach(function (item) {
-                                var tag_css = self.options.tags.css[map[item]];
+                                var tag_css = self.options.tags.css[map[item.trim()]];
                                 if(tag_css == undefined){
                                     var tag_css = self.options.tags.css[self.options.tags.css.length-1];
                                 }
-                                html += '<span class="'+tag_css+'">'+item+'</span>';
+                                html += '<span class="'+tag_css+'">'+item.trim()+'</span>';
                             })
                             $(this).find('td').eq(index).html(html);
                         })
