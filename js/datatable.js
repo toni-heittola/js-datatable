@@ -1866,10 +1866,10 @@ jQuery( document ).ready(function() {
                         $(self.element).find('tbody tr').each(function(){
                             var value = $(this).find('td').eq(index).text().trim();
                             value.split(',').forEach(function (item) {
-                                if(!(item in values)){
-                                    values[item] = 0;
+                                if(!(item.trim() in values)){
+                                    values[item.trim()] = 0;
                                 }
-                                values[item]++;
+                                values[item.trim()]++;
                             });
                         });
                     }
@@ -1888,6 +1888,7 @@ jQuery( document ).ready(function() {
                 });
 
                 $.each(this.field_meta, function(index, meta){
+                    console.log(meta);
                     if(meta.tag){
                         $(self.element).find('tbody tr').each(function(){
                             var value = $(this).find('td').eq(index).text().trim();
@@ -1904,6 +1905,7 @@ jQuery( document ).ready(function() {
                         })
                     }
                 })
+
             }else if(this.options.tag_mode =='column'){
                 var map = {};
                 $.each(this.field_meta, function(index, meta){
@@ -1912,10 +1914,10 @@ jQuery( document ).ready(function() {
                         $(self.element).find('tbody tr').each(function(){
                             var value = $(this).find('td').eq(index).text().trim();
                             value.split(',').forEach(function (item) {
-                                if (!(item in values)) {
-                                    values[item] = 0;
+                                if (!(item.trim() in values)) {
+                                    values[item.trim()] = 0;
                                 }
-                                values[item]++;
+                                values[item.trim()]++;
                             });
                         });
                         var sortable = [];
