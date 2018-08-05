@@ -132,3 +132,41 @@ table.datatable .hidden{
 .filter-control {
     margin: 0 2px 2px 2px;
 }
+
+.datatable-horizontal-bar{}
+
+.datatable-horizontal-bar-thin{
+    height: 10px !important;
+    margin-bottom: 5px !important;
+}
+
+.datatable-inline-vertical-bar{}
+
+.canvas-cell{
+    padding-top: 4px !important;
+    padding-bottom: 4px !important;
+    vertical-align: middle !important;
+}
+
+table.datatable td.canvas-cell{
+    text-align: left !important;
+}
+
+table.datatable .hover{
+    background-image: url("overlay.png");
+}
+table.datatable .row-hover{
+    background-color: #e8e8e8 !important;
+}
+table.datatable tr.success > td.row-hover {
+    background-color: #d0e9c6 !important;
+}
+table.datatable tr.info > td.row-hover {
+    background-color: #c4e3f3 !important;
+}
+table.datatable tr.warning > td.row-hover {
+    background-color: #faf2cc !important;
+}
+table.datatable tr.danger > td.row-hover {
+    background-color: #ebcccc !important;
+}
