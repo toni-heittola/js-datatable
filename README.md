@@ -203,35 +203,94 @@ In case an extensive customization is required, the datatable can be created wit
             });
     </script>
 
-
 ## Parameters
 
 ### Table options
 
-| Attribute              | Default              | Description                                                                   |
-| ---------------------- |--------------------- | ----------------------------------------------------------------------------- |
-| data-bar-hline         | false                | Show horizontal line, value got from data file. Use hline field to set.    |
-| data-bar-height	     | 200	                | Height of a visualization canvas.                                             |
-| data-chart	         | false	            | Controls chart visualization.                                                 |
-| data-chart-default-mode | 'bar'               | Default visualization mode: bar, scatter, comparison                          |
-| data-chart-modes       | 'bar'                | Comma separated list of visualization modes: bar, scatter, comparison         |
-| data-comparison-a-row | undefined     | Preselected row A                                                             |
-| data-comparison-b-row | undefined     | Preselected row B                                                             |
-| data-comparison-active-set | undefined       | Preselected set.                                                              |
-| data-comparison-height | 240                  | Height of a visualization canvas.                                             |
-| data-comparison-row-id-field | undefined      | Id of a column used to populate selection dropdown.                           |
-| data-comparison-sets-json | undefined         | Comparison sets in JSON format.                                               |
-| data-id-field	            | undefined	        | Column name to be used to identify rows.                                      |
-| data-json	                | undefined	        | JSON file to populate the table from.                                         |
-| data-rank-mode            | 'normal'          | Dynamic ranking mode: normal, grouped_muted, grouped_empty                    |
-| data-row-highlighting	    | false	            | Use row_css field in the data file to have row colors.                        |
-| data-scatter-height	    | 240	            | Height of a visualization canvas.                                             |
-| data-scatter-x	        | undefined	        | Id of a column used as default data source for a scatter plot.                |
-| data-scatter-y	        | undefined	        | Id of a column used as default data source for a scatter plot.                |
-| data-show-bar-chart-xaxis	| 'true'	        | Show x-axis in bar visualization.                                             |
-| data-tag-mode             | 'global'          | Dynamic tagging, column values are grouped and groups are assigned a color: global, column |
-| data-yaml 	            | undefined	        | YAML file to populate the table from.                                         |
-
+| Attribute                 | Default              | Description                                                                   |
+| ------------------------- |--------------------- | ----------------------------------------------------------------------------- |
+| data-chart	            | false	               | Controls chart visualization.                                                 |
+| data-chart-default-mode   | 'bar'                | Default visualization mode: bar, scatter, comparison                          |
+| data-chart-modes          | 'bar'                | Comma separated list of visualization modes: bar, scatter, comparison         |
+| data-id-field	            | undefined	           | Column name to be used to identify rows.                                      |
+| data-json	                | undefined	           | JSON file to populate the table from.                                         |
+| data-rank-mode            | 'normal'             | Dynamic ranking mode: normal, grouped_muted, grouped_empty                    |
+| data-row-highlighting	    | false	               | Use row_css field in the data file to have row colors.                        |
+| data-column-hover 	    | false	               | On cell hover highlight full column.                                          |
+| data-show-bar-chart-xaxis	| 'true'	           | Show x-axis in bar visualization.                                             |
+| data-tag-mode             | 'global'             | Dynamic tagging, column values are grouped and groups are assigned a color: global, column |
+| data-yaml 	            | undefined	           | YAML file to populate the table from.                                         |
+|                           |                      |                                                                               |
+| data-bar-hline            | false                | Show horizontal line, value got from data file. Use hline field to set.       |
+| data-bar-height	        | 200	               | Height of a visualization canvas.                                             |
+| data-bar-show-xaxis	    | true	               | Show x-axis in bar visualization.                                             |
+| data-bar-show-vertical-indicator | false	       | Show vertical indicator line.                                                 |
+| data-bar-vertical-indicator-linewidth | 4        | Vertical indicator line width.                                                |
+| data-bar-vertical-indicator-stroke | rgba(0,0,0,0.2) | Vertical indicator line color.                                            |
+| data-bar-show-horizontal-indicator | true        | Show horizontal indicator line.                                               |
+| data-bar-horizontal-indicator-linewidth | 4      | Horizontal indicator line width.                                              |
+| data-bar-horizontal-indicator-stroke | rgba(0,0,0,0.2) | Horizontal indicator line color.                                        |
+| data-bar-horizontal-indicator-fill  | rgba(0,0,0,0.1) | Horizontal indicator fill color.                                         |
+| data-bar-show-error-bar   | true                 | Show error bar for data point (if interval is defined).                       |
+| data-bar-error-bar-linewidth | 2                 | Error bar line width.                                                         |
+| data-bar-error-bar-tipwidth  | undefined         | Error bar tip width. If null give, then tip width is defined automatically.   |
+| data-bar-error-bar-stroke    | undefined         | Error bar line color. If null given, then item/row color is used.             |
+| data-bar-tooltip-position    | 'top'             | Tooltip position, possible values: 'average', 'top', 'bottom'                 |
+|                           |                      |                                                                               |
+| data-line-fields          | undefined            | Comma separated list of fields to be show in the line plot. If undefined, all field shown. |
+| data-line-xaxis-field     | undefined            | Data field to be used on x-axis.                                              |
+| data-line-xaxis-sorted    | false                | Should the data be sorted based on x-axis field.                              |
+| data-line-height          | 240                  | Height of a visualization canvas.                                             |
+| data-line-show-point      | false                | Show data points.                                                             | 
+| data-line-point-radius    | 4                    | Data point radius.                                                            |
+| data-line-point-radius-hover | 4                 | Data point radius when mouse on top of it.                                    |
+| data-line-show-line       | true                 | Show line between data points.                                                |
+| data-line-show-vertical-indicator      | true    | Show vertical indicator line.                                                 | 
+| data-line-vertical-indicator-linewidth | 4       | Vertical indicator line width.                                                |
+| data-line-vertical-indicator-stroke    | rgba(160,160,160,0.5) | Vertical indicator line color.                                  |
+| data-line-show-horizontal-indicator    | true    | Show horizontal indicator line.                                               |
+| data-line-horizontal-indicator-linewidth | 4     | Horizontal indicator line width.                                              |
+| data-line-horizontal-indicator-stroke  | rgba(160,160,160,0.5) | Horizontal indicator line color.                                |
+| data-line-horizontal-indicator-fill    | rgba(160,160,160,0.5) | Horizontal indicator fill color.                                |
+| data-line-show-error-bar               | true    | Show error bar for data point (if interval is defined).                       |
+| data-line-error-bar-linewidth          | 2       | Error bar line width.                                                         |
+| data-line-error-bar-tipwidth           | undefined | Error bar tip width. If undefined give, then tip width is defined automatically. |
+| data-line-error-bar-stroke             | undefined | Error bar line color. If undefined given, then item/row color is used.      |
+| data-line-show-interval                | true    | Show interval.                                                                |
+| data-line-interval-linewidth           | 0.4     | Interval line width.                                                          |
+| data-line-hline                        | false   | Show horizontal line, value got from data file. Use hline field to set.       |
+| data-line-tooltip-position             | 'top'   | Tooltip position, possible values: 'average', 'top', 'bottom'                 | 
+|                           |                      |                                                                               |
+| data-scatter-height	    | 240	               | Height of a visualization canvas.                                             |
+| data-scatter-x	        | undefined	           | Id of a column used as default data source for a scatter plot.                |
+| data-scatter-y	        | undefined	           | Id of a column used as default data source for a scatter plot.                |
+| data-scatter-point-radius | 5                    | Data point radius.                                                            |
+| data-scatter-point-radius-hover | 10             | Data point radius when mouse on top of it.                                    |
+| data-scatter-show-vertical-indicator | true      | Show vertical indicator line.                                                 |
+| data-scatter-vertical-indicator-linewidth | 4    | Vertical indicator line width.                                                |
+| data-scatter-vertical-indicator-stroke | rgba(160,160,160,0.5) | Vertical indicator line color.                                  |
+| data-scatter-show-horizontal-indicator    | true    | Show horizontal indicator line.                                            |
+| data-scatter-horizontal-indicator-linewidth | 4     | Horizontal indicator line width.                                           |
+| data-scatter-horizontal-indicator-stroke  | rgba(160,160,160,0.5) | Horizontal indicator line color.                             |
+| data-scatter-horizontal-indicator-fill    | rgba(160,160,160,0.5) | Horizontal indicator fill color.                             |
+| data-scatter-show-error-bar               | true    | Show error bar for data point (if interval is defined).                    |
+| data-scatter-error-bar-linewidth          | 1       | Error bar line width.                                                      |
+| data-scatter-error-bar-tipwidth           | 8       | Error bar tip width. If undefined give, then tip width is defined automatically. |
+| data-scatter-error-bar-stroke             | rgba(0,0,0,0.2) | Error bar line color. If undefined given, then item/row color is used. |
+| data-scatter-show-error-box | true        | Show bounding box for error.                                                         |
+| data-scatter-error-box-fill | rgba(0,0,0,0.05) | Error bounding box fill color.                                                  |
+|                           |                      |                                                                               |
+| data-comparison-height    | 240                  | Height of a visualization canvas.                                             |
+| data-comparison-row-id-field | undefined         | Id of a column used to populate selection dropdown.                           |
+| data-comparison-sets-json | undefined            | Comparison sets in JSON format.                                               |
+| data-comparison-active-set | undefined           | Preselected set.                                                              |
+| data-comparison-a-row     | undefined            | Preselected row A                                                             |
+| data-comparison-b-row     | undefined            | Preselected row B                                                             |
+| data-comparison-show-error-bar       | true    | Show error bar for data point (if interval is defined).                    |
+| data-comparison-error-bar-linewidth  | 2       | Error bar line width.                                                      |
+| data-comparison-error-bar-tipwidth   | 8       | Error bar tip width. If undefined give, then tip width is defined automatically. |
+| data-comparison-error-bar-stroke     | rgba(0,0,0,0.2) | Error bar line color. If undefined given, then item/row color is used. |
+|                           |                      |                                                                               |
 
 #### Comparison sets json-format
 
@@ -286,3 +345,38 @@ Essential Bootstraptable specific parameters are collected here for completeness
 | data-sortable	         | false	            | True to allow the column can be sorted.                                       |
 | data-formatter	     | undefined	        | The context (this) is the column Object. The cell formatter function, take three parameters: value: the field value. row: the row record data. index: the row index. |
 | data-field	         | undefined	        | The column field name.                                                        |
+
+
+## Changelog
+
+**v1.1.0**
+
+- Add inline data visualizations to the table. 
+- Add line plot type.
+- Add error bars to bar, scatter, line, and comparison plots.
+- Add two way data highlighting, hovering data point in graph will now highlight corresponding data row. 
+- Add horizontal and vertical lines when hovering over data point.
+ 
+**v1.0.5**
+
+- Add more value formatters (e.g. interval, and plusminus)
+
+**v1.0.4**
+
+- Fix click event triggering for dynamically created elements
+
+**v1.0.3**
+
+- Minor edit to handle negative values in ValueSorter
+
+**v1.0.2**
+
+- Fix default chart type handling
+
+**v1.0.1**
+
+- Fix documentation
+
+**v1.0.0**
+
+- Initial release
