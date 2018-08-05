@@ -17,6 +17,11 @@
     <link rel="stylesheet" href="https://cdn.rawgit.com/toni-heittola/js-datatable/master/css.min/bootstrap-table.min.css">
     <link rel="stylesheet" href="https://cdn.rawgit.com/toni-heittola/js-datatable/master/css.min/bootstrap-table-filter-control.min.css">
     <link rel="stylesheet" href="https://cdn.rawgit.com/toni-heittola/js-datatable/master/css.min/datatable.min.css">
+    <!--
+    <link rel="stylesheet" href="../css.min/bootstrap-table.min.css">
+    <link rel="stylesheet" href="../css.min/bootstrap-table-filter-control.min.css">
+    <link rel="stylesheet" href="../css/datatable.css">
+    -->
     <style>
         nav[data-toggle='toc'] {
           margin-top: 30px;
@@ -270,12 +275,13 @@ To see plugin in action, check <a href="http://www.cs.tut.fi/sgn/arg/dcase2016/t
                                 </ul>
                             </td>
                         </tr>
+
                         <tr>
                             <td>Bar / Show x-axis</td>
-                            <td>data-show-bar-chart-xaxis</td>
-                            <td>bar.show_bar_chart_xaxis</td>
+                            <td>data-bar-show-xaxis</td>
+                            <td>bar.show_xaxis</td>
                             <td>Boolean</td>
-                            <td>'true'</td>
+                            <td>true</td>
                             <td>Show x-axis in bar visualization.</td>
                         </tr>
                         <tr>
@@ -283,17 +289,309 @@ To see plugin in action, check <a href="http://www.cs.tut.fi/sgn/arg/dcase2016/t
                             <td>data-bar-height</td>
                             <td>bar.height</td>
                             <td>Number</td>
-                            <td>200</td>
+                            <td>240</td>
                             <td>Height of a visualization canvas.</td>
                         </tr>
                         <tr>
                             <td>Bar / horizontal line</td>
                             <td>data-bar-hline</td>
-                            <td>bar.hline.enabled</td>
+                            <td>bar.horizontal_line.enabled</td>
                             <td>Boolean</td>
                             <td>false</td>
                             <td>Show horizontal line, value got from data file. Use hline field to set.</td>
                         </tr>
+                        <tr>
+                            <td>Bar / Tooltip position</td>
+                            <td>data-bar-tooltip-position</td>
+                            <td>bar.tooltips.position</td>
+                            <td>String</td>
+                            <td>'top'</td>
+                            <td>Tooltip position, possible values: <ul><li>average</li><li>top</li><li>bottom</li></ul></td>
+                        </tr>
+                        <tr>
+                            <td>Bar / Show horizontal indicator line</td>
+                            <td>data-bar-show-horizontal-indicator</td>
+                            <td>bar.vertical_horizontal_line.enabled</td>
+                            <td>Boolean</td>
+                            <td>true</td>
+                            <td>Show horizontal indicator line.</td>
+                        </tr>
+                        <tr>
+                            <td>Bar / Show vertical indicator line</td>
+                            <td>data-bar-show-vertical-indicator</td>
+                            <td>bar.vertical_indicator_line.enabled</td>
+                            <td>Boolean</td>
+                            <td>false</td>
+                            <td>Show vertical indicator line.</td>
+                        </tr>
+                        <tr>
+                            <td>Bar / Vertical indicator line width</td>
+                            <td>data-bar-vertical-indicator-linewidth</td>
+                            <td>bar.vertical_indicator_line.lineWidth</td>
+                            <td>Number</td>
+                            <td>4</td>
+                            <td>Vertical indicator line width.</td>
+                        </tr>
+                        <tr>
+                            <td>Bar / Vertical indicator line color</td>
+                            <td>data-bar-vertical-indicator-stroke</td>
+                            <td>bar.vertical_indicator_line.strokeStyle</td>
+                            <td>String</td>
+                            <td>rgba(0,0,0,0.2)</td>
+                            <td>Vertical indicator line color.</td>
+                        </tr>
+
+                        <tr>
+                            <td>Bar / Horizontal indicator line width</td>
+                            <td>data-bar-horizontal-indicator-linewidth</td>
+                            <td>bar.horizontal_indicator_line.lineWidth</td>
+                            <td>Number</td>
+                            <td>4</td>
+                            <td>Horizontal indicator line width.</td>
+                        </tr>
+                        <tr>
+                            <td>Bar / Horizontal indicator line color</td>
+                            <td>data-bar-horizontal-indicator-stroke</td>
+                            <td>bar.horizontal_indicator_line.strokeStyle</td>
+                            <td>String</td>
+                            <td>rgba(0,0,0,0.2)</td>
+                            <td>Horizontal indicator line color.</td>
+                        </tr>
+                        <tr>
+                            <td>Bar / Horizontal indicator line fill color</td>
+                            <td>data-bar-horizontal-indicator-fill</td>
+                            <td>bar.horizontal_indicator_line.fillStyle</td>
+                            <td>String</td>
+                            <td>rgba(0,0,0,0.1)</td>
+                            <td>Horizontal indicator fill color.</td>
+                        </tr>
+
+                        <tr>
+                            <td>Bar / Show error bars</td>
+                            <td>data-bar-show-error-bar</td>
+                            <td>bar.error_bar.enabled</td>
+                            <td>Boolean</td>
+                            <td>true</td>
+                            <td>Show error bar for data point (if interval is defined).</td>
+                        </tr>
+                        <tr>
+                            <td>Bar / Error bar line width</td>
+                            <td>data-bar-error-bar-linewidth</td>
+                            <td>bar.error_bar.lineWidth</td>
+                            <td>Number</td>
+                            <td>2</td>
+                            <td>Error bar line width.</td>
+                        </tr>
+                        <tr>
+                            <td>Bar / Error bars tip width</td>
+                            <td>data-bar-error-bar-tipwidth</td>
+                            <td>bar.error_bar.tipWidth</td>
+                            <td>Number</td>
+                            <td>undefined</td>
+                            <td>Error bar tip width. If undefined give, then tip width is defined automatically.</td>
+                        </tr>
+                        <tr>
+                            <td>Bar / Error bars line color</td>
+                            <td>data-bar-error-bar-stroke</td>
+                            <td>bar.error_bar.strokeStyle</td>
+                            <td>String</td>
+                            <td>undefined</td>
+                            <td>Error bar line color. If undefined given, then item/row color is used.</td>
+                        </tr>
+
+                        <tr>
+                            <td>Line / fields</td>
+                            <td>data-line-fields</td>
+                            <td>line.fields</td>
+                            <td>String</td>
+                            <td>undefined</td>
+                            <td>Comma separated list of fields to be show in the line plot. If undefined, all field shown.</td>
+                        </tr>
+                        <tr>
+                            <td>Line / X-axis field</td>
+                            <td>data-line-xaxis-field</td>
+                            <td>line.xaxis_field</td>
+                            <td>String</td>
+                            <td>undefined</td>
+                            <td>Data field to be used on x-axis.</td>
+                        </tr>
+                        <tr>
+                            <td>Line / Sorted X-axis</td>
+                            <td>data-line-xaxis-sorted</td>
+                            <td>line.xaxis_sorted</td>
+                            <td>Boolean</td>
+                            <td>false</td>
+                            <td>Should the data be sorted based on x-axis field.</td>
+                        </tr>
+                        <tr>
+                            <td>Line / Height</td>
+                            <td>data-line-height</td>
+                            <td>line.height</td>
+                            <td>Number</td>
+                            <td>240</td>
+                            <td>Height of a visualization canvas.</td>
+                        </tr>
+                        <tr>
+                            <td>Line / Show data points</td>
+                            <td>data-line-show-point</td>
+                            <td>line.point.enabled</td>
+                            <td>Boolean</td>
+                            <td>false</td>
+                            <td>Show data points.</td>
+                        </tr>
+                        <tr>
+                            <td>Line / Data point radius</td>
+                            <td>data-line-point-radius</td>
+                            <td>line.point.radius.normal</td>
+                            <td>Number</td>
+                            <td>4</td>
+                            <td>Data point radius.</td>
+                        </tr>
+                        <tr>
+                            <td>Line / Data point radius hover</td>
+                            <td>data-line-point-radius-hover</td>
+                            <td>line.point.radius.hover</td>
+                            <td>Number</td>
+                            <td>4</td>
+                            <td>Data point radius when mouse on top of it.</td>
+                        </tr>
+
+
+                        <tr>
+                            <td>Line / Show line</td>
+                            <td>data-line-show-line</td>
+                            <td>line.line.enabled</td>
+                            <td>Boolean</td>
+                            <td>true</td>
+                            <td>Show line between data points.</td>
+                        </tr>
+                        <tr>
+                            <td>Line / Show vertical indicator line</td>
+                            <td>data-line-show-vertical-indicator</td>
+                            <td>line.vertical_indicator_line.enabled</td>
+                            <td>Boolean</td>
+                            <td>true</td>
+                            <td>Show vertical indicator line.</td>
+                        </tr>
+                        <tr>
+                            <td>Line / Vertical indicator line width</td>
+                            <td>data-line-vertical-indicator-linewidth</td>
+                            <td>line.vertical_indicator_line.lineWidth</td>
+                            <td>Number</td>
+                            <td>4</td>
+                            <td>Vertical indicator line width.</td>
+                        </tr>
+                        <tr>
+                            <td>Line / Vertical indicator line color</td>
+                            <td>data-line-vertical-indicator-stroke</td>
+                            <td>line.vertical_indicator_line.strokeStyle</td>
+                            <td>String</td>
+                            <td>rgba(160,160,160,0.5)</td>
+                            <td>Vertical indicator line color.</td>
+                        </tr>
+
+                        <tr>
+                            <td>Line / Show horizontal indicator line</td>
+                            <td>data-line-show-horizontal-indicator</td>
+                            <td>line.vertical_horizontal_line.enabled</td>
+                            <td>Boolean</td>
+                            <td>true</td>
+                            <td>Show horizontal indicator line.</td>
+                        </tr>
+                        <tr>
+                            <td>Line / Horizontal indicator line width</td>
+                            <td>data-line-horizontal-indicator-linewidth</td>
+                            <td>line.horizontal_indicator_line.lineWidth</td>
+                            <td>Number</td>
+                            <td>4</td>
+                            <td>Horizontal indicator line width.</td>
+                        </tr>
+                        <tr>
+                            <td>Line / Horizontal indicator line color</td>
+                            <td>data-line-horizontal-indicator-stroke</td>
+                            <td>line.horizontal_indicator_line.strokeStyle</td>
+                            <td>String</td>
+                            <td>rgba(160,160,160,0.5)</td>
+                            <td>Horizontal indicator line color.</td>
+                        </tr>
+                        <tr>
+                            <td>Line / Horizontal indicator fill color</td>
+                            <td>data-line-horizontal-indicator-fill</td>
+                            <td>line.horizontal_indicator_line.fillStyle</td>
+                            <td>String</td>
+                            <td>rgba(160,160,160,0.5)</td>
+                            <td>Horizontal indicator fill color.</td>
+                        </tr>
+
+                        <tr>
+                            <td>Line / Show error bars</td>
+                            <td>data-line-show-error-bar</td>
+                            <td>line.error_bar.enabled</td>
+                            <td>Boolean</td>
+                            <td>true</td>
+                            <td>Show error bar for data point (if interval is defined).</td>
+                        </tr>
+                        <tr>
+                            <td>Line / Error bar line width</td>
+                            <td>data-line-error-bar-linewidth</td>
+                            <td>line.error_bar.lineWidth</td>
+                            <td>Number</td>
+                            <td>2</td>
+                            <td>Error bar line width.</td>
+                        </tr>
+                        <tr>
+                            <td>Line / Error bars tip width</td>
+                            <td>data-line-error-bar-tipwidth</td>
+                            <td>line.error_bar.tipWidth</td>
+                            <td>Number</td>
+                            <td>undefined</td>
+                            <td>Error bar tip width. If undefined give, then tip width is defined automatically.</td>
+                        </tr>
+                        <tr>
+                            <td>Line / Error bars line color</td>
+                            <td>data-line-error-bar-stroke</td>
+                            <td>line.error_bar.strokeStyle</td>
+                            <td>String</td>
+                            <td>undefined</td>
+                            <td>Error bar line color. If undefined given, then item/row color is used.</td>
+                        </tr>
+
+                        <tr>
+                            <td>Line / Show interval</td>
+                            <td>data-line-show-interval</td>
+                            <td>line.interval.enabled</td>
+                            <td>Boolean</td>
+                            <td>true</td>
+                            <td>Show interval.</td>
+                        </tr>
+                        <tr>
+                            <td>Line / Interval line width</td>
+                            <td>data-line-interval-linewidth</td>
+                            <td>line.interval.lineWidth</td>
+                            <td>Number</td>
+                            <td>0.4</td>
+                            <td>Interval line width.</td>
+                        </tr>
+
+                        <tr>
+                            <td>Line / Horizontal line</td>
+                            <td>data-line-hline</td>
+                            <td>line.horizontal_line.enabled</td>
+                            <td>Boolean</td>
+                            <td>false</td>
+                            <td>Show horizontal line, value got from data file. Use hline field to set.</td>
+                        </tr>
+                        <tr>
+                            <td>Line / Tooltip position</td>
+                            <td>data-line-tooltip-position</td>
+                            <td>line.tooltips.position</td>
+                            <td>String</td>
+                            <td>'top'</td>
+                            <td>Tooltip position, possible values: <ul><li>average</li><li>top</li><li>bottom</li></ul></td>
+                        </tr>
+
+
+
                         <tr>
                             <td>Scatter / height</td>
                             <td>data-scatter-height</td>
@@ -317,6 +615,129 @@ To see plugin in action, check <a href="http://www.cs.tut.fi/sgn/arg/dcase2016/t
                             <td>String</td>
                             <td>undefined</td>
                             <td>Id of a column used as default data source for a scatter plot.</td>
+                        </tr>
+                        <tr>
+                            <td>Scatter / Point radius</td>
+                            <td>data-scatter-point-radius</td>
+                            <td>scatter.point.normal</td>
+                            <td>Number</td>
+                            <td>5</td>
+                            <td>Data point radius.</td>
+                        </tr>
+                        <tr>
+                            <td>Scatter / Point radius hover</td>
+                            <td>data-scatter-point-radius-hover</td>
+                            <td>scatter.point.hover</td>
+                            <td>Number</td>
+                            <td>10</td>
+                            <td>Data point radius when mouse on top of it.</td>
+                        </tr>
+
+                        <tr>
+                            <td>Scatter / Show vertical indicator line</td>
+                            <td>data-scatter-show-vertical-indicator</td>
+                            <td>scatter.vertical_indicator_line.enabled</td>
+                            <td>Boolean</td>
+                            <td>true</td>
+                            <td>Show vertical indicator line.</td>
+                        </tr>
+                        <tr>
+                            <td>Scatter / Vertical indicator line width</td>
+                            <td>data-scatter-vertical-indicator-linewidth</td>
+                            <td>scatter.vertical_indicator_line.lineWidth</td>
+                            <td>Number</td>
+                            <td>4</td>
+                            <td>Vertical indicator line width.</td>
+                        </tr>
+                        <tr>
+                            <td>Scatter / Vertical indicator line color</td>
+                            <td>data-scatter-vertical-indicator-stroke</td>
+                            <td>scatter.vertical_indicator_line.strokeStyle</td>
+                            <td>String</td>
+                            <td>rgba(160,160,160,0.5)</td>
+                            <td>Vertical indicator line color.</td>
+                        </tr>
+
+                        <tr>
+                            <td>Scatter / Show horizontal indicator line</td>
+                            <td>data-scatter-show-horizontal-indicator</td>
+                            <td>scatter.vertical_horizontal_line.enabled</td>
+                            <td>Boolean</td>
+                            <td>true</td>
+                            <td>Show horizontal indicator line.</td>
+                        </tr>
+                        <tr>
+                            <td>Scatter / Horizontal indicator line width</td>
+                            <td>data-scatter-horizontal-indicator-linewidth</td>
+                            <td>scatter.horizontal_indicator_line.lineWidth</td>
+                            <td>Number</td>
+                            <td>4</td>
+                            <td>Horizontal indicator line width.</td>
+                        </tr>
+                        <tr>
+                            <td>Scatter / Horizontal indicator line color</td>
+                            <td>data-scatter-horizontal-indicator-stroke</td>
+                            <td>scatter.horizontal_indicator_line.strokeStyle</td>
+                            <td>String</td>
+                            <td>rgba(160,160,160,0.5)</td>
+                            <td>Horizontal indicator line color.</td>
+                        </tr>
+                        <tr>
+                            <td>Scatter / Horizontal indicator fill color</td>
+                            <td>data-scatter-horizontal-indicator-fill</td>
+                            <td>scatter.horizontal_indicator_line.fillStyle</td>
+                            <td>String</td>
+                            <td>rgba(160,160,160,0.5)</td>
+                            <td>Horizontal indicator fill color.</td>
+                        </tr>
+
+                        <tr>
+                            <td>Scatter / Show error bars</td>
+                            <td>data-scatter-show-error-bar</td>
+                            <td>scatter.error_bar.enabled</td>
+                            <td>Boolean</td>
+                            <td>true</td>
+                            <td>Show error bar for data point (if interval is defined).</td>
+                        </tr>
+                        <tr>
+                            <td>Scatter / Error bar line width</td>
+                            <td>data-scatter-error-bar-linewidth</td>
+                            <td>scatter.error_bar.lineWidth</td>
+                            <td>Number</td>
+                            <td>1</td>
+                            <td>Error bar line width.</td>
+                        </tr>
+                        <tr>
+                            <td>Scatter / Error bars tip width</td>
+                            <td>data-scatter-error-bar-tipwidth</td>
+                            <td>scatter.error_bar.tipWidth</td>
+                            <td>Number</td>
+                            <td>8</td>
+                            <td>Error bar tip width.</td>
+                        </tr>
+                        <tr>
+                            <td>Scatter / Error bars line color</td>
+                            <td>data-scatter-error-bar-stroke</td>
+                            <td>scatter.error_bar.strokeStyle</td>
+                            <td>String</td>
+                            <td>rgba(0,0,0,0.2)</td>
+                            <td>Error bar line color.</td>
+                        </tr>
+                        <tr>
+                            <td>Scatter / Show error box</td>
+                            <td>data-scatter-show-error-box</td>
+                            <td>scatter.error_bar.bounding_box</td>
+                            <td>Boolean</td>
+                            <td>true</td>
+                            <td>Show bounding box for error.</td>
+                        </tr>
+                        <tr>
+                            <td>Scatter / Error box fill color</td>
+                            <td>data-scatter-error-box-fill</td>
+                            <td>scatter.error_bar.fillStyle</td>
+                            <td>String</td>
+                            <td>rgba(0,0,0,0.05)</td>
+                            <td>Error bounding box fill color.</td>
                         </tr>
 
                         <tr>
@@ -376,6 +797,41 @@ To see plugin in action, check <a href="http://www.cs.tut.fi/sgn/arg/dcase2016/t
                             <td>undefined</td>
                             <td>Preselected row B</td>
                         </tr>
+
+                        <tr>
+                            <td>Comparison / Show error bars</td>
+                            <td>data-comparison-show-error-bar</td>
+                            <td>comparison.error_bar.enabled</td>
+                            <td>Boolean</td>
+                            <td>true</td>
+                            <td>Show error bar for data point (if interval is defined).</td>
+                        </tr>
+                        <tr>
+                            <td>Comparison / Error bar line width</td>
+                            <td>data-comparison-error-bar-linewidth</td>
+                            <td>comparison.error_bar.lineWidth</td>
+                            <td>Number</td>
+                            <td>2</td>
+                            <td>Error bar line width.</td>
+                        </tr>
+                        <tr>
+                            <td>Comparison / Error bars tip width</td>
+                            <td>data-comparison-error-bar-tipwidth</td>
+                            <td>comparison.error_bar.tipWidth</td>
+                            <td>Number</td>
+                            <td>8</td>
+                            <td>Error bar tip width.</td>
+                        </tr>
+                        <tr>
+                            <td>Comparison / Error bars line color</td>
+                            <td>data-comparison-error-bar-stroke</td>
+                            <td>comparison.error_bar.strokeStyle</td>
+                            <td>String</td>
+                            <td>rgba(0,0,0,0.2)</td>
+                            <td>Error bar line color.</td>
+                        </tr>
+
+
                     </tbody>
                 </table>
 
@@ -434,15 +890,25 @@ To see plugin in action, check <a href="http://www.cs.tut.fi/sgn/arg/dcase2016/t
                             <td>
                                 Value formatter:
                                 <ul>
-                                    <li><code>int</code> and <code>int-percentage</code>, numeric, integer</li>
-                                    <li><code>float1</code> and <code>float1-percentage</code>, numeric, float with one decimal</li>
-                                    <li><code>float2</code> and <code>float2-percentage</code>, numeric, float with two decimals</li>
-                                    <li><code>float3</code> and <code>float3-percentage</code>, numeric, float with three decimals</li>
-                                    <li><code>float4</code> and <code>float4-percentage</code>, numeric, float with four decimals</li>
-                                    <li><code>float1-percentage-interval</code> and <code>float1-percentage-interval-muted</code>, numeric with intervals, format [value1] ([interval_low - interval_high]), floats with one decimals</li>
-                                    <li><code>float2-percentage-interval</code> and <code>float2-percentage-interval-muted</code>, numeric with intervals, format [value1] ([interval_low - interval_high]), floats with two decimals</li>
-                                    <li><code>float3-percentage-interval</code> and <code>float3-percentage-interval-muted</code>, numeric with intervals, format [value1] ([interval_low - interval_high]), floats with three decimals</li>
-                                    <li><code>float4-percentage-interval</code> and <code>float4-percentage-interval-muted</code>, numeric with intervals, format [value1] ([interval_low - interval_high]), floats with four decimals</li>
+                                    <li><code>int</code>, <code>int-percentage</code> and <code>int-error</code>, numeric, integer</li>
+                                    <li><code>float1</code>,  <code>float1-percentage</code> and <code>float1-error</code>, numeric, float with one decimal</li>
+                                    <li><code>float2</code>, <code>float2-percentage</code> and <code>float2-error</code>, numeric, float with two decimals</li>
+                                    <li><code>float3</code>, <code>float3-percentage</code> and <code>float3-error</code>, numeric, float with three decimals</li>
+                                    <li><code>float4</code>,  <code>float4-percentage</code> and <code>float4-error</code>, numeric, float with four decimals</li>
+
+                                    <li><code>int-percentage-interval</code> and <code>int-percentage-interval-muted</code>, numeric with intervals, format [value] ([interval_low - interval_high]), integers</li>
+                                    <li><code>float1-percentage-interval</code> and <code>float1-percentage-interval-muted</code>, numeric with intervals, format [value] ([interval_low - interval_high]), floats with one decimals</li>
+                                    <li><code>float2-percentage-interval</code> and <code>float2-percentage-interval-muted</code>, numeric with intervals, format [value] ([interval_low - interval_high]), floats with two decimals</li>
+                                    <li><code>float3-percentage-interval</code> and <code>float3-percentage-interval-muted</code>, numeric with intervals, format [value] ([interval_low - interval_high]), floats with three decimals</li>
+                                    <li><code>float4-percentage-interval</code> and <code>float4-percentage-interval-muted</code>, numeric with intervals, format [value] ([interval_low - interval_high]), floats with four decimals</li>
+
+
+                                    <li><code>int-percentage-plusminus</code> and <code>int-percentage-plusminus-muted</code>, numeric with plusminus interval, format [value] ±[interval], integers</li>
+                                    <li><code>float1-percentage-plusminus</code> and <code>float1-percentage-plusminus-muted</code>, numeric with plusminus intervals, format [value] ±[interval], floats with one decimals</li>
+                                    <li><code>float2-percentage-plusminus</code> and <code>float2-percentage-plusminus-muted</code>, numeric with plusminus intervals, format [value] ±[interval], floats with two decimals</li>
+                                    <li><code>float3-percentage-plusminus</code> and <code>float3-percentage-plusminus-muted</code>, numeric with plusminus intervals, format [value] ±[interval], floats with three decimals</li>
+                                    <li><code>float4-percentage-plusminus</code> and <code>float4-percentage-plusminus-muted</code>, numeric with plusminus intervals, format [value] ±[interval], floats with four decimals</li>
+
                                     <li><code>list</code>, data split <code>,</code> into rows</li>
                                     <li><code>url</code> data in parsed into list of hrefs, format <code>[url];[url title],[url];[url title]</code></li>
                                     <li><code>ref</code> data in parsed into list of reference hrefs, format <code>[url to reference];[reference label],[url to reference];[reference label]</code></li>
@@ -461,7 +927,7 @@ To see plugin in action, check <a href="http://www.cs.tut.fi/sgn/arg/dcase2016/t
                     </tbody>
                 </table>
 
-                <h2 id="bootstraptable-parameters">Bootstrap parameters</h2>
+                <h2 id="bootstraptable-parameters">Bootstraptable parameters</h2>
                 <p>Essential Bootstraptable specific parameters are collected here for completeness. For full reference, <a href="http://bootstrap-table.wenzhixin.net.cn/documentation/">see Bootstraptable.js documentation</a>.</p>
                 <h3>Table options</h3>
                 <table class="table datatable"
@@ -957,26 +1423,19 @@ data:
                 </ul>
 
                 <h3 id="value-formatters">Value formatters</h3>
-                <p>Value in the cells can be formated dynamically. js-datatable provides currently following formatters:
-                    <ul>
-                        <li><code>int</code> and <code>int-percentage</code>, numeric, integer</li>
-                        <li><code>float1</code> and <code>float1-percentage</code>, numeric, float with one decimal</li>
-                        <li><code>float2</code> and <code>float2-percentage</code>, numeric, float with two decimals</li>
-                        <li><code>float3</code> and <code>float3-percentage</code>, numeric, float with three decimals</li>
-                        <li><code>float4</code> and <code>float4-percentage</code>, numeric, float with four decimals</li>
-                        <li><code>float1-percentage-interval</code> and <code>float1-percentage-interval-muted</code>, numeric with intervals, format [value1] ([interval_low - interval_high]), floats with one decimals</li>
-                        <li><code>float2-percentage-interval</code> and <code>float2-percentage-interval-muted</code>, numeric with intervals, format [value1] ([interval_low - interval_high]), floats with two decimals</li>
-                        <li><code>float3-percentage-interval</code> and <code>float3-percentage-interval-muted</code>, numeric with intervals, format [value1] ([interval_low - interval_high]), floats with three decimals</li>
-                        <li><code>float4-percentage-interval</code> and <code>float4-percentage-interval-muted</code>, numeric with intervals, format [value1] ([interval_low - interval_high]), floats with four decimals</li>
-                        <li><code>list</code>, data split <code>,</code> into rows</li>
-                        <li><code>url</code> data in parsed into list of hrefs, format <code>[url];[url title],[url];[url title]</code></li>
-                        <li><code>ref</code> data in parsed into list of reference hrefs, format <code>[url to reference];[reference label],[url to reference];[reference label]</code></li>
-                        <li><code>anchor</code> data value used for href to jump to HTML link anchor. In case the link refers to collapsed item, it is opened.</li>
-                    </ul>
-                </p>
+                <p>Value in the cells can be formatted dynamically. js-datatable provides currently following formatters.</p>
+
+                <h4>Numeric</h4>
+                <ul>
+                    <li><code>int</code>, numeric, integer</li>
+                    <li><code>float1</code>, numeric, float with one decimal</li>
+                    <li><code>float2</code>, numeric, float with two decimal</li>
+                    <li><code>float3</code>, numeric, float with three decimal</li>
+                    <li><code>float4</code>, numeric, float with four decimal</li>
+                </ul>
                 <table class="table datatable"
-                       data-json="data2.json"
-                       data-id-field="name"
+                       data-json="data4.json"
+                       data-id-field="code"
                        data-sort-name="value1"
                        data-sort-order="desc"
                        data-pagination="false"
@@ -984,25 +1443,25 @@ data:
                     <thead>
                         <tr>
                             <th data-field="code" data-sortable="true">Name</th>
-                            <th data-field="value1" data-sortable="true" data-value-type="float2-percentage">Value 1</th>
-                            <th data-field="value2" data-sortable="true" data-value-type="float4">Value 2</th>
-                            <th data-field="list" data-sortable="true" data-value-type="list">List</th>
-                            <th data-field="anchor" data-sortable="true" data-value-type="anchor">Anchor</th>
-                            <th data-field="url" data-sortable="true" data-value-type="url">URL</th>
-                            <th data-field="ref" data-sortable="true" data-value-type="ref">References</th>
+                            <th data-field="value1" data-sortable="true" data-value-type="int">int</th>
+                            <th data-field="value1" data-sortable="true" data-value-type="float1">float1</th>
+                            <th data-field="value1" data-sortable="true" data-value-type="float2">float2</th>
+                            <th data-field="value1" data-sortable="true" data-value-type="float3">float3</th>
+                            <th data-field="value1" data-sortable="true" data-value-type="float4">float4</th>
                         </tr>
                     </thead>
                 </table>
+
                 <br>
-                <a class="btn btn-primary" role="button" data-toggle="collapse" href="#simple-dynamic-table-value-formatter-example" aria-expanded="false" aria-controls="simple-dynamic-table-value-formatter-example">
-                  <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Show code
+                <a class="btn btn-primary" role="button" data-toggle="collapse" href="#simple-dynamic-table-value-formatter-example-numeric" aria-expanded="false" aria-controls="simple-dynamic-table-value-formatter-example-numeric">
+                    <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Show code
                 </a>
 
-                <div class="collapse" id="simple-dynamic-table-value-formatter-example">
+                <div class="collapse" id="simple-dynamic-table-value-formatter-example-numeric">
                     <pre><code class="language-markup">
 &lt;table class="table datatable"
-       data-json="data2.json"
-       data-id-field="name"
+       data-json="data4.json"
+       data-id-field="code"
        data-sort-name="value1"
        data-sort-order="desc"
        data-pagination="false"
@@ -1010,12 +1469,625 @@ data:
     &lt;thead&gt;
         &lt;tr&gt;
             &lt;th data-field="code" data-sortable="true"&gt;Name&lt;/th&gt;
-            &lt;th data-field="value1" data-sortable="true" data-value-type="float2-percentage"&gt;Value 1&lt;/th&gt;
-            &lt;th data-field="value2" data-sortable="true" data-value-type="float4"&gt;Value 2&lt;/th&gt;
+            &lt;th data-field="value1" data-sortable="true" data-value-type="int"&gt;int&lt;/th&gt;
+            &lt;th data-field="value1" data-sortable="true" data-value-type="float1"&gt;float1&lt;/th&gt;
+            &lt;th data-field="value1" data-sortable="true" data-value-type="float2"&gt;float2&lt;/th&gt;
+            &lt;th data-field="value1" data-sortable="true" data-value-type="float3"&gt;float3&lt;/th&gt;
+            &lt;th data-field="value1" data-sortable="true" data-value-type="float4"&gt;float4&lt;/th&gt;
+        &lt;/tr&gt;
+    &lt;/thead&gt;
+&lt;/table&gt;
+                    </code></pre>
+                </div>
+                <br>
+
+                <h4>Numeric with interval</h4>
+                <p>Data format: [value] ([interval low value] - [interval high value])</p>
+                <ul>
+                    <li><code>int-interval</code> and <code>int-interval-muted</code>, numeric with intervals, integers.</li>
+                    <li><code>float1-interval</code> and <code>float1-interval-muted</code>, numeric with intervals, floats with one decimals.</li>
+                    <li><code>float2-interval</code> and <code>float2-interval-muted</code>, numeric with intervals, floats with two decimals.</li>
+                    <li><code>float3-interval</code> and <code>float3-interval-muted</code>, numeric with intervals, floats with three decimals.</li>
+                    <li><code>float4-interval</code> and <code>float4-interval-muted</code>, numeric with intervals, floats with four decimals.</li>
+                </ul>
+                <table class="table datatable"
+                       data-json="data4.json"
+                       data-id-field="code"
+                       data-sort-name="value1i"
+                       data-sort-order="desc"
+                       data-pagination="false"
+                       data-show-pagination-switch="false">
+                    <thead>
+                        <tr>
+                            <th data-field="code" data-sortable="true">Name</th>
+                            <th data-field="value1i" data-sortable="true" data-value-type="int-interval">int-interval</th>
+                            <th data-field="value1i" data-sortable="true" data-value-type="int-interval-muted">int-interval-muted</th>
+                            <th data-field="value1i" data-sortable="true" data-value-type="float1-interval">float1-interval</th>
+                            <th data-field="value1i" data-sortable="true" data-value-type="float1-interval-muted">float1-interval-muted</th>
+                            <th data-field="value1i" data-sortable="true" data-value-type="float2-interval">float2-interval</th>
+                            <th data-field="value1i" data-sortable="true" data-value-type="float2-interval-muted">float2-interval-muted</th>
+                            <th data-field="value1i" data-sortable="true" data-value-type="float3-interval">float3-interval</th>
+                            <th data-field="value1i" data-sortable="true" data-value-type="float3-interval-muted">float3-interval-muted</th>
+                            <th data-field="value1i" data-sortable="true" data-value-type="float4-interval">float4-interval</th>
+                            <th data-field="value1i" data-sortable="true" data-value-type="float4-interval-muted">float4-interval-muted</th>
+                        </tr>
+                    </thead>
+                </table>
+
+                <br>
+                <a class="btn btn-primary" role="button" data-toggle="collapse" href="#simple-dynamic-table-value-formatter-example-numeric-with-interval" aria-expanded="false" aria-controls="simple-dynamic-table-value-formatter-example-numeric-with-interval">
+                    <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Show code
+                </a>
+
+                <div class="collapse" id="simple-dynamic-table-value-formatter-example-numeric-with-interval">
+                    <pre><code class="language-markup">
+&lt;table class="table datatable"
+       data-json="data4.json"
+       data-id-field="code"
+       data-sort-name="value1i"
+       data-sort-order="desc"
+       data-pagination="false"
+       data-show-pagination-switch="false"&gt;
+    &lt;thead&gt;
+        &lt;tr&gt;
+            &lt;th data-field="code" data-sortable="true"&gt;Name&lt;/th&gt;
+            &lt;th data-field="value1i" data-sortable="true" data-value-type="int-interval"&gt;int-interval&lt;/th&gt;
+            &lt;th data-field="value1i" data-sortable="true" data-value-type="int-interval-muted"&gt;int-interval-muted&lt;/th&gt;
+            &lt;th data-field="value1i" data-sortable="true" data-value-type="float1-interval"&gt;float1-interval&lt;/th&gt;
+            &lt;th data-field="value1i" data-sortable="true" data-value-type="float1-interval-muted"&gt;float1-interval-muted&lt;/th&gt;
+            &lt;th data-field="value1i" data-sortable="true" data-value-type="float2-interval"&gt;float2-interval&lt;/th&gt;
+            &lt;th data-field="value1i" data-sortable="true" data-value-type="float2-interval-muted"&gt;float2-interval-muted&lt;/th&gt;
+            &lt;th data-field="value1i" data-sortable="true" data-value-type="float3-interval"&gt;float3-interval&lt;/th&gt;
+            &lt;th data-field="value1i" data-sortable="true" data-value-type="float3-interval-muted"&gt;float3-interval-muted&lt;/th&gt;
+            &lt;th data-field="value1i" data-sortable="true" data-value-type="float4-interval"&gt;float4-interval&lt;/th&gt;
+            &lt;th data-field="value1i" data-sortable="true" data-value-type="float4-interval-muted"&gt;float4-interval-muted&lt;/th&gt;
+        &lt;/tr&gt;
+    &lt;/thead&gt;
+&lt;/table&gt;
+                    </code></pre>
+                </div>
+                <br>
+
+                <h4>Numeric with plusminus interval</h4>
+                <p>Data format: [value1]±[plusminus value]</p>
+                <ul>
+                    <li><code>int-plusminus</code> and <code>int-plusminus-muted</code>, numeric with plus minus interval, integers.</li>
+                    <li><code>float1-plusminus</code> and <code>float1-plusminus-muted</code>, numeric with plus minus interval, floats with one decimals.</li>
+                    <li><code>float2-plusminus</code> and <code>float2-plusminus-muted</code>, numeric with plus minus interval, floats with two decimals.</li>
+                    <li><code>float3-plusminus</code> and <code>float3-plusminus-muted</code>, numeric with plus minus interval, floats with three decimals.</li>
+                    <li><code>float4-plusminus</code> and <code>float4-plusminus-muted</code>, numeric with plus minus interval, floats with four decimals.</li>
+                </ul>
+                <table class="table datatable"
+                       data-json="data4.json"
+                       data-id-field="code"
+                       data-sort-name="value1p"
+                       data-sort-order="desc"
+                       data-pagination="false"
+                       data-show-pagination-switch="false">
+                    <thead>
+                        <tr>
+                            <th data-field="code" data-sortable="true">Name</th>
+                            <th data-field="value1p" data-sortable="true" data-value-type="int-plusminus">int-plusminus</th>
+                            <th data-field="value1p" data-sortable="true" data-value-type="int-plusminus-muted">int-plusminus-muted</th>
+                            <th data-field="value1p" data-sortable="true" data-value-type="float1-plusminus">float1-plusminus</th>
+                            <th data-field="value1p" data-sortable="true" data-value-type="float1-plusminus-muted">float1-plusminus-muted</th>
+                            <th data-field="value1p" data-sortable="true" data-value-type="float2-plusminus">float2-plusminus</th>
+                            <th data-field="value1p" data-sortable="true" data-value-type="float2-plusminus-muted">float2-plusminus-muted</th>
+                            <th data-field="value1p" data-sortable="true" data-value-type="float3-plusminus">float3-plusminus</th>
+                            <th data-field="value1p" data-sortable="true" data-value-type="float3-plusminus-muted">float3-plusminus-muted</th>
+                            <th data-field="value1p" data-sortable="true" data-value-type="float4-plusminus">float4-plusminus</th>
+                            <th data-field="value1p" data-sortable="true" data-value-type="float4-plusminus-muted">float4-plusminus-muted</th>
+                        </tr>
+                    </thead>
+                </table>
+
+                <br>
+                <a class="btn btn-primary" role="button" data-toggle="collapse" href="#simple-dynamic-table-value-formatter-example-numeric-with-plusminus-interval" aria-expanded="false" aria-controls="simple-dynamic-table-value-formatter-example-numeric-with-plusminus-interval">
+                    <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Show code
+                </a>
+
+                <div class="collapse" id="simple-dynamic-table-value-formatter-example-numeric-with-plusminus-interval">
+                    <pre><code class="language-markup">
+&lt;table class="table datatable"
+       data-json="data4.json"
+       data-id-field="code"
+       data-sort-name="value1p"
+       data-sort-order="desc"
+       data-pagination="false"
+       data-show-pagination-switch="false"&gt;
+    &lt;thead&gt;
+        &lt;tr&gt;
+            &lt;th data-field="code" data-sortable="true"&gt;Name&lt;/th&gt;
+            &lt;th data-field="value1p" data-sortable="true" data-value-type="int-plusminus"&gt;int-plusminus&lt;/th&gt;
+            &lt;th data-field="value1p" data-sortable="true" data-value-type="int-plusminus-muted"&gt;int-plusminus-muted&lt;/th&gt;
+            &lt;th data-field="value1p" data-sortable="true" data-value-type="float1-plusminus"&gt;float1-plusminus&lt;/th&gt;
+            &lt;th data-field="value1p" data-sortable="true" data-value-type="float1-plusminus-muted"&gt;float1-plusminus-muted&lt;/th&gt;
+            &lt;th data-field="value1p" data-sortable="true" data-value-type="float2-plusminus"&gt;float2-plusminus&lt;/th&gt;
+            &lt;th data-field="value1p" data-sortable="true" data-value-type="float2-plusminus-muted"&gt;float2-plusminus-muted&lt;/th&gt;
+            &lt;th data-field="value1p" data-sortable="true" data-value-type="float3-plusminus"&gt;float3-plusminus&lt;/th&gt;
+            &lt;th data-field="value1p" data-sortable="true" data-value-type="float3-plusminus-muted"&gt;float3-plusminus-muted&lt;/th&gt;
+            &lt;th data-field="value1p" data-sortable="true" data-value-type="float4-plusminus"&gt;float4-plusminus&lt;/th&gt;
+            &lt;th data-field="value1p" data-sortable="true" data-value-type="float4-plusminus-muted"&gt;float4-plusminus-muted&lt;/th&gt;
+        &lt;/tr&gt;
+    &lt;/thead&gt;
+&lt;/table&gt;
+                    </code></pre>
+                </div>
+                <br>
+
+                <h4>Plusminus error</h4>
+                <p>Data format: [plusminus value]</p>
+                <ul>
+                    <li><code>int-error</code>, numeric plus minus interval, integers.</li>
+                    <li><code>float1-error</code>, numeric plus minus interval, floats with one decimals.</li>
+                    <li><code>float2-error</code>, numeric plus minus interval, floats with two decimals.</li>
+                    <li><code>float3-error</code>, numeric plus minus interval, floats with three decimals.</li>
+                    <li><code>float4-error</code>, numeric plus minus interval, floats with four decimals.</li>
+                </ul>
+                <table class="table datatable"
+                       data-json="data4.json"
+                       data-id-field="code"
+                       data-sort-name="value1e"
+                       data-sort-order="desc"
+                       data-pagination="false"
+                       data-show-pagination-switch="false">
+                    <thead>
+                        <tr>
+                            <th data-field="code" data-sortable="true">Name</th>
+                            <th data-field="value1e" data-sortable="true" data-value-type="int-error">int-error</th>
+                            <th data-field="value1e" data-sortable="true" data-value-type="float1-error">float1-error</th>
+                            <th data-field="value1e" data-sortable="true" data-value-type="float2-error">float2-error</th>
+                            <th data-field="value1e" data-sortable="true" data-value-type="float3-error">float3-error</th>
+                            <th data-field="value1e" data-sortable="true" data-value-type="float4-error">float4-error</th>
+                        </tr>
+                    </thead>
+                </table>
+
+
+                <br>
+                <a class="btn btn-primary" role="button" data-toggle="collapse" href="#simple-dynamic-table-value-formatter-example-plusminus-error" aria-expanded="false" aria-controls="simple-dynamic-table-value-formatter-example-plusminus-error">
+                    <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Show code
+                </a>
+
+                <div class="collapse" id="simple-dynamic-table-value-formatter-example-plusminus-error">
+                    <pre><code class="language-markup">
+&lt;table class="table datatable"
+       data-json="data4.json"
+       data-id-field="code"
+       data-sort-name="value1e"
+       data-sort-order="desc"
+       data-pagination="false"
+       data-show-pagination-switch="false"&gt;
+    &lt;thead&gt;
+        &lt;tr&gt;
+            &lt;th data-field="code" data-sortable="true"&gt;Name&lt;/th&gt;
+            &lt;th data-field="value1e" data-sortable="true" data-value-type="int-error"&gt;int-error&lt;/th&gt;
+            &lt;th data-field="value1e" data-sortable="true" data-value-type="float1-error"&gt;float1-error&lt;/th&gt;
+            &lt;th data-field="value1e" data-sortable="true" data-value-type="float2-error"&gt;float2-error&lt;/th&gt;
+            &lt;th data-field="value1e" data-sortable="true" data-value-type="float3-error"&gt;float3-error&lt;/th&gt;
+            &lt;th data-field="value1e" data-sortable="true" data-value-type="float4-error"&gt;float4-error&lt;/th&gt;
+        &lt;/tr&gt;
+    &lt;/thead&gt;
+&lt;/table&gt;
+                    </code></pre>
+                </div>
+                <br>
+
+
+                <h4>Percentage</h4>
+                <ul>
+                    <li><code>int-percentage</code>, numeric, integer.</li>
+                    <li><code>float1-percentage</code>, numeric, float with one decimal.</li>
+                    <li><code>float2-percentage</code>, numeric, float with two decimal.</li>
+                    <li><code>float3-percentage</code>, numeric, float with three decimal.</li>
+                    <li><code>float4-percentage</code>, numeric, float with four decimal.</li>
+                </ul>
+                <table class="table datatable"
+                       data-json="data4.json"
+                       data-id-field="code"
+                       data-sort-name="value1"
+                       data-sort-order="desc"
+                       data-pagination="false"
+                       data-show-pagination-switch="false">
+                    <thead>
+                        <tr>
+                            <th data-field="code" data-sortable="true">Name</th>
+                            <th data-field="value1" data-sortable="true" data-value-type="int-percentage">int-percentage</th>
+                            <th data-field="value1" data-sortable="true" data-value-type="float1-percentage">float1-percentage</th>
+                            <th data-field="value1" data-sortable="true" data-value-type="float2-percentage">float2-percentage</th>
+                            <th data-field="value1" data-sortable="true" data-value-type="float3-percentage">float3-percentage</th>
+                            <th data-field="value1" data-sortable="true" data-value-type="float4-percentage">float4-percentage</th>
+                        </tr>
+                    </thead>
+                </table>
+
+                <br>
+                <a class="btn btn-primary" role="button" data-toggle="collapse" href="#simple-dynamic-table-value-formatter-example-percentage" aria-expanded="false" aria-controls="simple-dynamic-table-value-formatter-example-percentage">
+                    <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Show code
+                </a>
+
+                <div class="collapse" id="simple-dynamic-table-value-formatter-example-percentage">
+                    <pre><code class="language-markup">
+&lt;table class="table datatable"
+       data-json="data4.json"
+       data-id-field="code"
+       data-sort-name="value1"
+       data-sort-order="desc"
+       data-pagination="false"
+       data-show-pagination-switch="false"&gt;
+    &lt;thead&gt;
+        &lt;tr&gt;
+            &lt;th data-field="code" data-sortable="true"&gt;Name&lt;/th&gt;
+            &lt;th data-field="value1" data-sortable="true" data-value-type="int-percentage"&gt;int-percentage&lt;/th&gt;
+            &lt;th data-field="value1" data-sortable="true" data-value-type="float1-percentage"&gt;float1-percentage&lt;/th&gt;
+            &lt;th data-field="value1" data-sortable="true" data-value-type="float2-percentage"&gt;float2-percentage&lt;/th&gt;
+            &lt;th data-field="value1" data-sortable="true" data-value-type="float3-percentage"&gt;float3-percentage&lt;/th&gt;
+            &lt;th data-field="value1" data-sortable="true" data-value-type="float4-percentage"&gt;float4-percentage&lt;/th&gt;
+        &lt;/tr&gt;
+    &lt;/thead&gt;
+&lt;/table&gt;
+                    </code></pre>
+                </div>
+                <br>
+
+                <h4>Percentage with interval</h4>
+                <p>Data format: [value] ([interval low value] - [interval high value])</p>
+                <ul>
+                    <li><code>int-percentage-interval</code> and <code>int-percentage-interval-muted</code>, numeric with intervals, integers.</li>
+                    <li><code>float1-percentage-interval</code> and <code>float1-percentage-interval-muted</code>, numeric with intervals, floats with one decimals.</li>
+                    <li><code>float2-percentage-interval</code> and <code>float2-percentage-interval-muted</code>, numeric with intervals, floats with two decimals.</li>
+                    <li><code>float3-percentage-interval</code> and <code>float3-percentage-interval-muted</code>, numeric with intervals, floats with three decimals.</li>
+                    <li><code>float4-percentage-interval</code> and <code>float4-percentage-interval-muted</code>, numeric with intervals, floats with four decimals.</li>
+                </ul>
+                <table class="table datatable"
+                       data-json="data4.json"
+                       data-id-field="code"
+                       data-sort-name="value1i"
+                       data-sort-order="desc"
+                       data-pagination="false"
+                       data-show-pagination-switch="false">
+                    <thead>
+                        <tr>
+                            <th data-field="code" data-sortable="true">Name</th>
+                            <th data-field="value1i" data-sortable="true" data-value-type="int-percentage-interval">int-percentage-interval</th>
+                            <th data-field="value1i" data-sortable="true" data-value-type="int-percentage-interval-muted">int-percentage-interval-muted</th>
+                            <th data-field="value1i" data-sortable="true" data-value-type="float1-percentage-interval">float1-percentage-interval</th>
+                            <th data-field="value1i" data-sortable="true" data-value-type="float1-percentage-interval-muted">float1-percentage-interval-muted</th>
+                            <th data-field="value1i" data-sortable="true" data-value-type="float2-percentage-interval">float2-percentage-interval</th>
+                            <th data-field="value1i" data-sortable="true" data-value-type="float2-percentage-interval-muted">float2-percentage-interval-muted</th>
+                            <th data-field="value1i" data-sortable="true" data-value-type="float3-percentage-interval">float3-percentage-interval</th>
+                            <th data-field="value1i" data-sortable="true" data-value-type="float3-percentage-interval-muted">float3-percentage-interval-muted</th>
+                            <th data-field="value1i" data-sortable="true" data-value-type="float4-percentage-interval">float4-percentage-interval</th>
+                            <th data-field="value1i" data-sortable="true" data-value-type="float4-percentage-interval-muted">float4-percentage-interval-muted</th>
+                        </tr>
+                    </thead>
+                </table>
+
+
+                <br>
+                <a class="btn btn-primary" role="button" data-toggle="collapse" href="#simple-dynamic-table-value-formatter-example-percentage-with-interval" aria-expanded="false" aria-controls="simple-dynamic-table-value-formatter-example-percentage-with-interval">
+                    <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Show code
+                </a>
+
+                <div class="collapse" id="simple-dynamic-table-value-formatter-example-percentage-with-interval">
+                    <pre><code class="language-markup">
+&lt;table class="table datatable"
+       data-json="data4.json"
+       data-id-field="code"
+       data-sort-name="value1i"
+       data-sort-order="desc"
+       data-pagination="false"
+       data-show-pagination-switch="false"&gt;
+    &lt;thead&gt;
+        &lt;tr&gt;
+            &lt;th data-field="code" data-sortable="true"&gt;Name&lt;/th&gt;
+            &lt;th data-field="value1i" data-sortable="true" data-value-type="int-percentage-interval"&gt;int-percentage-interval&lt;/th&gt;
+            &lt;th data-field="value1i" data-sortable="true" data-value-type="int-percentage-interval-muted"&gt;int-percentage-interval-muted&lt;/th&gt;
+            &lt;th data-field="value1i" data-sortable="true" data-value-type="float1-percentage-interval"&gt;float1-percentage-interval&lt;/th&gt;
+            &lt;th data-field="value1i" data-sortable="true" data-value-type="float1-percentage-interval-muted"&gt;float1-percentage-interval-muted&lt;/th&gt;
+            &lt;th data-field="value1i" data-sortable="true" data-value-type="float2-percentage-interval"&gt;float2-percentage-interval&lt;/th&gt;
+            &lt;th data-field="value1i" data-sortable="true" data-value-type="float2-percentage-interval-muted"&gt;float2-percentage-interval-muted&lt;/th&gt;
+            &lt;th data-field="value1i" data-sortable="true" data-value-type="float3-percentage-interval"&gt;float3-percentage-interval&lt;/th&gt;
+            &lt;th data-field="value1i" data-sortable="true" data-value-type="float3-percentage-interval-muted"&gt;float3-percentage-interval-muted&lt;/th&gt;
+            &lt;th data-field="value1i" data-sortable="true" data-value-type="float4-percentage-interval"&gt;float4-percentage-interval&lt;/th&gt;
+            &lt;th data-field="value1i" data-sortable="true" data-value-type="float4-percentage-interval-muted"&gt;float4-percentage-interval-muted&lt;/th&gt;
+        &lt;/tr&gt;
+    &lt;/thead&gt;
+&lt;/table&gt;
+                    </code></pre>
+                </div>
+                <br>
+
+
+
+                <h4>Percentage with plusminus interval</h4>
+                <p>Data format: [value]±[plusminus value]</p>
+                <ul>
+                    <li><code>int-percentage-plusminus</code> and <code>int-percentage-plusminus-muted</code>, numeric with plus minus interval, integers.</li>
+                    <li><code>float1-percentage-plusminus</code> and <code>float1-percentage-plusminus-muted</code>, numeric with plus minus interval, floats with one decimals.</li>
+                    <li><code>float2-percentage-plusminus</code> and <code>float2-percentage-plusminus-muted</code>, numeric with plus minus interval, floats with two decimals.</li>
+                    <li><code>float3-percentage-plusminus</code> and <code>float3-percentage-plusminus-muted</code>, numeric with plus minus interval, floats with three decimals.</li>
+                    <li><code>float4-percentage-plusminus</code> and <code>float4-percentage-plusminus-muted</code>, numeric with plus minus interval, floats with four decimals.</li>
+                </ul>
+                <table class="table datatable"
+                       data-json="data4.json"
+                       data-id-field="code"
+                       data-sort-name="value1i"
+                       data-sort-order="desc"
+                       data-pagination="false"
+                       data-show-pagination-switch="false">
+                    <thead>
+                        <tr>
+                            <th data-field="code" data-sortable="true">Name</th>
+                            <th data-field="value1p" data-sortable="true" data-value-type="int-percentage-plusminus">int-percentage-plusminus</th>
+                            <th data-field="value1p" data-sortable="true" data-value-type="int-percentage-plusminus-muted">int-percentage-plusminus-muted</th>
+                            <th data-field="value1p" data-sortable="true" data-value-type="float1-percentage-plusminus">float1-percentage-plusminus</th>
+                            <th data-field="value1p" data-sortable="true" data-value-type="float1-percentage-plusminus-muted">float1-percentage-plusminus-muted</th>
+                            <th data-field="value1p" data-sortable="true" data-value-type="float2-percentage-plusminus">float2-percentage-plusminus</th>
+                            <th data-field="value1p" data-sortable="true" data-value-type="float2-percentage-plusminus-muted">float2-percentage-plusminus-muted</th>
+                            <th data-field="value1p" data-sortable="true" data-value-type="float3-percentage-plusminus">float3-percentage-plusminus</th>
+                            <th data-field="value1p" data-sortable="true" data-value-type="float3-percentage-plusminus-muted">float3-percentage-plusminus-muted</th>
+                            <th data-field="value1p" data-sortable="true" data-value-type="float4-percentage-plusminus">float4-percentage-plusminus</th>
+                            <th data-field="value1p" data-sortable="true" data-value-type="float4-percentage-plusminus-muted">float4-percentage-plusminus-muted</th>
+                        </tr>
+                    </thead>
+                </table>
+
+                <br>
+                <a class="btn btn-primary" role="button" data-toggle="collapse" href="#simple-dynamic-table-value-formatter-example-percentage-with-plusminus-interval" aria-expanded="false" aria-controls="simple-dynamic-table-value-formatter-example-percentage-with-plusminus-interval">
+                    <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Show code
+                </a>
+
+                <div class="collapse" id="simple-dynamic-table-value-formatter-example-percentage-with-plusminus-interval">
+                    <pre><code class="language-markup">
+&lt;table class="table datatable"
+       data-json="data4.json"
+       data-id-field="code"
+       data-sort-name="value1i"
+       data-sort-order="desc"
+       data-pagination="false"
+       data-show-pagination-switch="false"&gt;
+    &lt;thead&gt;
+        &lt;tr&gt;
+            &lt;th data-field="code" data-sortable="true"&gt;Name&lt;/th&gt;
+            &lt;th data-field="value1p" data-sortable="true" data-value-type="int-percentage-plusminus"&gt;int-percentage-plusminus&lt;/th&gt;
+            &lt;th data-field="value1p" data-sortable="true" data-value-type="int-percentage-plusminus-muted"&gt;int-percentage-plusminus-muted&lt;/th&gt;
+            &lt;th data-field="value1p" data-sortable="true" data-value-type="float1-percentage-plusminus"&gt;float1-percentage-plusminus&lt;/th&gt;
+            &lt;th data-field="value1p" data-sortable="true" data-value-type="float1-percentage-plusminus-muted"&gt;float1-percentage-plusminus-muted&lt;/th&gt;
+            &lt;th data-field="value1p" data-sortable="true" data-value-type="float2-percentage-plusminus"&gt;float2-percentage-plusminus&lt;/th&gt;
+            &lt;th data-field="value1p" data-sortable="true" data-value-type="float2-percentage-plusminus-muted"&gt;float2-percentage-plusminus-muted&lt;/th&gt;
+            &lt;th data-field="value1p" data-sortable="true" data-value-type="float3-percentage-plusminus"&gt;float3-percentage-plusminus&lt;/th&gt;
+            &lt;th data-field="value1p" data-sortable="true" data-value-type="float3-percentage-plusminus-muted"&gt;float3-percentage-plusminus-muted&lt;/th&gt;
+            &lt;th data-field="value1p" data-sortable="true" data-value-type="float4-percentage-plusminus"&gt;float4-percentage-plusminus&lt;/th&gt;
+            &lt;th data-field="value1p" data-sortable="true" data-value-type="float4-percentage-plusminus-muted"&gt;float4-percentage-plusminus-muted&lt;/th&gt;
+        &lt;/tr&gt;
+    &lt;/thead&gt;
+&lt;/table&gt;
+                    </code></pre>
+                </div>
+                <br>
+
+                <h4>Data lists</h4>
+                <ul>
+                    <li><code>list</code>, data items delimited with <code>,</code> are split into <code>&lt;br&gt;</code> separated lines.</li>
+                </ul>
+                <table class="table datatable"
+                       data-json="data2.json"
+                       data-id-field="name"
+                       data-sort-name="list"
+                       data-sort-order="desc"
+                       data-pagination="false"
+                       data-show-pagination-switch="false">
+                    <thead>
+                        <tr>
+                            <th data-field="code" data-sortable="true">Name</th>
+                            <th data-field="list" data-sortable="true" data-value-type="list">List</th>
+                        </tr>
+                    </thead>
+                </table>
+
+                <br>
+                <a class="btn btn-primary" role="button" data-toggle="collapse" href="#simple-dynamic-table-value-formatter-example-data-lists" aria-expanded="false" aria-controls="simple-dynamic-table-value-formatter-example-data-lists">
+                    <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Show code
+                </a>
+
+                <div class="collapse" id="simple-dynamic-table-value-formatter-example-data-lists">
+                    <pre><code class="language-markup">
+&lt;table class="table datatable"
+       data-json="data4.json"
+       data-id-field="code"
+       data-sort-name="list"
+       data-sort-order="desc"
+       data-pagination="false"
+       data-show-pagination-switch="false"&gt;
+    &lt;thead&gt;
+        &lt;tr&gt;
+            &lt;th data-field="code" data-sortable="true"&gt;Name&lt;/th&gt;
             &lt;th data-field="list" data-sortable="true" data-value-type="list"&gt;List&lt;/th&gt;
-            &lt;th data-field="anchor" data-sortable="true" data-value-type="anchor"&gt;Anchor&lt;/th&gt;
-            &lt;th data-field="url" data-sortable="true" data-value-type="url"&gt;URL&lt;/th&gt;
-            &lt;th data-field="ref" data-sortable="true" data-value-type="ref"&gt;References&lt;/th&gt;
+        &lt;/tr&gt;
+    &lt;/thead&gt;
+&lt;/table&gt;
+                    </code></pre>
+                </div>
+                <br>
+
+                <h4>Linking</h4>
+                <ul>
+                    <li><code>url</code> data in parsed into list of hrefs. Data format: <code>[url];[url title],[url];[url title]</code></li>
+                    <li><code>ref</code> similar to <code>url</code>, but content is assumed to be reference to scientific article. Data format: <code>[url to pdf];[reference label],[url to pdf];[reference label]</code></li>
+                    <li><code>anchor</code> data value used for href to jump to HTML link anchor. In case the link refers to collapsed item, it is opened.</li>
+                </ul>
+                <table class="table datatable"
+                       data-json="data2.json"
+                       data-id-field="name"
+                       data-sort-name="code"
+                       data-sort-order="desc"
+                       data-pagination="false"
+                       data-show-pagination-switch="false">
+                    <thead>
+                        <tr>
+                            <th data-field="code" data-sortable="true">Name</th>
+                            <th data-field="anchor" data-sortable="true" data-value-type="anchor">Anchor</th>
+                            <th data-field="url" data-sortable="true" data-value-type="url">URL</th>
+                            <th data-field="ref" data-sortable="true" data-value-type="ref">References</th>
+                        </tr>
+                    </thead>
+                </table>
+
+                <br>
+                <a class="btn btn-primary" role="button" data-toggle="collapse" href="#simple-dynamic-table-value-formatter-example-linking" aria-expanded="false" aria-controls="simple-dynamic-table-value-formatter-example-linking">
+                    <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Show code
+                </a>
+
+                <div class="collapse" id="simple-dynamic-table-value-formatter-example-linking">
+                    <pre><code class="language-markup">
+&lt;table class="table datatable"
+       data-json="data4.json"
+       data-id-field="code"
+       data-sort-name="code"
+       data-sort-order="desc"
+       data-pagination="false"
+       data-show-pagination-switch="false"&gt;
+    &lt;thead&gt;
+        &lt;tr&gt;
+            &lt;th data-field="code" data-sortable="true"&gt;Name&lt;/th&gt;
+            &lt;th data-field="anchor" data-sortable="true" data-value-type="anchor">Anchor&lt;/th&gt;
+            &lt;th data-field="url" data-sortable="true" data-value-type="url">URL&lt;/th&gt;
+            &lt;th data-field="ref" data-sortable="true" data-value-type="ref">References&lt;/th&gt;
+        &lt;/tr&gt;
+    &lt;/thead&gt;
+&lt;/table&gt;
+                    </code></pre>
+                </div>
+                <br>
+
+                <h4>Inline data visualization</h4>
+                <p>Inline data visualization can be used to visualize data series inside a cell. There is available a few different graph types:</p>
+                <ul>
+                    <li><code>inline-bar-horizontal-percentage</code> and <code>inline-bar-horizontal-thin-percentage</code> to visualize percentages, values should add up to 100.</li>
+                    <li><code>inline-bar-vertical</code>, data series is visualized as bar plot.</li>
+                    <li><code>inline-line</code> and <code>inline-line-steps</code>, data series is visualized with line plot either linearly interpolating between data points or not.</li>
+                    <li><code>inline-bar-vertical-tristate</code>, data series is visualized as tristate box plot.</li>
+                    <li><code>inline-indicator-value</code> and <code>inline-indicator-value-html</code>, visualize data series with equal sized boxes, and fill color is used to indicate data point value.</li>
+                    <li><code>inline-indicator-binary</code> and <code>inline-indicator-binary-html</code>, visualize data series with equal sized boxes, and fill color is used to indicate data point value 0 or >0.</li>
+                    <li><code>inline-indicator-tristate</code> and <code>inline-indicator-tristate-html</code>, visualize data series with equal sized boxes, and fill color and offset is used to indicate data point values 0, >0 and <0.</li>
+                </ul>
+                <p>Data series should be formatted for inline graphs as:
+                    <code>[value1];[text label (with HTML tags) or HTML color code (#000000, rgb(), or rgba())],[value2];[text/color]</code>
+                </p>
+
+                <table class="table datatable"
+                       data-json="data4.json"
+                       data-id-field="name"
+                       data-sort-name="code"
+                       data-sort-order="desc"
+                       data-pagination="false"
+                       data-show-pagination-switch="false">
+                    <thead>
+                        <tr>
+                            <th data-field="code" data-sortable="true">Name</th>
+                            <th data-field="hbar" data-sortable="true" data-value-type="inline-bar-horizontal-percentage">inline-bar-horizontal-percentage</th>
+                            <th data-field="hbar" data-sortable="true" data-value-type="inline-bar-horizontal-thin-percentage">inline-bar-horizontal-thin-percentage</th>
+                        </tr>
+                    </thead>
+                </table>
+
+                <br>
+                <table class="table datatable"
+                       data-json="data4.json"
+                       data-id-field="name"
+                       data-sort-name="code"
+                       data-sort-order="desc"
+                       data-pagination="false"
+                       data-show-pagination-switch="false">
+                    <thead>
+                        <tr>
+                            <th data-field="code" data-sortable="true">Name</th>
+                            <th data-field="line" data-sortable="true" data-value-type="inline-bar-vertical">inline-bar-vertical</th>
+                            <th data-field="line" data-sortable="true" data-value-type="inline-bar-vertical-tristate">inline-bar-vertical-tristate</th>
+                            <th data-field="timeline" data-sortable="true" data-value-type="inline-line">inline-line</th>
+                            <th data-field="timeline" data-sortable="true" data-value-type="inline-line-steps">inline-line-steps</th>
+                        </tr>
+                    </thead>
+                </table>
+                <br>
+                <table class="table datatable"
+                       data-json="data4.json"
+                       data-id-field="name"
+                       data-sort-name="code"
+                       data-sort-order="desc"
+                       data-pagination="false"
+                       data-show-pagination-switch="false">
+                    <thead>
+                    <tr>
+                        <th data-field="code" data-sortable="true">Name</th>
+                        <th data-field="binary" data-sortable="true" data-value-type="inline-indicator-value">inline-indicator-value</th>
+                        <th data-field="binary" data-sortable="true" data-value-type="inline-indicator-value-html">inline-indicator-value-html</th>
+                        <th data-field="binary" data-sortable="true" data-value-type="inline-indicator-binary">inline-indicator-binary</th>
+                        <th data-field="binary" data-sortable="true" data-value-type="inline-indicator-binary-html">inline-indicator-binary-html</th>
+                        <th data-field="line" data-sortable="true" data-value-type="inline-indicator-tristate">inline-indicator-tristate</th>
+                        <th data-field="line" data-sortable="true" data-value-type="inline-indicator-tristate-html">inline-indicator-tristate-html</th>
+                    </tr>
+                    </thead>
+                </table>
+
+                <br>
+                <a class="btn btn-primary" role="button" data-toggle="collapse" href="#simple-dynamic-table-value-formatter-example-inline-visualization" aria-expanded="false" aria-controls="simple-dynamic-table-value-formatter-example-inline-visualization">
+                  <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Show code
+                </a>
+
+                <div class="collapse" id="simple-dynamic-table-value-formatter-example-inline-visualization">
+                    <pre><code class="language-markup">
+&lt;table class="table datatable"
+       data-json="data4.json"
+       data-id-field="name"
+       data-sort-name="code"
+       data-sort-order="desc"
+       data-pagination="false"
+       data-show-pagination-switch="false"&gt;
+    &lt;thead&gt;
+        &lt;tr&gt;
+            &lt;th data-field="code" data-sortable="true"&gt;Name&lt;/th&gt;
+            &lt;th data-field="hbar" data-sortable="true" data-value-type="inline-bar-horizontal-percentage"&gt;inline-bar-horizontal-percentage&lt;/th&gt;
+            &lt;th data-field="hbar" data-sortable="true" data-value-type="inline-bar-horizontal-thin-percentage"&gt;inline-bar-horizontal-thin-percentage&lt;/th&gt;
+        &lt;/tr&gt;
+    &lt;/thead&gt;
+&lt;/table&gt;
+
+&lt;table class="table datatable"
+       data-json="data4.json"
+       data-id-field="name"
+       data-sort-name="code"
+       data-sort-order="desc"
+       data-pagination="false"
+       data-show-pagination-switch="false"&gt;
+    &lt;thead&gt;
+        &lt;tr&gt;
+            &lt;th data-field="code" data-sortable="true"&gt;Name&lt;/th&gt;
+            &lt;th data-field="line" data-sortable="true" data-value-type="inline-bar-vertical"&gt;inline-bar-vertical&lt;/th&gt;
+            &lt;th data-field="line" data-sortable="true" data-value-type="inline-bar-vertical-tristate"&gt;inline-bar-vertical-tristate&lt;/th&gt;
+            &lt;th data-field="line" data-sortable="true" data-value-type="inline-line"&gt;inline-line&lt;/th&gt;
+            &lt;th data-field="line" data-sortable="true" data-value-type="inline-line-steps"&gt;inline-line-steps&lt;/th&gt;
+        &lt;/tr&gt;
+    &lt;/thead&gt;
+&lt;/table&gt;
+
+&lt;table class="table datatable"
+       data-json="data4.json"
+       data-id-field="name"
+       data-sort-name="code"
+       data-sort-order="desc"
+       data-pagination="false"
+       data-show-pagination-switch="false"&gt;
+    &lt;thead&gt;
+        &lt;tr&gt;
+            &lt;th data-field="code" data-sortable="true"&gt;Name&lt;/th&gt;
+            &lt;th data-field="line" data-sortable="true" data-value-type="inline-indicator-value"&gt;inline-indicator-value&lt;/th&gt;
+            &lt;th data-field="line" data-sortable="true" data-value-type="inline-indicator-value-html"&gt;inline-indicator-value-html&lt;/th&gt;
+            &lt;th data-field="binary" data-sortable="true" data-value-type="inline-indicator-binary"&gt;inline-indicator-binary&lt;/th&gt;
+            &lt;th data-field="binary" data-sortable="true" data-value-type="inline-indicator-binary-html"&gt;inline-indicator-binary-html&lt;/th&gt;
+            &lt;th data-field="line" data-sortable="true" data-value-type="inline-indicator-tristate"&gt;inline-indicator-tristate&lt;/th&gt;
+            &lt;th data-field="line" data-sortable="true" data-value-type="inline-indicator-tristate-html"&gt;inline-indicator-tristate-html&lt;/th&gt;
         &lt;/tr&gt;
     &lt;/thead&gt;
 &lt;/table&gt;
@@ -1461,7 +2533,7 @@ data:
                         data-id-field="code"
                         data-rank-mode="grouped_muted"
                         data-chart-modes="bar"
-                        data-show-bar-chart-xaxis="true"
+                        data-bar-show-xaxis="true"
                         data-sort-name="value1"
                         data-sort-order="desc"
                         data-pagination="false"
@@ -1514,7 +2586,7 @@ data:
         data-id-field="code"
         data-rank-mode="grouped_muted"
         data-chart-modes="bar"
-        data-show-bar-chart-xaxis="true"
+        data-bar-show-xaxis="true"
         data-sort-name="value1"
         data-sort-order="desc"
         data-pagination="false"
@@ -1556,6 +2628,443 @@ data:
                     </code></pre>
                 </div>
                 <br>
+
+                <h3 id="visualization-bar-error">Bar with error bars</h3>
+
+                <table
+                        class="datatable table"
+                        data-json="data4.json"
+                        data-show-chart="true"
+                        data-id-field="code"
+                        data-rank-mode="grouped_muted"
+                        data-chart-modes="bar"
+                        data-bar-show-xaxis="true"
+                        data-sort-name="value1i"
+                        data-sort-order="desc"
+                        data-pagination="false"
+                        data-show-pagination-switch="false"
+                >
+                    <thead>
+                    <tr>
+                        <th data-sortable="false" data-rank="true">
+                            <span class="text-muted">Rank</span>
+                        </th>
+                        <th class="sep-left-cell"
+                            data-chartable="false"
+                            data-field="code"
+                            data-sortable="true"
+                            data-visible="true">
+                            System
+                        </th>
+                        <th class="sep-left-cell"
+                            data-align="center"
+                            data-beginatzero="false"
+                            data-chartable="true"
+                            data-field="value1i"
+                            data-sortable="true"
+                            data-value-type="float1-percentage-interval-muted"
+                            data-visible="true">
+                            Value 1
+                        </th>
+                        <th class="sep-left-cell"
+                            data-align="center"
+                            data-beginatzero="false"
+                            data-chartable="true"
+                            data-field="value1p"
+                            data-sortable="true"
+                            data-value-type="int-percentage-plusminus-muted"
+                            data-visible="true">
+                            Value 2
+                        </th>
+                    </tr>
+                    </thead>
+                </table>
+                <br>
+                <a class="btn btn-primary" role="button" data-toggle="collapse" href="#visualization-bar-error-example" aria-expanded="false" aria-controls="visualization-bar-error-example">
+                    <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Show code
+                </a>
+
+                <div class="collapse" id="visualization-bar-error-example">
+                    <pre><code class="language-markup">
+&lt;table
+        class="datatable table"
+        data-json="data2.json"
+        data-show-chart="true"
+        data-id-field="code"
+        data-rank-mode="grouped_muted"
+        data-chart-modes="bar"
+        data-bar-show-xaxis="true"
+        data-sort-name="value1i"
+        data-sort-order="desc"
+        data-pagination="false"
+        data-show-pagination-switch="false"
+    &gt;
+    &lt;thead&gt;
+        &lt;tr&gt;
+            &lt;th data-sortable="false" data-rank="true"&gt;
+                &lt;span class="text-muted"&gt;Rank&lt;/span&gt;
+            &lt;/th&gt;
+            &lt;th class="sep-left-cell"
+                data-chartable="false"
+                data-field="code"
+                data-sortable="true"
+                data-visible="true"&gt;
+                System
+            &lt;/th&gt;
+            &lt;th class="sep-left-cell"
+                data-align="center"
+                data-beginatzero="false"
+                data-chartable="true"
+                data-field="value1i"
+                data-sortable="true"
+                data-value-type="float1-percentage-interval-muted"
+                data-visible="true"&gt;
+                Value 1
+            &lt;/th&gt;
+            &lt;th class="sep-left-cell"
+                data-align="center"
+                data-beginatzero="false"
+                data-chartable="true"
+                data-field="value1p"
+                data-sortable="true"
+                data-value-type="int-percentage-plusminus-muted"
+                data-visible="true"&gt;
+                Value 2
+            &lt;/th&gt;
+        &lt;/tr&gt;
+    &lt;/thead&gt;
+&lt;/table&gt;
+                    </code></pre>
+                </div>
+                <br>
+
+                <h3 id="visualization-line">Line</h3>
+
+                <table
+                        class="datatable table"
+                        data-json="data2.json"
+                        data-show-chart="true"
+                        data-id-field="code"
+                        data-rank-mode="grouped_muted"
+                        data-chart-modes="line"
+                        data-bar-show-xaxis="true"
+                        data-sort-name="value1"
+                        data-sort-order="desc"
+                        data-pagination="false"
+                        data-show-pagination-switch="false"
+                >
+                    <thead>
+                    <tr>
+                        <th data-sortable="false" data-rank="true">
+                            <span class="text-muted">Rank</span>
+                        </th>
+                        <th class="sep-left-cell"
+                            data-chartable="false"
+                            data-field="code"
+                            data-sortable="true"
+                            data-visible="true">
+                            System
+                        </th>
+                        <th class="sep-left-cell"
+                            data-align="center"
+                            data-beginatzero="false"
+                            data-chartable="true"
+                            data-field="value1"
+                            data-sortable="true"
+                            data-visible="true">
+                            Value 1
+                        </th>
+                        <th class="sep-left-cell"
+                            data-align="center"
+                            data-beginatzero="false"
+                            data-chartable="true"
+                            data-field="value2"
+                            data-sortable="true"
+                            data-visible="true">
+                            Value 2
+                        </th>
+                    </tr>
+                    </thead>
+                </table>
+                <br>
+                <a class="btn btn-primary" role="button" data-toggle="collapse" href="#visualization-line-example" aria-expanded="false" aria-controls="visualization-line-example">
+                    <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Show code
+                </a>
+
+                <div class="collapse" id="visualization-line-example">
+                    <pre><code class="language-markup">
+&lt;table
+        class="datatable table"
+        data-json="data2.json"
+        data-show-chart="true"
+        data-id-field="code"
+        data-rank-mode="grouped_muted"
+        data-chart-modes="line"
+        data-bar-show-xaxis="true"
+        data-sort-name="value1"
+        data-sort-order="desc"
+        data-pagination="false"
+        data-show-pagination-switch="false"
+    &gt;
+    &lt;thead&gt;
+        &lt;tr&gt;
+            &lt;th data-sortable="false" data-rank="true"&gt;
+                &lt;span class="text-muted"&gt;Rank&lt;/span&gt;
+            &lt;/th&gt;
+            &lt;th class="sep-left-cell"
+                data-chartable="false"
+                data-field="code"
+                data-sortable="true"
+                data-visible="true"&gt;
+                System
+            &lt;/th&gt;
+            &lt;th class="sep-left-cell"
+                data-align="center"
+                data-beginatzero="false"
+                data-chartable="true"
+                data-field="value1"
+                data-sortable="true"
+                data-visible="true"&gt;
+                Value 1
+            &lt;/th&gt;
+            &lt;th class="sep-left-cell"
+                data-align="center"
+                data-beginatzero="false"
+                data-chartable="true"
+                data-field="value2"
+                data-sortable="true"
+                data-visible="true"&gt;
+                Value 2
+            &lt;/th&gt;
+        &lt;/tr&gt;
+    &lt;/thead&gt;
+&lt;/table&gt;
+                    </code></pre>
+                </div>
+                <br>
+                <h3 id="visualization-line-error-bar">Line with error bar</h3>
+
+                <table
+                        class="datatable table"
+                        data-json="data4.json"
+                        data-show-chart="true"
+                        data-id-field="code"
+                        data-rank-mode="grouped_muted"
+                        data-chart-modes="line"
+                        data-sort-name="value1i"
+                        data-sort-order="desc"
+                        data-pagination="false"
+                        data-show-pagination-switch="false"
+                        data-line-show-error-bar="true"
+                        data-line-show-interval="false"
+                >
+                    <thead>
+                    <tr>
+                        <th data-sortable="false" data-rank="true">
+                            <span class="text-muted">Rank</span>
+                        </th>
+                        <th class="sep-left-cell"
+                            data-chartable="false"
+                            data-field="code"
+                            data-sortable="true"
+                            data-visible="true">
+                            System
+                        </th>
+                        <th class="sep-left-cell"
+                            data-align="center"
+                            data-beginatzero="false"
+                            data-chartable="true"
+                            data-field="value1i"
+                            data-sortable="true"
+                            data-value-type="float1-percentage-interval-muted"
+                            data-visible="true">
+                            Value 1
+                        </th>
+                        <th class="sep-left-cell"
+                            data-align="center"
+                            data-beginatzero="false"
+                            data-chartable="true"
+                            data-field="value1p"
+                            data-sortable="true"
+                            data-value-type="int-percentage-plusminus-muted"
+                            data-visible="true">
+                            Value 2
+                        </th>
+                    </tr>
+                    </thead>
+                </table>
+                <br>
+                <a class="btn btn-primary" role="button" data-toggle="collapse" href="#visualization-line-error-bar-example" aria-expanded="false" aria-controls="visualization-line-error-bar-example">
+                    <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Show code
+                </a>
+
+                <div class="collapse" id="visualization-line-error-bar-example">
+                    <pre><code class="language-markup">
+&lt;table
+    class="datatable table"
+    data-json="data4.json"
+    data-show-chart="true"
+    data-id-field="code"
+    data-rank-mode="grouped_muted"
+    data-chart-modes="line"
+    data-sort-name="value1i"
+    data-sort-order="desc"
+    data-pagination="false"
+    data-line-show-error-bar="true"
+    data-line-show-interval="false"
+    &gt;
+    &lt;thead&gt;
+        &lt;tr&gt;
+            &lt;th data-sortable="false" data-rank="true"&gt;
+                &lt;span class="text-muted"&gt;Rank&lt;/span&gt;
+            &lt;/th&gt;
+            &lt;th class="sep-left-cell"
+                data-chartable="false"
+                data-field="code"
+                data-sortable="true"
+                data-visible="true"&gt;
+                System
+            &lt;/th&gt;
+            &lt;th class="sep-left-cell"
+                data-align="center"
+                data-beginatzero="false"
+                data-chartable="true"
+                data-field="value1i"
+                data-sortable="true"
+                data-value-type="float1-percentage-interval-muted"
+                data-visible="true"&gt;
+                Value 1
+            &lt;/th&gt;
+            &lt;th class="sep-left-cell"
+                data-align="center"
+                data-beginatzero="false"
+                data-chartable="true"
+                data-field="value1p"
+                data-sortable="true"
+                data-value-type="int-percentage-plusminus-muted"
+                data-visible="true"&gt;
+                Value 2
+            &lt;/th&gt;
+        &lt;/tr&gt;
+    &lt;/thead&gt;
+&lt;/table&gt;
+                    </code></pre>
+                </div>
+                <br>
+
+
+
+                <h3 id="visualization-line-error">Line with error bounds</h3>
+
+                <table
+                        class="datatable table"
+                        data-json="data4.json"
+                        data-show-chart="true"
+                        data-id-field="code"
+                        data-rank-mode="grouped_muted"
+                        data-chart-modes="line"
+                        data-sort-name="value1i"
+                        data-sort-order="desc"
+                        data-pagination="false"
+                        data-show-pagination-switch="false"
+                        data-line-show-error-bar="false"
+                        data-line-show-interval="true"
+                >
+                    <thead>
+                    <tr>
+                        <th data-sortable="false" data-rank="true">
+                            <span class="text-muted">Rank</span>
+                        </th>
+                        <th class="sep-left-cell"
+                            data-chartable="false"
+                            data-field="code"
+                            data-sortable="true"
+                            data-visible="true">
+                            System
+                        </th>
+                        <th class="sep-left-cell"
+                            data-align="center"
+                            data-beginatzero="false"
+                            data-chartable="true"
+                            data-field="value1i"
+                            data-sortable="true"
+                            data-value-type="float1-percentage-interval-muted"
+                            data-visible="true">
+                            Value 1
+                        </th>
+                        <th class="sep-left-cell"
+                            data-align="center"
+                            data-beginatzero="false"
+                            data-chartable="true"
+                            data-field="value1p"
+                            data-sortable="true"
+                            data-value-type="int-percentage-plusminus-muted"
+                            data-visible="true">
+                            Value 2
+                        </th>
+                    </tr>
+                    </thead>
+                </table>
+                <br>
+                <a class="btn btn-primary" role="button" data-toggle="collapse" href="#visualization-line-error-example" aria-expanded="false" aria-controls="visualization-line-error-example">
+                    <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Show code
+                </a>
+
+                <div class="collapse" id="visualization-line-error-example">
+                    <pre><code class="language-markup">
+&lt;table
+    class="datatable table"
+    data-json="data4.json"
+    data-show-chart="true"
+    data-id-field="code"
+    data-rank-mode="grouped_muted"
+    data-chart-modes="line"
+    data-sort-name="value1i"
+    data-sort-order="desc"
+    data-pagination="false"
+    data-show-pagination-switch="false"
+    data-line-show-error-bar="false"
+    data-line-show-interval="true"
+    &gt;
+    &lt;thead&gt;
+        &lt;tr&gt;
+            &lt;th data-sortable="false" data-rank="true"&gt;
+                &lt;span class="text-muted"&gt;Rank&lt;/span&gt;
+            &lt;/th&gt;
+            &lt;th class="sep-left-cell"
+                data-chartable="false"
+                data-field="code"
+                data-sortable="true"
+                data-visible="true"&gt;
+                System
+            &lt;/th&gt;
+            &lt;th class="sep-left-cell"
+                data-align="center"
+                data-beginatzero="false"
+                data-chartable="true"
+                data-field="value1i"
+                data-sortable="true"
+                data-value-type="float1-percentage-interval-muted"
+                data-visible="true"&gt;
+                Value 1
+            &lt;/th&gt;
+            &lt;th class="sep-left-cell"
+                data-align="center"
+                data-beginatzero="false"
+                data-chartable="true"
+                data-field="value1p"
+                data-sortable="true"
+                data-value-type="int-percentage-plusminus-muted"
+                data-visible="true"&gt;
+                Value 2
+            &lt;/th&gt;
+        &lt;/tr&gt;
+    &lt;/thead&gt;
+&lt;/table&gt;
+                    </code></pre>
+                </div>
+                <br>
+
 
                 <h3 id="visualization-scatter">Scatter</h3>
                 <p>Two dimensional data visualisation. Visualized columns can be selected from dropdown menus. Default columns for scatter chart are set with <code>data-scatter-x</code> and <code>data-scatter-y</code> attributes.</p>
@@ -1612,6 +3121,114 @@ data:
                 </a>
 
                 <div class="collapse" id="visualization-scatter-example">
+                    <pre><code class="language-markup">
+&lt;table
+    class="datatable table"
+    data-json="data2.json"
+    data-show-chart="true"
+    data-id-field="code"
+    data-rank-mode="grouped_muted"
+    data-chart-modes="scatter"
+    data-scatter-x="value1"
+    data-scatter-y="value2"
+    data-sort-name="value1"
+    data-sort-order="desc"
+    data-pagination="false"
+    data-show-pagination-switch="false"
+    &gt;
+    &lt;thead&gt;
+        &lt;tr&gt;
+            &lt;th data-sortable="false" data-rank="true"&gt;
+                &lt;span class="text-muted"&gt;Rank&lt;/span&gt;
+            &lt;/th&gt;
+            &lt;th class="sep-left-cell"
+                data-chartable="false"
+                data-field="code"
+                data-sortable="true"
+                data-visible="true"&gt;
+                System
+            &lt;/th&gt;
+            &lt;th class="sep-left-cell"
+                data-align="center"
+                data-beginatzero="false"
+                data-chartable="true"
+                data-field="value1"
+                data-sortable="true"
+                data-visible="true"&gt;
+                Value 1
+            &lt;/th&gt;
+            &lt;th class="sep-left-cell"
+                data-align="center"
+                data-beginatzero="false"
+                data-chartable="true"
+                data-field="value2"
+                data-sortable="true"
+                data-visible="true"&gt;
+                Value 2
+            &lt;/th&gt;
+        &lt;/tr&gt;
+    &lt;/thead&gt;
+&lt;/table&gt;
+                    </code></pre>
+                </div>
+                <br>
+
+                <h3 id="visualization-scatter-error-bar">Scatter with error bars</h3>
+                <table
+                        class="datatable table"
+                        data-json="data4.json"
+                        data-show-chart="true"
+                        data-id-field="code"
+                        data-rank-mode="grouped_muted"
+                        data-chart-modes="scatter"
+                        data-scatter-x="value1i"
+                        data-scatter-y="value1p"
+                        data-sort-name="value1i"
+                        data-sort-order="desc"
+                        data-pagination="false"
+                        data-show-pagination-switch="false"
+                >
+                    <thead>
+                    <tr>
+                        <th data-sortable="false" data-rank="true">
+                            <span class="text-muted">Rank</span>
+                        </th>
+                        <th class="sep-left-cell"
+                            data-chartable="false"
+                            data-field="code"
+                            data-sortable="true"
+                            data-visible="true">
+                            System
+                        </th>
+                        <th class="sep-left-cell"
+                            data-align="center"
+                            data-beginatzero="false"
+                            data-chartable="true"
+                            data-field="value1i"
+                            data-sortable="true"
+                            data-value-type="float1-percentage-interval-muted"
+                            data-visible="true">
+                            Value 1
+                        </th>
+                        <th class="sep-left-cell"
+                            data-align="center"
+                            data-beginatzero="false"
+                            data-chartable="true"
+                            data-field="value1p"
+                            data-sortable="true"
+                            data-value-type="int-percentage-plusminus-muted"
+                            data-visible="true">
+                            Value 2
+                        </th>
+                    </tr>
+                    </thead>
+                </table>
+                <br>
+                <a class="btn btn-primary" role="button" data-toggle="collapse" href="#visualization-scatter-error-bar-example" aria-expanded="false" aria-controls="visualization-scatter-error-bar-example">
+                    <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Show code
+                </a>
+
+                <div class="collapse" id="visualization-scatter-error-bar-example">
                     <pre><code class="language-markup">
 &lt;table
     class="datatable table"
@@ -2144,7 +3761,6 @@ Comparison sets are set with <code>data-comparison-sets-json</code> attribute, a
                 </div>
                 <br>
 
-
                 <h3 id="visualization-row-highlighting">Row highlighting</h3>
                 <p>If <code>data-row-highlighting</code> is enabled, row colors are relayed onto bar and scatter visualizations. </p>
                 <table
@@ -2542,7 +4158,16 @@ $( document ).ready(function() {
     <script type="text/javascript" src="https://cdn.rawgit.com/toni-heittola/js-datatable/v1.0.4/js.min/js-yaml.min.js"></script>
 
     <script type="text/javascript" src="https://cdn.rawgit.com/toni-heittola/js-datatable/v1.0.4/js.min/datatable.min.js"></script>
+    <!--
+    <script type="text/javascript" src="../js/bootstrap-table.js"></script>
+    <script type="text/javascript" src="../js/bootstrap-table-filter-control.js"></script>
 
+    <script type="text/javascript" src="../js/Chart.bundle.js"></script>
+    <script type="text/javascript" src="../js/moment.js"></script>
+    <script type="text/javascript" src="../js.min/js-yaml.min.js"></script>
+
+    <script type="text/javascript" src="../js/datatable.js"></script>
+    -->
     <script type="text/javascript">
         $( document ).ready(function() {
             $('#js-customization-example').datatable({
