@@ -1623,7 +1623,6 @@ jQuery( document ).ready(function() {
                     case 'inline-indicator-binary':
                         window['valueFormatter_inline_indicator_binary_svg'+this.uniqueId] = function (value, row, index){
                             var data = self.parseDataList(value);
-                            console.log(data);
                             var html = '';
                             if(data.length > 0) {
                                 for (var i = 0; i < data.length; i++) {
@@ -2094,7 +2093,6 @@ jQuery( document ).ready(function() {
                         var yaxis = chart.scales['y-axis-0'];
 
                         var dataset = this.getDataset();
-                        //console.log(chart.getDatasetMeta(0).data[1]._model.x - chart.getDatasetMeta(0).data[0]._model.x);
                         if (data_min && data_max) {
                             var x_tipWidth_pixel = 1.0;
                             var y_tipWidth_pixel = 1.0;
@@ -2110,7 +2108,7 @@ jQuery( document ).ready(function() {
                                     strokeStyle = chart.config.options.error_bar.strokeStyle;
                                 }
 
-                                ctx.strokeStyle = strokeStyle; //dataset.borderColor[index]; //'rgba(112, 187, 225 ,0.99)';
+                                ctx.strokeStyle = strokeStyle;
 
                                 var lineWidth = dataset.borderWidth;
                                 if(chart.config.options.error_bar.hasOwnProperty('lineWidth')){
@@ -2123,12 +2121,8 @@ jQuery( document ).ready(function() {
 
                                 if(typeof data_max[index] === 'object' && typeof data_min[index] === 'object'){
                                     if(data_max[index]){
-                                        //console.log(chart.getDatasetMeta(0));
                                         var x_max = xaxis.getPixelForValue(data_max[index].x);
                                         var x_min = xaxis.getPixelForValue(data_min[index].x);
-                                        //x_tipWidth = xaxis.getPixelForValue(x_tipWidth) - xaxis.getPixelForValue(0);
-                                        //y_tipWidth = xaxis.getPixelForValue(y_tipWidth) - yaxis.getPixelForValue(0);
-                                        //var tipWidth_ratio = 0.5;
 
                                         x_tipWidth_pixel = 10;
                                         y_tipWidth_pixel = 10;
@@ -2136,7 +2130,6 @@ jQuery( document ).ready(function() {
                                             x_tipWidth_pixel = chart.config.options.error_bar.tipWidth;
                                             y_tipWidth_pixel = chart.config.options.error_bar.tipWidth;
                                         }
-
 
                                         // X
                                         ctx.beginPath();
