@@ -40,12 +40,12 @@
 
 <body data-spy="scroll" data-target="#toc">
 
-<div class="container">
-    <div class="row">
-        <div class="col-md-3">
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="col-md-2">
             <nav id="toc" data-spy="affix" data-toggle="toc"></nav>
         </div>
-        <div class="col-md-9">
+        <div class="col-md-10">
             <h1 class="page-header" id="js-table">js-datatable development tests</h1>
 
             <h2 id="visualization-baseline">Horizontal line</h2>
@@ -58,8 +58,13 @@
                     data-row-highlighting="true"
                     data-chart-modes="bar,scatter,comparison"
                     data-chart-default-mode="bar"
+
                     data-bar-baseline="false"
                     data-bar-hline="true"
+                    data-bar-height="250"
+                    data-bar-tooltip-position="top"
+                    data-bar-show-horizontal-indicator="true"
+                    data-bar-show-error-bar="true"
 
                     data-scatter-x="value1"
                     data-scatter-y="value2"
@@ -72,8 +77,9 @@
 
                     data-sort-name="value1"
                     data-sort-order="desc"
-                    data-pagination="false"
-                    data-show-pagination-switch="false"
+                    data-pagination="true"
+                    data-show-pagination-switch="true"
+                    data-column-hover="true"
             >
                 <thead>
                 <tr>
@@ -95,7 +101,7 @@
                         data-sortable="true"
                         data-visible="true"
                         data-value-type="float1-percentage-interval-muted"
-                        data-axis-label="Label"
+                        data-axis-label="Label A"
                     >
                         Value 1
                     </th>
@@ -105,30 +111,89 @@
                         data-chartable="true"
                         data-field="value2"
                         data-sortable="true"
-                        data-visible="true">
+                        data-visible="true"
+                        data-value-type="float1-percentage"
+                        data-axis-label="Label B"
+                    >
                         Value 2
                     </th>
                     <th class="sep-left-cell"
                         data-align="center"
                         data-beginatzero="false"
                         data-chartable="true"
-                        data-field="value3"
+                        data-field="hbar"
                         data-sortable="true"
-                        data-visible="true">
-                        Value 3
+                        data-visible="true"
+                        data-value-type="inline-bar-horizontal-percentage">
+                        Bar
                     </th>
                     <th class="sep-left-cell"
                         data-align="center"
                         data-beginatzero="false"
                         data-chartable="true"
-                        data-field="value4"
+                        data-field="line"
                         data-sortable="true"
-                        data-visible="true">
-                        Value 4
+                        data-visible="true"
+                        data-value-type="inline-bar-vertical-tristate">
+                        Line
+                    </th>
+                    <th class="sep-left-cell"
+                        data-align="center"
+                        data-beginatzero="false"
+                        data-chartable="true"
+                        data-field="line"
+                        data-sortable="true"
+                        data-visible="true"
+                        data-value-type="inline-indicator-tristate-1">
+                        Bin
+                    </th>
+                    <th class="sep-left-cell"
+                        data-align="center"
+                        data-beginatzero="false"
+                        data-chartable="true"
+                        data-field="timeline"
+                        data-sortable="true"
+                        data-visible="true"
+                        data-value-type="inline-line-steps">
+                        scatter line
                     </th>
                 </tr>
                 </thead>
             </table>
+
+            <h2 id="visualization-baseline">Time line</h2>
+            <table
+                    class="datatable table"
+                    data-json="data_time.json"
+                    data-show-chart="false"
+                    data-id-field="time"
+
+                    data-sort-name="time"
+                    data-sort-order="desc"
+                    data-pagination="true"
+                    data-show-pagination-switch="true"
+                    data-column-hover="true"
+            >
+                <thead>
+                <tr>
+                    <th class=""
+                        data-chartable="false"
+                        data-field="time"
+                        data-sortable="true"
+                        data-visible="true">
+                        Time
+                    </th>
+                    <th class="sep-left-cell"
+                        data-chartable="false"
+                        data-field="value"
+                        data-sortable="true"
+                        data-visible="true">
+                        Value
+                    </th>
+                </tr>
+                </thead>
+            </table>
+
 
             <h2 id="visualization-comparison">Comparison</h2>
             <table
@@ -264,7 +329,7 @@
                         data-align="center"
                         data-field="list"
                         data-tag="false"
-                        data-value-type="list2"
+                        data-value-type="list"
                         data-sortable="true"
                         data-filter-control="select">
                         List
@@ -293,6 +358,7 @@
     <script type="text/javascript" src="../js/bootstrap-table-filter-control.js"></script>
 
     <script type="text/javascript" src="../js/Chart.bundle.js"></script>
+    <script type="text/javascript" src="../js/moment.js"></script>
     <script type="text/javascript" src="../js.min/js-yaml.min.js"></script>
 
     <script type="text/javascript" src="../js/datatable.js"></script>
