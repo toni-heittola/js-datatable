@@ -2385,7 +2385,6 @@ jQuery( document ).ready(function() {
 
                     // Vertical line following the mouse
                     if(chart.config.options.hasOwnProperty('vertical_indicator_line') && chart.config.options.vertical_indicator_line.enabled){
-                        console.log('TEST');
                         if (this.chart.tooltip._active && this.chart.tooltip._active.length) {
                             var current_point = this.chart.tooltip._active[0];
                             var ctx = this.chart.ctx;
