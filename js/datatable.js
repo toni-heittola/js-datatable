@@ -2383,6 +2383,38 @@ jQuery( document ).ready(function() {
                         }
                     }
 
+                    // Vertical line following the mouse
+                    if(chart.config.options.hasOwnProperty('vertical_indicator_line') && chart.config.options.vertical_indicator_line.enabled){
+                        console.log('TEST');
+                        if (this.chart.tooltip._active && this.chart.tooltip._active.length) {
+                            var current_point = this.chart.tooltip._active[0];
+                            var ctx = this.chart.ctx;
+                            var x = current_point.tooltipPosition().x;
+                            var topY = this.chart.scales['y-axis-0'].top;
+                            var bottomY = this.chart.scales['y-axis-0'].bottom;
+
+                            var lineWidth = 4;
+                            if(chart.config.options.vertical_indicator_line.hasOwnProperty('lineWidth')){
+                                lineWidth = chart.config.options.vertical_indicator_line.lineWidth;
+                            }
+
+                            var strokeStyle = 'rgba(0,0,0,0.2)';
+                            if(chart.config.options.vertical_indicator_line.hasOwnProperty('strokeStyle')){
+                                strokeStyle = chart.config.options.vertical_indicator_line.strokeStyle;
+                            }
+
+                            // Draw line
+                            ctx.save();
+                            ctx.beginPath();
+                            ctx.moveTo(x, topY);
+                            ctx.lineTo(x, bottomY);
+                            ctx.lineWidth = lineWidth;
+                            ctx.strokeStyle = strokeStyle;
+                            ctx.stroke();
+                            ctx.restore();
+                        }
+                    }
+
                     if(chart.config.options.hasOwnProperty('error_bar') && chart.config.options.error_bar.enabled) {
                         if (data_min && data_max) {
                             $.each( data, function( index, item ) {
@@ -3952,6 +3984,11 @@ jQuery( document ).ready(function() {
                     },
                     legend: {
                         display: false
+                    },
+                    vertical_indicator_line: {
+                        enabled: this.options.bar.vertical_indicator_line.enabled,
+                        lineWidth: this.options.bar.vertical_indicator_line.lineWidth,
+                        strokeStyle: this.options.bar.vertical_indicator_line.strokeStyle
                     },
                     horizontal_line: {
                         enabled: this.options.bar.horizontal_line.enabled
