@@ -3819,6 +3819,13 @@ jQuery( document ).ready(function() {
                 // Make sure lower and upper limits are valid
                 var value_max = item.value_max;
                 var value_min = item.value_min;
+
+                if(all_value_max < item.value){
+                    all_value_max = item.value;
+                }
+                if(all_value_min > item.value){
+                    all_value_min = item.value;
+                }
                 if(value_min !== null && value_max !== null){
                     if(value_max < value_min) {
                         // Flip max and min
@@ -3827,16 +3834,10 @@ jQuery( document ).ready(function() {
                         var value_max = value_tmp;
                     }
 
-                    if(all_value_max < item.value){
-                        all_value_max = item.value;
-                    }
                     if(all_value_max < value_max){
                         all_value_max = value_max;
                     }
 
-                    if(all_value_min > item.value){
-                        all_value_min = item.value;
-                    }
                     if(all_value_min > value_min){
                         all_value_min = value_min;
                     }
@@ -3889,6 +3890,34 @@ jQuery( document ).ready(function() {
                 $(this.options.element.bar.div).show(0);
                 var begin_at_zero = $(this.element).find('thead tr th[data-field=\"'+sort_name+'\"]').data('beginatzero');
 
+
+                // Axis scaling
+                var axis_scale = 'linear';
+                var axis_scale_type =null;
+                if(typeof header.data('axis-scale') !== 'undefined'){
+
+                    if(header.data('axis-scale').startsWith('log')) {
+                        axis_scale = 'logarithmic';
+                        axis_scale_type = 'log';
+
+                        if(header.data('axis-scale') === 'log_unit') {
+                            axis_scale_type = 'log_unit';
+
+                        }else if(header.data('axis-scale') === 'log_exp'){
+                            axis_scale_type = 'log_exp';
+
+                        }else if(header.data('axis-scale') === 'log10'){
+                            axis_scale_type = 'log10';
+
+                        }else if(header.data('axis-scale') === 'log10_unit'){
+                            axis_scale_type = 'log10_unit';
+
+                        }else if(header.data('axis-scale') === 'log10_exp'){
+                            axis_scale_type = 'log10_exp';
+                        }
+                    }
+                }
+
                 var chart_data = {
                     labels: labels,
                     datasets: [
@@ -3922,7 +3951,7 @@ jQuery( document ).ready(function() {
                 };
                 var caretSize = 5;
                 var caretPadding = 2;
-                if(this.options.bar.tooltips.position == 'top'){
+                if(this.options.bar.tooltips.position === 'top'){
                     tooltip_position = 'line_centered_top';
                     padding = {
                         left: 0,
@@ -3933,7 +3962,7 @@ jQuery( document ).ready(function() {
                     caretSize = 0;
                     caretPadding = 0;
 
-                }else if(this.options.bar.tooltips.position == 'bottom'){
+                }else if(this.options.bar.tooltips.position === 'bottom'){
                     tooltip_position = 'line_centered_bottom';
                     padding = {
                         left: 0,
@@ -3960,7 +3989,7 @@ jQuery( document ).ready(function() {
                         }],
                         yAxes: [{
                             stacked: false,
-                            type: 'linear',
+                            type: axis_scale,
                             ticks: {
                                 beginAtZero: begin_at_zero,
                                 suggestedMax: all_value_max,
@@ -4052,6 +4081,35 @@ jQuery( document ).ready(function() {
                         }
                     }
                 };
+
+                if(axis_scale === 'logarithmic'){
+                    chart_options.scales.yAxes[0].ticks.callback = function (value, index, values) {
+
+                        if(axis_scale_type.startsWith('log10')) {
+                            if (!(value === 1e1 || value === 1e2 ||
+                                value === 1e3 || value === 1e4 ||
+                                value === 1e5 || value === 1e6 ||
+                                value === 1e7 || value === 1e8 ||
+                                value === 1e9 || value === 1e10)) {
+                                return '';
+                            }
+                        }else if(axis_scale_type.startsWith('log')){
+                            if(values.length > 10){
+                                if(index % Math.ceil(values.length / 10.0) !== 0){
+                                    return '';
+                                }
+                            }
+                        }
+
+                        if(axis_scale_type.endsWith('_unit')){
+                            return self.addNumberPrefix(value);
+                        }else if(axis_scale_type.endsWith('_exp')){
+                            return value.toExponential(2);
+                        }else{
+                            return value;
+                        }
+                    }
+                }
 
                 this.bar_chart = new Chart(chart_ctx, {
                     type: 'barError',
@@ -4585,6 +4643,13 @@ jQuery( document ).ready(function() {
                 var x_value_max = x_item.value_max;
                 var x_value_min = x_item.value_min;
 
+                if(x_all_value_max < x_item.value){
+                    x_all_value_max = x_item.value;
+                }
+                if(x_all_value_min > x_item.value){
+                    x_all_value_min = x_item.value;
+                }
+
                 if(x_value_min !== null && x_value_max !== null){
                     if(x_value_max < x_value_min) {
                         // Flip max and min
@@ -4604,6 +4669,13 @@ jQuery( document ).ready(function() {
 
                 var y_value_max = y_item.value_max;
                 var y_value_min = y_item.value_min;
+
+                if(y_all_value_max < y_item.value){
+                    y_all_value_max = y_item.value;
+                }
+                if(y_all_value_min > y_item.value){
+                    y_all_value_min = y_item.value;
+                }
 
                 if(y_value_min !== null && y_value_max !== null){
                     if(y_value_max < y_value_min) {
@@ -4633,6 +4705,59 @@ jQuery( document ).ready(function() {
 
                 point_radius.push(this.options.scatter.point.radius.normal);
                 point_hover_radius.push(this.options.scatter.point.radius.hover);
+            }
+
+            // Axis scaling
+            var axis_x_scale = 'linear';
+            var axis_x_scale_type =null;
+            if(typeof header_x.data('axis-scale') !== 'undefined'){
+
+                if(header_x.data('axis-scale').startsWith('log')) {
+                    axis_x_scale = 'logarithmic';
+                    axis_x_scale_type = 'log';
+
+                    if(header_x.data('axis-scale') === 'log_unit') {
+                        axis_x_scale_type = 'log_unit';
+
+                    }else if(header_x.data('axis-scale') === 'log_exp'){
+                        axis_x_scale_type = 'log_exp';
+
+                    }else if(header_x.data('axis-scale') === 'log10'){
+                        axis_x_scale_type = 'log10';
+
+                    }else if(header_x.data('axis-scale') === 'log10_unit'){
+                        axis_x_scale_type = 'log10_unit';
+
+                    }else if(header_x.data('axis-scale') === 'log10_exp'){
+                        axis_x_scale_type = 'log10_exp';
+                    }
+                }
+            }
+
+            var axis_y_scale = 'linear';
+            var axis_y_scale_type =null;
+            if(typeof header_y.data('axis-scale') !== 'undefined'){
+
+                if(header_y.data('axis-scale').startsWith('log')) {
+                    axis_y_scale = 'logarithmic';
+                    axis_y_scale_type = 'log';
+
+                    if(header_y.data('axis-scale') === 'log_unit') {
+                        axis_y_scale_type = 'log_unit';
+
+                    }else if(header_y.data('axis-scale') === 'log_exp'){
+                        axis_y_scale_type = 'log_exp';
+
+                    }else if(header_y.data('axis-scale') === 'log10'){
+                        axis_y_scale_type = 'log10';
+
+                    }else if(header_y.data('axis-scale') === 'log10_unit'){
+                        axis_y_scale_type = 'log10_unit';
+
+                    }else if(header_y.data('axis-scale') === 'log10_exp'){
+                        axis_y_scale_type = 'log10_exp';
+                    }
+                }
             }
 
             var chart_ctx = document.getElementById(this.options.element.scatter.canvas.replace('#',''));
@@ -4694,7 +4819,7 @@ jQuery( document ).ready(function() {
                 scales: {
                     xAxes: [{
                         position: 'bottom',
-                        type: 'linear',
+                        type: axis_x_scale,
                         ticks: {
                             reverse: x_scale_reverse,
                             suggestedMin: x_all_value_min,
@@ -4708,7 +4833,7 @@ jQuery( document ).ready(function() {
                     }],
                     yAxes: [{
                         position: 'left',
-                        type: 'linear',
+                        type: axis_y_scale,
                         ticks: {
                             reverse: y_scale_reverse,
                             suggestedMin: y_all_value_min,
@@ -4726,9 +4851,9 @@ jQuery( document ).ready(function() {
                     backgroundColor: this.options.scatter.colors.background
                 },
                 onHover: function(event, elements){
-                    if(event.type == 'mouseout' || event.type == 'touchend'){
+                    if(event.type === 'mouseout' || event.type === 'touchend'){
                         $(self.element).find('tr td').removeClass('row-hover');
-                    }else if(event.type == 'mousemove'){
+                    }else if(event.type === 'mousemove'){
                         if(elements.length > 0){
                             $(self.element).find('tr td').removeClass('row-hover');
 
@@ -4737,7 +4862,7 @@ jQuery( document ).ready(function() {
                             var row_index = value_index;
                             if(table_options.pagination){
                                 var page_number = Math.floor(value_index / table_options.pageSize)+1;
-                                if(page_number == table_options.pageNumber){
+                                if(page_number === table_options.pageNumber){
                                     row_index = value_index % table_options.pageSize;
                                     $(self.element).find('tbody tr:nth-child('+(row_index+1)+') td').addClass('row-hover');
                                 }
@@ -4748,6 +4873,65 @@ jQuery( document ).ready(function() {
                     }
                 }
             };
+
+            if(axis_x_scale === 'logarithmic'){
+                chart_options.scales.xAxes[0].ticks.callback = function (value, index, values) {
+
+                    if(axis_x_scale_type.startsWith('log10')) {
+                        if (!(value === 1e1 || value === 1e2 ||
+                            value === 1e3 || value === 1e4 ||
+                            value === 1e5 || value === 1e6 ||
+                            value === 1e7 || value === 1e8 ||
+                            value === 1e9 || value === 1e10)) {
+                            return '';
+                        }
+                    }else if(axis_x_scale_type.startsWith('log')){
+                        if(values.length > 10){
+                            if(index % Math.ceil(values.length / 10.0) !== 0){
+                                return '';
+                            }
+                        }
+                    }
+
+                    if(axis_x_scale_type.endsWith('_unit')){
+                        return self.addNumberPrefix(value);
+                    }else if(axis_x_scale_type.endsWith('_exp')){
+                        return value.toExponential(2);
+                    }else{
+                        return value;
+                    }
+                }
+            }
+
+            if(axis_y_scale === 'logarithmic'){
+                chart_options.scales.yAxes[0].ticks.callback = function (value, index, values) {
+
+                    if(axis_y_scale_type.startsWith('log10')) {
+                        if (!(value === 1e1 || value === 1e2 ||
+                            value === 1e3 || value === 1e4 ||
+                            value === 1e5 || value === 1e6 ||
+                            value === 1e7 || value === 1e8 ||
+                            value === 1e9 || value === 1e10)) {
+                            return '';
+                        }
+                    }else if(axis_y_scale_type.startsWith('log')){
+                        if(values.length > 10){
+                            if(index % Math.ceil(values.length / 10.0) !== 0){
+                                return '';
+                            }
+                        }
+                    }
+
+                    if(axis_y_scale_type.endsWith('_unit')){
+                        return self.addNumberPrefix(value);
+                    }else if(axis_y_scale_type.endsWith('_exp')){
+                        return value.toExponential(2);
+                    }else{
+                        return value;
+                    }
+                }
+            }
+
             var chart_data = {
                 labels: labels,
                 datasets: [{
@@ -5625,6 +5809,20 @@ jQuery( document ).ready(function() {
             rgb.css += (opacity ? ',' + opacity : '') + ')';
 
             return rgb;
+        },
+        addNumberPrefix: function(value, min) {
+            min = min || 1e3;
+
+            if (value >= min) {
+                var units = ["k", "M", "B", "T"];
+
+                var order = Math.floor(Math.log(value) / Math.log(1000));
+
+                return Math.floor(value / 1000**order) + units[(order - 1)];
+            }
+
+            // return formatted original number
+            return value.toLocaleString();
         }
     };
 

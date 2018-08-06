@@ -61,6 +61,10 @@
 
                     data-bar-baseline="false"
                     data-bar-hline="true"
+                    data-bar-tooltip-position="top"
+
+                    data-bar-show-horizontal-indicator="true"
+                    data-bar-show-vertical-indicator="true"
                     data-bar-height="250"
                     data-bar-tooltip-position="top"
 
@@ -145,7 +149,7 @@
                         data-field="line"
                         data-sortable="true"
                         data-visible="true"
-                        data-value-type="inline-indicator-tristate-1">
+                        data-value-type="inline-indicator-tristate">
                         Bin
                     </th>
                     <th class="sep-left-cell"
@@ -233,6 +237,7 @@
                         data-chartable="true"
                         data-field="value1"
                         data-sortable="true"
+                        data-value-type="float1-interval-muted"
                         data-visible="true">
                         Value 1
                     </th>
@@ -242,6 +247,7 @@
                         data-chartable="true"
                         data-field="value2"
                         data-sortable="true"
+                        data-value-type="int"
                         data-visible="true">
                         Value 2
                     </th>
@@ -251,6 +257,7 @@
                         data-chartable="true"
                         data-field="value3"
                         data-sortable="true"
+                        data-value-type="float1-plusminus-muted"
                         data-visible="true">
                         Value 3
                     </th>
@@ -260,6 +267,7 @@
                         data-chartable="true"
                         data-field="value4"
                         data-sortable="true"
+                        data-value-type="float1-plusminus-muted"
                         data-visible="true">
                         Value 4
                     </th>
@@ -277,7 +285,7 @@
                    data-rank-mode="grouped_muted"
                    data-show-chart="true"
                    data-chart-modes="bar,scatter"
-                   data-chart-default-mode="scatter"
+                   data-chart-default-mode="bar"
                    data-show-bar-chart-xaxis="true"
                    data-filter-control="true"
                    data-filter-show-clear="true"
@@ -293,6 +301,7 @@
                     <th data-align="center"
                         data-field="value1"
                         data-chartable="true"
+                        data-value-type="float1-interval-muted"
                         data-sortable="true">
                         Value 1
                     </th>
@@ -303,45 +312,63 @@
                         data-sortable="true">
                         Value 2
                     </th>
-                    <th data-align="center"
-                        data-field="value3"
-                        data-reversed="true"
-                        data-chartable="true"
-                        data-sortable="true">
-                        Value 3
-                    </th>
-                    <th class="sep-left-cell"
-                        data-align="center"
-                        data-field="feature1"
-                        data-sortable="true"
-                        data-tag="true"
-                        data-filter-control="select">
-                        Feature 1
-                    </th>
-                    <th class="sep-left-cell"
-                        data-align="center"
-                        data-field="feature2"
-                        data-sortable="true"
-                        data-tag="true"
-                        data-filter-control="select">
-                        Feature 2
-                    </th>
-                    <th class="sep-left-cell"
-                        data-align="center"
-                        data-field="list"
-                        data-tag="false"
-                        data-value-type="list"
-                        data-sortable="true"
-                        data-filter-control="select">
-                        List
-                    </th>
                 </tr>
                 </thead>
             </table>
 
+            <h2 id="visualization-log">Plot with logarithmic values</h2>
 
-
-
+            <table
+                    class="datatable table"
+                    data-json="data4.json"
+                    data-show-chart="true"
+                    data-id-field="code"
+                    data-rank-mode="grouped_muted"
+                    data-chart-modes="bar,scatter,line"
+                    data-chart-default-mode="scatter"
+                    data-scatter-x="value5"
+                    data-scatter-y="value1"
+                    data-sort-name="value5"
+                    data-sort-order="desc"
+                    data-pagination="false"
+                    data-show-pagination-switch="false"
+            >
+                <thead>
+                <tr>
+                    <th data-sortable="false" data-rank="true">
+                        <span class="text-muted">Rank</span>
+                    </th>
+                    <th class="sep-left-cell"
+                        data-chartable="false"
+                        data-field="code"
+                        data-sortable="true"
+                        data-visible="true">
+                        System
+                    </th>
+                    <th class="sep-left-cell"
+                        data-align="center"
+                        data-beginatzero="false"
+                        data-chartable="true"
+                        data-field="value1"
+                        data-sortable="true"
+                        data-value-type="float1-interval-muted"
+                        data-visible="true">
+                        Value X
+                    </th>
+                    <th class="sep-left-cell"
+                        data-align="center"
+                        data-beginatzero="false"
+                        data-chartable="true"
+                        data-axis-scale="log10_unit"
+                        data-field="value5"
+                        data-sortable="true"
+                        data-value-type="int"
+                        data-visible="true">
+                        Value Y
+                    </th>
+                </tr>
+                </thead>
+            </table>
 
         </div>
     </div>
@@ -360,7 +387,7 @@
 
     <script type="text/javascript" src="../js/Chart.bundle.js"></script>
     <script type="text/javascript" src="../js/moment.js"></script>
-    <script type="text/javascript" src="../js.min/js-yaml.min.js"></script>
+    <script type="text/javascript" src="../js/js-yaml.js"></script>
 
     <script type="text/javascript" src="../js/datatable.js"></script>
 

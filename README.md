@@ -312,6 +312,7 @@ In case an extensive customization is required, the datatable can be created wit
 | data-chartable	     | undefined	        | Can the column be select for visualization.                                   |
 | data-beginatzero	     | undefined	        | 0 is included in when values from column are visualized.                      |
 | data-value-type        | undefined	        | Value formatter: int, int-percentage, float1, float1-percentage, float2, float2-percentage, float3, float3-percentage, float4, float4-percentage, list, url, ref, anchor |
+| data-axis-scale        | 'linear'             | Axis scale type, possible values: 'log', 'log_unit', 'log_exp', 'log10', 'log10_unit', and 'log10_exp' |
 
 ### Row options
 
@@ -348,6 +349,10 @@ Essential Bootstraptable specific parameters are collected here for completeness
 
 
 ## Changelog
+
+**v1.1.1 (master)**
+
+- Add logarithmic scales to bar and scatter plots. 
 
 **v1.1.0**
 
