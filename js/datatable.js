@@ -98,7 +98,7 @@ jQuery( document ).ready(function() {
                     lineWidth: 4
                 },
                 vertical_indicator_line: {
-                    enabled: true,
+                    enabled: false,
                     strokeStyle: 'rgba(160,160,160,0.5)',
                     lineWidth: 4
                 },
