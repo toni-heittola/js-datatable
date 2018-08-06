@@ -2,10 +2,7 @@
 // datatable jQuery plug-in
 // ========================================
 //
-// datatable.js
-// Version: 0.2.6
-//
-// Copyright 2015-2017 Toni Heittola (toni.heittola@gmail.com)
+// Copyright 2015-2018 Toni Heittola (toni.heittola@gmail.com)
 // Released under the MIT license
 //
 // ========================================
@@ -98,6 +95,11 @@ jQuery( document ).ready(function() {
                     enabled: true,
                     strokeStyle: 'rgba(160,160,160,0.5)',
                     fillStyle: 'rgba(160,160,160,0.2)',
+                    lineWidth: 4
+                },
+                vertical_indicator_line: {
+                    enabled: true,
+                    strokeStyle: 'rgba(160,160,160,0.5)',
                     lineWidth: 4
                 },
                 error_bar: {
@@ -3661,6 +3663,7 @@ jQuery( document ).ready(function() {
             $(this.element).bootstrapTable();
             $(this.element).trigger('post-body.bs.table');
         },
+
         updateChart: function () {
             if(this.options.show_chart){
                 if(this.chart_mode == 'off'){
@@ -3679,6 +3682,7 @@ jQuery( document ).ready(function() {
                 }
             }
         },
+
         validBar: function () {
             var table_options = $(this.element).bootstrapTable('getOptions');
             var sort_name = table_options.sortName;
