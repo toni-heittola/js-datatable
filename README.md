@@ -353,6 +353,7 @@ Essential Bootstraptable specific parameters are collected here for completeness
 **v1.1.1 (master)**
 
 - Add logarithmic scales to bar and scatter plots. 
+- Add new value formatters float1-exp, float2-exp, float3-exp, float4-exp, numeric-unit.
 
 **v1.1.0**
 
