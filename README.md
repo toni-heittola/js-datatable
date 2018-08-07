@@ -346,7 +346,6 @@ Essential Bootstraptable specific parameters are collected here for completeness
 | data-sortable	         | false	            | True to allow the column can be sorted.                                       |
 | data-formatter	     | undefined	        | The context (this) is the column Object. The cell formatter function, take three parameters: value: the field value. row: the row record data. index: the row index. |
 | data-field	         | undefined	        | The column field name.                                                        |
-| data-axis-scale        | 'linear'             | Axis scale type, possible values: `log`, `log_unit`, `log_exp`, `log10`, `log10_unit`, and `log10_exp`. `*log10` will show only exponents of 10, `*_unit` will shorten large numbers with units (k, M, T), `exp` will use exponent notation. |
 
 ## Changelog
 
