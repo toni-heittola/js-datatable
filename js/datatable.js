@@ -1231,6 +1231,36 @@ jQuery( document ).ready(function() {
                         $(this).attr('data-formatter','valueFormatter_float4');
                         break;
 
+                    // large integers
+                    case 'float1-exp':
+                        $(this).attr('data-formatter','valueFormatter_float1_exp');
+                        break;
+                    case 'float2-exp':
+                        $(this).attr('data-formatter','valueFormatter_float2_exp');
+                        break;
+                    case 'float3-exp':
+                        $(this).attr('data-formatter','valueFormatter_float3_exp');
+                        break;
+                    case 'float4-exp':
+                        $(this).attr('data-formatter','valueFormatter_float4_exp');
+                        break;
+
+                    case 'numeric-unit':
+                        window['valueFormatter_numeric_unit'+this.uniqueId] = function (value, row, index){
+                            if($.isNumeric(value)){
+                                value = parseFloat(value);
+                                return self.addNumberPrefix(value);
+
+                            }else{
+                                return value;
+                            }
+
+
+                        };
+
+                        $(this).attr('data-formatter', 'valueFormatter_numeric_unit'+this.uniqueId);
+                        break;
+
                     // numeric with interval
                     case 'int-interval':
                         $(this).attr('data-formatter','valueFormatter_int_with_interval');
@@ -5870,7 +5900,7 @@ jQuery( document ).ready(function() {
 // ========================================
 // Helper functions for bootstrap-table.js
 // ========================================
-function valueFormatter_generic(value, row, index, precision, muted, prefix, postfix){
+function valueFormatter_generic_fixed(value, row, index, precision, muted, prefix, postfix){
     if(typeof prefix === 'undefined') {
         prefix = ''
     }
@@ -5891,57 +5921,91 @@ function valueFormatter_generic(value, row, index, precision, muted, prefix, pos
 }
 
 function percentageFormatter(value, row, index){
-    return valueFormatter_generic(value, row, index, undefined, false, undefined, ' %');
+    return valueFormatter_generic_fixed(value, row, index, undefined, false, undefined, ' %');
 }
 
 function valueFormatter_int(value, row, index){
-    return valueFormatter_generic(value, row, index, 0);
+    return valueFormatter_generic_fixed(value, row, index, 0);
 }
+
 function valueFormatter_float1(value, row, index){
-    return valueFormatter_generic(value, row, index, 1);
+    return valueFormatter_generic_fixed(value, row, index, 1);
 }
 function valueFormatter_float2(value, row, index){
-    return valueFormatter_generic(value, row, index, 2);
+    return valueFormatter_generic_fixed(value, row, index, 2);
 }
 function valueFormatter_float3(value, row, index){
-    return valueFormatter_generic(value, row, index, 3);
+    return valueFormatter_generic_fixed(value, row, index, 3);
 }
 function valueFormatter_float4(value, row, index){
-    return valueFormatter_generic(value, row, index, 4);
+    return valueFormatter_generic_fixed(value, row, index, 4);
+}
+
+function valueFormatter_generic_exponential(value, row, index, precision, muted, prefix, postfix){
+    if(typeof prefix === 'undefined') {
+        prefix = ''
+    }
+    if(typeof postfix === 'undefined') {
+        postfix = ''
+    }
+
+    if($.isNumeric(value)){
+        value = parseFloat(value);
+        if(typeof precision !== 'undefined') {
+            value = value.toExponential(precision);
+        }
+        return prefix + value + postfix;
+
+    }else{
+        return value;
+    }
+}
+
+function valueFormatter_float1_exp(value, row, index) {
+    return valueFormatter_generic_exponential(value, row, index, 1);
+}
+function valueFormatter_float2_exp(value, row, index) {
+    return valueFormatter_generic_exponential(value, row, index, 2);
+}
+function valueFormatter_float3_exp(value, row, index) {
+    return valueFormatter_generic_exponential(value, row, index, 3);
+}
+function valueFormatter_float4_exp(value, row, index) {
+    return valueFormatter_generic_exponential(value, row, index, 4);
 }
 
 // percentage values
 function valueFormatter_int_percentage(value, row, index){
-    return valueFormatter_generic(value, row, index, 0, false, undefined, ' %');
+    return valueFormatter_generic_fixed(value, row, index, 0, false, undefined, ' %');
 }
 function valueFormatter_float1_percentage(value, row, index){
-    return valueFormatter_generic(value, row, index, 1, false, undefined, ' %');
+    return valueFormatter_generic_fixed(value, row, index, 1, false, undefined, ' %');
 }
 function valueFormatter_float2_percentage(value, row, index){
-    return valueFormatter_generic(value, row, index, 2, false, undefined, ' %');
+    return valueFormatter_generic_fixed(value, row, index, 2, false, undefined, ' %');
 }
 function valueFormatter_float3_percentage(value, row, index){
-    return valueFormatter_generic(value, row, index, 3, false, undefined, ' %');
+    return valueFormatter_generic_fixed(value, row, index, 3, false, undefined, ' %');
 }
 function valueFormatter_float4_percentage(value, row, index){
-    return valueFormatter_generic(value, row, index, 4, false, undefined, ' %');
+    return valueFormatter_generic_fixed(value, row, index, 4, false, undefined, ' %');
 }
 
 // error values
 function valueFormatter_int_error(value, row, index){
-    return valueFormatter_generic(value, row, index, 0, false, '±');
+    return valueFormatter_generic_fixed(value, row, index, 0, false, '±');
 }
 function valueFormatter_float1_error(value, row, index){
-    return valueFormatter_generic(value, row, index, 1, false, '±');
+    return valueFormatter_generic_fixed(value, row, index, 1, false, '±');
 }
 function valueFormatter_float2_error(value, row, index){
-    return valueFormatter_generic(value, row, index, 2, false, '±');
+    return valueFormatter_generic_fixed(value, row, index, 2, false, '±');
 }
 function valueFormatter_float3_error(value, row, index){
-    return valueFormatter_generic(value, row, index, 3, false, '±');
+    return valueFormatter_generic_fixed(value, row, index, 3, false, '±');
 }
 function valueFormatter_float4_error(value, row, index){
-    return valueFormatter_generic(value, row, index, 4, false, '±');
+    return valueFormatter_generic_fixed(value, row, index, 4, false, '±');
 }
 
 function valueFormatter_numeric_with_interval(value, row, index, precision, muted){
