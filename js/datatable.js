@@ -64,7 +64,17 @@ jQuery( document ).ready(function() {
                     'HH:mm',
                     'HH:mm:ss',
                     'HH:mm:ss.SSS'
-                ]
+                ],
+                display_formats: {
+                    'second': 'hh:mm:ss',
+                    'minute': 'hh:mm',
+                    'hour': 'hh',
+                    'day': 'YYYY-MM-DD',
+                    'week': 'll',
+                    'month': 'MMM YYYY',
+                    'quarter': '[Q]Q - YYYY',
+                    'year': 'YYYY'
+                }
             },
             table: {
                 id_field: 'id',
@@ -180,9 +190,24 @@ jQuery( document ).ready(function() {
             },
             line: {
                 height: 240,
-                xaxis: null,
-                xaxis_field: null,
-                xaxis_sorted: false,
+                show_xaxis: true,
+                xaxis: {
+                    field: null,
+                    sorted: false,
+                    timeunit: null,
+                    timestepsize: null
+                },
+                yaxis: {
+                    beginatzero: false,
+                    label: null,
+                    scale: null,
+                },
+                fill: false,
+                //xaxis_field: null,
+                //xaxis_sorted: false,
+                //xaxis_timeunit: null,
+                //xaxis_timestepsize: null,
+                //yaxis_beginatzero: false,
                 fields: null,
                 point: {
                     enabled: true,
@@ -204,13 +229,13 @@ jQuery( document ).ready(function() {
                 vertical_indicator_line: {
                     enabled: true,
                     strokeStyle: 'rgba(160,160,160,0.5)',
-                    lineWidth: 4
+                    lineWidth: 2
                 },
                 horizontal_indicator_line: {
                     enabled: true,
-                    strokeStyle: 'rgba(160,160,160,0.5)',
+                    strokeStyle: null, //'rgba(160,160,160,0.5)',
                     fillStyle: 'rgba(160,160,160,0.2)',
-                    lineWidth: 4
+                    lineWidth: 2
                 },
                 error_bar: {
                     enabled: false,
@@ -953,13 +978,36 @@ jQuery( document ).ready(function() {
 
             // Line
             if(typeof $(element).data('line-fields') !== 'undefined'){
-                attributes.line.fields = $(element).data('line-fields').split(',');
+                attributes.line.fields = $(element).data('line-fields').split(',').map(function(item) {
+                    return item.trim();
+                });
+            }
+            if(typeof $(element).data('line-fill') !== 'undefined'){
+                attributes.line.fill = $(element).data('line-fill');
+            }
+            if(typeof $(element).data('line-show-xaxis') !== 'undefined'){
+                attributes.line.show_xaxis = $(element).data('line-show-xaxis');
             }
             if(typeof $(element).data('line-xaxis-field') !== 'undefined'){
-                attributes.line.xaxis_field = $(element).data('line-xaxis-field');
+                attributes.line.xaxis.field = $(element).data('line-xaxis-field');
             }
             if(typeof $(element).data('line-xaxis-sorted') !== 'undefined'){
-                attributes.line.xaxis_sorted = $(element).data('line-xaxis-sorted');
+                attributes.line.xaxis.sorted = $(element).data('line-xaxis-sorted');
+            }
+            if(typeof $(element).data('line-xaxis-timeunit') !== 'undefined'){
+                attributes.line.xaxis.timeunit = $(element).data('line-xaxis-timeunit');
+            }
+            if(typeof $(element).data('line-xaxis-timestepsize') !== 'undefined'){
+                attributes.line.xaxis.timestepsize = $(element).data('line-xaxis-timestepsize');
+            }
+            if(typeof $(element).data('line-yaxis-beginatzero') !== 'undefined'){
+                attributes.line.yaxis.beginatzero = $(element).data('line-yaxis-beginatzero');
+            }
+            if(typeof $(element).data('line-yaxis-label') !== 'undefined'){
+                attributes.line.yaxis.label = $(element).data('line-yaxis-label');
+            }
+            if(typeof $(element).data('line-yaxis-scale') !== 'undefined'){
+                attributes.line.yaxis.scale = $(element).data('line-yaxis-scale');
             }
             if(typeof $(element).data('line-height') !== 'undefined'){
                 attributes.line.height = $(element).data('line-height');
@@ -1254,8 +1302,6 @@ jQuery( document ).ready(function() {
                             }else{
                                 return value;
                             }
-
-
                         };
 
                         $(this).attr('data-formatter', 'valueFormatter_numeric_unit'+this.uniqueId);
@@ -1942,9 +1988,7 @@ jQuery( document ).ready(function() {
                     // Vertical line following the mouse
                     if(chart.config.options.hasOwnProperty('vertical_indicator_line') && chart.config.options.vertical_indicator_line.enabled){
                         if (this.chart.tooltip._active && this.chart.tooltip._active.length) {
-                            var current_point = this.chart.tooltip._active[0];
                             var ctx = this.chart.ctx;
-                            var x = current_point.tooltipPosition().x;
                             var topY = this.chart.scales['y-axis-0'].top;
                             var bottomY = this.chart.scales['y-axis-0'].bottom;
 
@@ -1958,14 +2002,20 @@ jQuery( document ).ready(function() {
                                 strokeStyle = chart.config.options.vertical_indicator_line.strokeStyle;
                             }
 
-                            // Draw line
                             ctx.save();
-                            ctx.beginPath();
-                            ctx.moveTo(x, topY);
-                            ctx.lineTo(x, bottomY);
                             ctx.lineWidth = lineWidth;
                             ctx.strokeStyle = strokeStyle;
-                            ctx.stroke();
+                            for (var i = 0; i < this.chart.tooltip._active.length; i++) {
+                                var current_point = this.chart.tooltip._active[0];
+                                var x = current_point.tooltipPosition().x;
+                                // Draw line
+
+                                ctx.beginPath();
+                                ctx.moveTo(x, topY);
+                                ctx.lineTo(x, bottomY);
+                                ctx.stroke();
+
+                            }
                             ctx.restore();
                         }
                     }
@@ -1973,61 +2023,65 @@ jQuery( document ).ready(function() {
                     // Horizontal line following the mouse
                     if(chart.config.options.hasOwnProperty('horizontal_indicator_line') && chart.config.options.horizontal_indicator_line.enabled){
                         if (this.chart.tooltip._active && this.chart.tooltip._active.length) {
-                            var yaxis = chart.scales['y-axis-0'];
-                            var current_point = this.chart.tooltip._active[0];
-
-                            var ctx = this.chart.ctx;
-                            var x = current_point._model.x;
-                            var y = current_point._model.y;
-                            var y_max = yaxis.getPixelForValue(this.getDataset().data_max[current_point._index]);
-                            var y_min = yaxis.getPixelForValue(this.getDataset().data_min[current_point._index]);
-
-                            var left = this.chart.scales['x-axis-0'].left;
-                            var right = this.chart.scales['x-axis-0'].right;
-
                             var lineWidth = 2;
                             if(chart.config.options.horizontal_indicator_line.hasOwnProperty('lineWidth')){
                                 lineWidth = chart.config.options.horizontal_indicator_line.lineWidth;
                             }
 
                             var strokeStyle = 'rgba(0,0,0,0.8)';
-                            if(chart.config.options.horizontal_indicator_line.hasOwnProperty('strokeStyle')){
-                                strokeStyle = chart.config.options.horizontal_indicator_line.strokeStyle;
-                            }
 
                             // Draw line
                             ctx.save();
                             ctx.lineWidth = lineWidth;
-                            ctx.strokeStyle = strokeStyle;
 
-                            if(chart.config.options.hasOwnProperty('error_bar') && chart.config.options.error_bar.enabled){
-                                var fillStyle = 'rgba(0,0,0,0.1)';
-                                if(chart.config.options.horizontal_indicator_line.hasOwnProperty('fillStyle')){
-                                    fillStyle = chart.config.options.horizontal_indicator_line.fillStyle;
+                            var yaxis = chart.scales['y-axis-0'];
+                            for (var i = 0; i < this.chart.tooltip._active.length; i++) {
+                                var current_point = this.chart.tooltip._active[i];
+
+                                if(chart.config.options.horizontal_indicator_line.hasOwnProperty('strokeStyle') && chart.config.options.horizontal_indicator_line.strokeStyle){
+                                    strokeStyle = chart.config.options.horizontal_indicator_line.strokeStyle;
+                                }else{
+
+                                    var color = null;
+                                    if(current_point._model.borderColor.startsWith('rgb')){
+                                        color = self.hexToRGB(self.RGBToHex(current_point._model.borderColor), 0.15);
+                                    }else{
+                                        color = self.hexToRGB(current_point._model.borderColor, 0.15);
+                                    }
+
+                                    if(color){
+                                        strokeStyle = color.css;
+                                    }
                                 }
-                                ctx.fillStyle = fillStyle;
+                                ctx.strokeStyle = strokeStyle;
+
+                                var ctx = this.chart.ctx;
+                                var x = current_point._model.x;
+                                var y = current_point._model.y;
+                                var y_max = yaxis.getPixelForValue(this.getDataset().data_max[current_point._index]);
+                                var y_min = yaxis.getPixelForValue(this.getDataset().data_min[current_point._index]);
+
+                                var left = this.chart.scales['x-axis-0'].left;
+                                var right = this.chart.scales['x-axis-0'].right;
+
+
+                                if (chart.config.options.hasOwnProperty('error_bar') && chart.config.options.error_bar.enabled) {
+                                    var fillStyle = 'rgba(0,0,0,0.1)';
+                                    if (chart.config.options.horizontal_indicator_line.hasOwnProperty('fillStyle')) {
+                                        fillStyle = chart.config.options.horizontal_indicator_line.fillStyle;
+                                    }
+                                    ctx.fillStyle = fillStyle;
+
+                                    ctx.beginPath();
+                                    ctx.fillRect(left, y_min, right - left, (y_max - y_min));
+                                    ctx.stroke();
+                                }
 
                                 ctx.beginPath();
-                                ctx.fillRect(left,y_min,right-left,(y_max-y_min));
+                                ctx.moveTo(left, y);
+                                ctx.lineTo(right, y);
                                 ctx.stroke();
-                                /*
-                                ctx.beginPath();
-                                ctx.moveTo(left, y_min);
-                                ctx.lineTo(right, y_min);
-                                ctx.stroke();
-
-                                ctx.beginPath();
-                                ctx.moveTo(left, y_max);
-                                ctx.lineTo(right, y_max);
-                                ctx.stroke();
-                                */
                             }
-
-                            ctx.beginPath();
-                            ctx.moveTo(left, y);
-                            ctx.lineTo(right, y);
-                            ctx.stroke();
-
                             ctx.restore();
                         }
                     }
@@ -2505,24 +2559,21 @@ jQuery( document ).ready(function() {
 
             // Tooltip positioners
             Chart.Tooltip.positioners.line_centered_top = function(elements, eventPosition) {
-                //var tooltip = this;
                 return {
                     x: elements[0]._model.x,
                     y: 0
                 };
             };
             Chart.Tooltip.positioners.line_centered_bottom = function(elements, eventPosition) {
-                //var tooltip = this;
                 return {
                     x: elements[0]._model.x,
-                    y: self.options.line.height
+                    y: elements[0]._chart.height
                 };
             };
             Chart.Tooltip.positioners.inline_centered_bottom = function(elements, eventPosition) {
-                //var tooltip = this;
                 return {
                     x: elements[0]._model.x,
-                    y: self.options.inline_chart.height
+                    y: elements[0]._chart.height
                 };
             };
 
@@ -3056,7 +3107,7 @@ jQuery( document ).ready(function() {
                                 data: values_,
                                 backgroundColor: bg_colors
                             })
-                        ]
+                        ];
                         options.scales.yAxes[0].stacked = true;
                         options.scales.xAxes[0].stacked = true;
 
@@ -3631,6 +3682,12 @@ jQuery( document ).ready(function() {
                 if(typeof $(this).data('beginatzero') !== 'undefined' ){
                     meta.beginatzero = $(this).data('beginatzero');
                 }
+                if(typeof $(this).data('axis-label') !== 'undefined' ){
+                    meta.axis_label = $(this).data('axis-label');
+                }
+                if(typeof $(this).data('axis-scale') !== 'undefined' ){
+                    meta.axis_scale = $(this).data('axis-scale');
+                }
                 if(typeof $(this).data('align') !== 'undefined' ){
                     meta.align = $(this).data('align');
                 }
@@ -4172,11 +4229,11 @@ jQuery( document ).ready(function() {
 
             // Get xaxis_field
             var xaxis_field = table_options.idField;
-            if(this.options.line.xaxis_field){
-                xaxis_field = this.options.line.xaxis_field
+            if(this.options.line.xaxis.field){
+                xaxis_field = this.options.line.xaxis.field
             }
 
-            if(this.options.line.xaxis_sorted){
+            if(this.options.line.xaxis.sorted){
                 // Sort data
                 table_data.sort(function(a, b){
                     a = self.convertValue(a[xaxis_field], -Infinity);
@@ -4203,13 +4260,28 @@ jQuery( document ).ready(function() {
                 labels.push(label);
             }
 
+            // Axis scaling
+            var axis_scale = 'linear';
+            var axis_scale_type = null;
+
+            var time_mode = false;
+            if((new Date(labels[0])).getTime() > 0){
+                time_mode = true;
+            }
             // Create datasets
             var datasets = [];
             var dataset_id = 0;
             var all_value_max = -Infinity;
             var all_value_min = Infinity;
+
+            var beginAtZero = this.options.line.yaxis.beginatzero;
+
             $(this.element).find("thead tr th[data-field!=''][data-field]").each(function(index, header) {
                 if(typeof $(this).data('chartable') !== 'undefined' && $(this).data('chartable')){
+                    if(!beginAtZero){
+                        beginAtZero = $(this).data('beginatzero');
+                    }
+
                     var dataset_name = self.cleanFieldValue($(this).html());
                     var field_name = $(this).data('field');
 
@@ -4218,7 +4290,6 @@ jQuery( document ).ready(function() {
                         if(self.options.line.fields.includes(field_name)){
                             valid_dataset = true;
                         }
-
                     }else{
                         valid_dataset = true;
                     }
@@ -4229,6 +4300,30 @@ jQuery( document ).ready(function() {
                         var value_formatter = null;
                         if(typeof $(this).data('formatter') !== 'undefined'){
                             value_formatter = $(this).data('formatter');
+                        }
+
+                        if(typeof $(this).data('axis-scale') !== 'undefined'){
+
+                            if($(this).data('axis-scale').startsWith('log')) {
+                                axis_scale = 'logarithmic';
+                                axis_scale_type = 'log';
+
+                                if($(this).data('axis-scale') === 'log_unit') {
+                                    axis_scale_type = 'log_unit';
+
+                                }else if($(this).data('axis-scale') === 'log_exp'){
+                                    axis_scale_type = 'log_exp';
+
+                                }else if($(this).data('axis-scale') === 'log10'){
+                                    axis_scale_type = 'log10';
+
+                                }else if($(this).data('axis-scale') === 'log10_unit'){
+                                    axis_scale_type = 'log10_unit';
+
+                                }else if($(this).data('axis-scale') === 'log10_exp'){
+                                    axis_scale_type = 'log10_exp';
+                                }
+                            }
                         }
 
                         var data = [];
@@ -4257,8 +4352,18 @@ jQuery( document ).ready(function() {
 
                             // Convert value to float
                             var item = self.parseNumericValue(table_data[i][field_name]);
+                            if(time_mode){
+                                var time_label = $("<div/>").html(table_data[i][xaxis_field]).text().trim().replace(/<(?:.|\n)*?>/gm, '').replace('_',' ');
+                                data.push(
+                                    {
+                                        x: time_label, //new Date(time_label),
+                                        y: item.value
+                                    }
+                                );
 
-                            data.push(item.value);
+                            }else{
+                                data.push(item.value);
+                            }
 
                             // Make sure lower and upper limits are valid
                             var value_max = item.value_max;
@@ -4295,20 +4400,38 @@ jQuery( document ).ready(function() {
                                     point_bg_colors.push(self.options.line.colors[table_data[i]['_class']].bg.normal);
                                     point_bg_hover_colors.push(self.options.line.colors[table_data[i]['_class']].border.hover);
                                 }else{
-                                    point_border_colors.push(self.options.line.colors.default.border.normal);
-                                    point_border_hover_colors.push(self.options.line.colors.default.border.hover);
-                                    point_bg_colors.push(self.options.line.colors.default.bg.normal);
-                                    point_bg_hover_colors.push(self.options.line.colors.default.bg.hover);
+                                    point_border_colors.push(
+                                        self.hexToRGB(self.options.line.colors.datasets[dataset_id], 0.5).css
+                                    );
+                                    point_border_hover_colors.push(self.hexToRGB(self.options.line.colors.datasets[dataset_id], 0.8).css);
+
+                                    point_bg_colors.push(
+                                        self.hexToRGB(self.options.line.colors.datasets[dataset_id], 0.5).css
+                                    );
+                                    point_bg_hover_colors.push(
+                                        self.hexToRGB(self.options.line.colors.datasets[dataset_id], 0.8).css
+                                    );
                                 }
                             }else{
-                                point_border_colors.push(self.options.line.colors.default.border.normal);
-                                point_border_hover_colors.push(self.options.line.colors.default.border.hover);
-                                point_bg_colors.push(self.options.line.colors.default.bg.normal);
-                                point_bg_hover_colors.push(self.options.line.colors.default.bg.hover);
-                            }
+                                point_border_colors.push(
+                                    self.hexToRGB(self.options.line.colors.datasets[dataset_id], 0.5).css
+                                );
+                                point_border_hover_colors.push(self.hexToRGB(self.options.line.colors.datasets[dataset_id], 0.8).css);
 
-                            point_radius.push(self.options.line.point.radius.normal);
-                            point_hover_radius.push(self.options.line.point.radius.hover);
+                                point_bg_colors.push(
+                                    self.hexToRGB(self.options.line.colors.datasets[dataset_id], 0.5).css
+                                );
+                                point_bg_hover_colors.push(
+                                    self.hexToRGB(self.options.line.colors.datasets[dataset_id], 0.8).css
+                                );
+                            }
+                            if(self.options.line.point.enabled){
+                                point_radius.push(self.options.line.point.radius.normal);
+                                point_hover_radius.push(self.options.line.point.radius.hover);
+                            }else{
+                                point_radius.push(0);
+                                point_hover_radius.push(0);
+                            }
                         }
 
                         var value_postfix = '';
@@ -4327,35 +4450,63 @@ jQuery( document ).ready(function() {
 
                             horizontal_line_value: horizontal_line_value,
 
-                            borderWidth: 2,
-                            borderColor: self.options.line.colors.datasets[dataset_id],
-                            backgroundColor: self.hexToRGB(self.options.line.colors.datasets[dataset_id], 0.20).css, //self.options.line.colors.datasets[dataset_id],
-                            fill: false,
                             value_postfix: value_postfix,
+
+                            // Border line
+                            borderWidth: 2,
+                            borderColor: self.hexToRGB(self.options.line.colors.datasets[dataset_id]).css,
                             lineTension: 0,
                             spanGaps: true,
 
+                            // Background
+                            fill: self.options.line.fill,
+                            backgroundColor: self.hexToRGB(self.options.line.colors.datasets[dataset_id], 0.10).css,
+
+                            // Point
+                            pointRadius: point_radius,
+                            pointHoverRadius: point_hover_radius,
                             pointBackgroundColor: point_bg_colors,
                             pointBorderWidth: point_border_colors,
                             pointHoverBackgroundColor: point_bg_hover_colors,
-                            pointHoverBorderColor: point_border_hover_colors,
-                            pointRadius: point_radius,
-                            pointHoverRadius: point_hover_radius
+                            pointHoverBorderColor: point_border_hover_colors
+
                         });
                         dataset_id++;
                     }
                 }
             });
 
-            $(this.options.element.line.div).show(0);
+            if(!axis_scale_type){
+                // Update y-axis scele
+                if(this.options.line.yaxis.scale){
 
+                    if(this.options.line.yaxis.scale.startsWith('log')) {
+                        axis_scale = 'logarithmic';
+                        axis_scale_type = 'log';
+
+                        if(this.options.line.yaxis.scale === 'log_unit') {
+                            axis_scale_type = 'log_unit';
+
+                        }else if(this.options.line.yaxis.scale === 'log_exp'){
+                            axis_scale_type = 'log_exp';
+
+                        }else if(this.options.line.yaxis.scale === 'log10'){
+                            axis_scale_type = 'log10';
+
+                        }else if(this.options.line.yaxis.scale === 'log10_unit'){
+                            axis_scale_type = 'log10_unit';
+
+                        }else if(this.options.line.yaxis.scale === 'log10_exp'){
+                            axis_scale_type = 'log10_exp';
+                        }
+                    }
+                }
+            }
+
+            $(this.options.element.line.div).show(0);
             var chart_data = {
                 labels: labels,
                 datasets: datasets
-                //hline_index: this.hline_index,
-                //hline_value: this.hline_value,
-                //hline_color: this.hline_color,
-                //hline_enabled: this.options.line.horizontal_line.enabled
             };
 
             var show_legend = false;
@@ -4363,6 +4514,7 @@ jQuery( document ).ready(function() {
                 show_legend = true;
             }
 
+            // Tooltip position
             var tooltip_position = 'average';
             var padding = {
                 left: 0,
@@ -4375,7 +4527,7 @@ jQuery( document ).ready(function() {
                 padding = {
                     left: 0,
                     right: 0,
-                    top: 45,
+                    top: 40 + datasets.length *12,
                     bottom: 0
                 };
             }else if(this.options.line.tooltips.position == 'bottom'){
@@ -4384,7 +4536,7 @@ jQuery( document ).ready(function() {
                     left: 0,
                     right: 0,
                     top: 0,
-                    bottom: 45
+                    bottom: 40 + datasets.length *12
                 };
             }
 
@@ -4398,37 +4550,27 @@ jQuery( document ).ready(function() {
                 layout: {
                     padding: padding
                 },
+
                 scales: {
                     xAxes: [{
-                        //display: this.options.line.show_chart_xaxis,
+                        display: this.options.line.show_xaxis,
                         stacked: false,
-                        //type: 'time',
                         ticks: {
-                            //autoSkip: false,
                             maxRotation: 90
-                        },
-                        distribution: 'linear'
+                        }
                     }],
                     yAxes: [{
                         stacked: false,
-                        type: 'linear',
+                        type: axis_scale,
                         ticks: {
-                            beginAtZero: true,
+                            beginAtZero: beginAtZero,
                             suggestedMin: all_value_min,
                             suggestedMax: all_value_max
-                        },
-                        scaleLabel: {
-                            display: true,
-                            //labelString: value_label,
-                            fontColor: 'black'
                         }
                     }]
                 },
                 maintainAspectRatio: true,
                 responsive: true,
-                /*animation: {
-                    duration: 100
-                },*/
 
                 animation: {
                     duration: 0 // general animation time
@@ -4492,7 +4634,8 @@ jQuery( document ).ready(function() {
                         label: function(tooltipItems, data){
                             var data_string = data.datasets[tooltipItems.datasetIndex].data_string[tooltipItems.index];
 
-                            return data.datasets[tooltipItems.datasetIndex].label +': ' + data_string;
+                            return data_string + ' (' + data.datasets[tooltipItems.datasetIndex].label + ')';
+                            //return data.datasets[tooltipItems.datasetIndex].label + ': ' + data_string;
                         }
                     }
                 },
@@ -4512,28 +4655,76 @@ jQuery( document ).ready(function() {
 
                             var value_index = elements[0]._index;
                             var table_options = $(self.element).bootstrapTable('getOptions');
-                            //var row_index = value_index;
+
                             $(self.element).find('tbody td:contains('+table_options.data[value_index][table_options.idField]+')').parent('tr').find('td').addClass('row-hover')
                         }
                     }
                 }
             };
 
-            if((new Date(labels[0])).getTime() > 0){
+            // X-axis is time
+            if(time_mode){
                 chart_options.scales.xAxes[0].type = 'time';
-                chart_options.scales.xAxes[0].time = {
-                    displayFormats: {
-                        hour: 'hh:mm:ss'
-                    },
-                    unit: 'hour'
-                };
+                chart_options.scales.xAxes[0].distribution = 'linear';
+                chart_options.scales.xAxes[0].time = {};
+                chart_options.scales.xAxes[0].time.displayFormats = this.options.time.display_formats;
+
+                if(this.options.line.xaxis.timeunit){
+                    chart_options.scales.xAxes[0].time.unit = this.options.line.xaxis.timeunit;
+                }
+                if(this.options.line.xaxis.timestepsize){
+                    chart_options.scales.xAxes[0].time.stepSize = this.options.line.xaxis.timestepsize;
+                }
+                chart_options.scales.xAxes[0].ticks = {};
             }
 
+            // Add y-axis label
+            if(this.options.line.yaxis.label){
+                chart_options.scales.yAxes[0].scaleLabel = {
+                    display: true,
+                    labelString: this.options.line.yaxis.label,
+                    fontColor: 'black'
+                }
+            }
+
+            // Handle y-axis scale
+            if(axis_scale === 'logarithmic'){
+                chart_options.scales.yAxes[0].ticks.callback = function (value, index, values) {
+
+                    if(axis_scale_type.startsWith('log10')) {
+                        if (!(value === 1e1 || value === 1e2 ||
+                            value === 1e3 || value === 1e4 ||
+                            value === 1e5 || value === 1e6 ||
+                            value === 1e7 || value === 1e8 ||
+                            value === 1e9 || value === 1e10)) {
+                            return '';
+                        }
+                    }else if(axis_scale_type.startsWith('log')){
+                        if(values.length > 10){
+                            if(index % Math.ceil(values.length / 10.0) !== 0){
+                                return '';
+                            }
+                        }
+                    }
+
+                    if(axis_scale_type.endsWith('_unit')){
+                        return self.addNumberPrefix(value);
+                    }else if(axis_scale_type.endsWith('_exp')){
+                        return value.toExponential(2);
+                    }else{
+                        return value;
+                    }
+                }
+            }
+
+
             this.line_chart = new Chart(chart_ctx, {
-                type: 'stripe', //'lineWithLine',
+                type: 'stripe',
                 data: chart_data,
                 options: chart_options
             });
+
+
 
             this.line_chart_data = chart_data;
         },
@@ -5360,12 +5551,10 @@ jQuery( document ).ready(function() {
 
         showLineChart: function (){
             var self = this;
-            if(this.validBar()){
-                if($(this.options.element.line.div).is(":hidden")){
-                    $(this.options.element.line.div).show(this.options.animation.show_speed, function(){
-                        self.updateLine();
-                    });
-                }
+            if($(this.options.element.line.div).is(":hidden")){
+                $(this.options.element.line.div).show(this.options.animation.show_speed, function(){
+                    self.updateLine();
+                });
             }
         },
         hideLineChart: function (){
@@ -5489,7 +5678,7 @@ jQuery( document ).ready(function() {
                                     var tag_css = self.options.tags.css[self.options.tags.css.length-1];
                                 }
                                 html += '<span class="'+tag_css+'">'+item.trim()+'</span>';
-                            })
+                            });
                             $(this).find('td').eq(index).html(html);
                         })
                     }
@@ -5625,8 +5814,8 @@ jQuery( document ).ready(function() {
                             if(field_data.charAt(0) == '#' || field_data.startsWith('rgb(') || field_data.startsWith('rgba(') ) {
                                 data_item['color'] = field_data;
                             }else {
-                                var patt = new RegExp(/[(](.+)[:](.+)[)]/g);
-                                var res = patt.test(field_data);
+                                var pattern = new RegExp(/[(](.+)[:](.+)[)]/g);
+                                var res = pattern.test(field_data);
                                 if(res){
                                     var value_fields = field_data.substring(1,field_data.length-1).split(':');
 
@@ -5644,7 +5833,7 @@ jQuery( document ).ready(function() {
                                     }
 
                                 }else{
-                                    // Singel value given
+                                    // Single value given
                                     var numeric_value = parseFloat(field_data);
                                     if(isNaN(numeric_value)){
                                         data_item['y_value'] = field_data;
@@ -5682,8 +5871,7 @@ jQuery( document ).ready(function() {
             return data;
         },
         cleanFieldValue: function(value){
-            var label = $("<div/>").html(value).text().trim().replace(/<(?:.|\n)*?>/gm, '').replace('_',' ');
-            return label;
+            return $("<div/>").html(value).text().trim().replace(/<(?:.|\n)*?>/gm, '').replace('_',' ');
         },
 
         valueSorter: function (a, b, direction){
@@ -5706,6 +5894,7 @@ jQuery( document ).ready(function() {
             if (moment(value, this.options.time.valid_formats, true).isValid() && !$.isNumeric(value)){
                 // We have date
                 value = moment(value).unix();
+
             }else{
                 if(value){
                     if(value.trim()){
@@ -5840,6 +6029,14 @@ jQuery( document ).ready(function() {
 
             return rgb;
         },
+        RGBToHex: function (rgb){
+            rgb = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
+            return (rgb && rgb.length === 4) ? "#" +
+                ("0" + parseInt(rgb[1],10).toString(16)).slice(-2) +
+                ("0" + parseInt(rgb[2],10).toString(16)).slice(-2) +
+                ("0" + parseInt(rgb[3],10).toString(16)).slice(-2) : '';
+        },
+
         addNumberPrefix: function(value, min) {
             min = min || 1e3;
 
@@ -5848,7 +6045,7 @@ jQuery( document ).ready(function() {
 
                 var order = Math.floor(Math.log(value) / Math.log(1000));
 
-                return Math.floor(value / 1000**order) + units[(order - 1)];
+                return Math.floor(value / Math.pow(1000, order)) + units[(order - 1)];
             }
 
             // return formatted original number
@@ -6269,20 +6466,12 @@ function runningFormatter(value, row, index){
 function isNumericWithInterval(value) {
     // Check if value has format [value] ([interval1] - [interval2])
     var regex = /[+-]?\d+(?:\.\d+)\s+\([+-]?\d+(?:\.\d+)\s+-\s+[+-]?\d+(?:\.\d+)\)/g;
-    var patt = new RegExp(regex);
-    if (patt.test(value)) {
-        return true;
-    }else{
-        return false;
-    }
+    var pattern = new RegExp(regex);
+    return pattern.test(value);
 }
 function isNumericWithError(value) {
     var pattern_plusminus = new RegExp(/([+-]?([0-9]*[.])?[0-9]+)(\s+)?[±](\s+)?(([0-9]*[.])?[0-9]+)/);
-    if (pattern_plusminus.test(value)) {
-        return true;
-    }else{
-        return false;
-    }
+    return pattern_plusminus.test(value);
 }
 function numericToFloat(value, precision){
     if (typeof value === 'string' || value instanceof String){
