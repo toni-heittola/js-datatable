@@ -38,8 +38,11 @@ jQuery( document ).ready(function() {
             rank_mode: 'normal',    // 'normal', 'grouped-muted', 'grouped-empty'
             tag_mode: 'column',     // global, column
             show_chart: false,
+            show_toolbar: true,
+            show_table_selector: false,
             chart_modes: 'bar',
             chart_default_mode: 'bar',
+            table_default_mode: 'show',
             list_separator: ',',
             css: {
                 active: 'active'
@@ -190,24 +193,21 @@ jQuery( document ).ready(function() {
             },
             line: {
                 height: 240,
-                show_xaxis: true,
                 xaxis: {
+                    display: true,
                     field: null,
                     sorted: false,
                     timeunit: null,
-                    timestepsize: null
+                    timestepsize: null,
+                    gridlines: true
                 },
                 yaxis: {
                     beginatzero: false,
                     label: null,
                     scale: null,
+                    gridlines: true
                 },
                 fill: false,
-                //xaxis_field: null,
-                //xaxis_sorted: false,
-                //xaxis_timeunit: null,
-                //xaxis_timestepsize: null,
-                //yaxis_beginatzero: false,
                 fields: null,
                 point: {
                     enabled: true,
@@ -220,6 +220,32 @@ jQuery( document ).ready(function() {
                 line: {
                     enabled: true,
                     tension: 0
+                },
+                vertical_segments: {
+                    enabled: true,
+                    data: null,
+                    opacity: 0.1,
+                    label: {
+                        fillStyle: '#000',
+                        fontSize: '12px',
+                        font: 'Arial',
+                        opacity: 0.2,
+                        position: 'top'
+                    }
+                },
+                horizontal_highlights: {
+                    enabled: true,
+                    data: null,
+                    opacity: 0.1,
+                    strokeStyle: 'rgba(112, 187, 225 ,1.0)',
+                    lineWidth: 2,
+                    label: {
+                        fillStyle: '#000',
+                        fontSize: '12px',
+                        font: 'Arial',
+                        opacity: 0.2,
+                        position: 'bottom-right'
+                    }
                 },
                 horizontal_line: {
                     enabled: false,
@@ -337,6 +363,10 @@ jQuery( document ).ready(function() {
                     titleFontSize: 18,
                     bodyFontSize: 14,
                     position: 'top'
+                },
+                legend: {
+                    enabled: true,
+                    position: 'right'
                 }
             },
             scatter: {
@@ -463,7 +493,8 @@ jQuery( document ).ready(function() {
                 }
             },
             element: {
-                chart_mode_selector: '#chart_selector',
+                chart_mode_selector: 'chart_mode_selector',
+                table_mode_selector: 'table_mode_selector',
                 bar: {
                     div: '#bar_div',
                     canvas: '#bar_canvas'
@@ -493,6 +524,7 @@ jQuery( document ).ready(function() {
                 }
             },
             icon: {
+                table: '<span class="glyphicon glyphicon-list-alt"></span>',
                 bar: '<span class="glyphicon glyphicon-stats"></span>',
                 line: '<span class="glyphicon glyphicon-random"></span>',
                 scatter: '<span class="glyphicon glyphicon-th-large"></span>',
@@ -505,6 +537,7 @@ jQuery( document ).ready(function() {
                 anchor: '<span class="glyphicon glyphicon-expand" aria-hidden="true"></span>'
             },
             label: {
+                table: '',
                 bar: 'Bar',
                 line: 'Line',
                 scatter: 'Scatter',
@@ -517,6 +550,7 @@ jQuery( document ).ready(function() {
                 select_b_row: 'Select row B'
             },
             button_css:{
+                table: 'btn btn-default',
                 bar: 'btn btn-info selector-button',
                 line: 'btn btn-info selector-button',
                 scatter: 'btn btn-info selector-button',
@@ -903,6 +937,16 @@ jQuery( document ).ready(function() {
             if(typeof $(element).data('show-chart') !== 'undefined'){
                 attributes.show_chart = $(element).data('show-chart');
             }
+            if(typeof $(element).data('show-toolbar') !== 'undefined'){
+                attributes.show_toolbar = $(element).data('show-toolbar');
+            }
+            if(typeof $(element).data('show-table-selector') !== 'undefined') {
+                attributes.show_table_selector = $(element).data('show-table-selector');
+            }
+            if(typeof $(element).data('table-default-mode') !== 'undefined'){
+                attributes.table_default_mode = $(element).data('table-default-mode');
+            }
+
             if(typeof $(element).data('row-highlighting') !== 'undefined'){
                 attributes.table.row_highlighting = $(element).data('row-highlighting');
             }
@@ -986,7 +1030,7 @@ jQuery( document ).ready(function() {
                 attributes.line.fill = $(element).data('line-fill');
             }
             if(typeof $(element).data('line-show-xaxis') !== 'undefined'){
-                attributes.line.show_xaxis = $(element).data('line-show-xaxis');
+                attributes.line.xaxis.display = $(element).data('line-show-xaxis');
             }
             if(typeof $(element).data('line-xaxis-field') !== 'undefined'){
                 attributes.line.xaxis.field = $(element).data('line-xaxis-field');
@@ -1000,6 +1044,9 @@ jQuery( document ).ready(function() {
             if(typeof $(element).data('line-xaxis-timestepsize') !== 'undefined'){
                 attributes.line.xaxis.timestepsize = $(element).data('line-xaxis-timestepsize');
             }
+            if(typeof $(element).data('line-xaxis-gridlines') !== 'undefined'){
+                attributes.line.xaxis.gridlines = $(element).data('line-xaxis-gridlines');
+            }
             if(typeof $(element).data('line-yaxis-beginatzero') !== 'undefined'){
                 attributes.line.yaxis.beginatzero = $(element).data('line-yaxis-beginatzero');
             }
@@ -1008,6 +1055,9 @@ jQuery( document ).ready(function() {
             }
             if(typeof $(element).data('line-yaxis-scale') !== 'undefined'){
                 attributes.line.yaxis.scale = $(element).data('line-yaxis-scale');
+            }
+            if(typeof $(element).data('line-yaxis-gridlines') !== 'undefined'){
+                attributes.line.yaxis.gridlines = $(element).data('line-yaxis-gridlines');
             }
             if(typeof $(element).data('line-height') !== 'undefined'){
                 attributes.line.height = $(element).data('line-height');
@@ -1045,6 +1095,60 @@ jQuery( document ).ready(function() {
             if(typeof $(element).data('line-horizontal-indicator-fill') !== 'undefined'){
                 attributes.line.horizontal_indicator_line.fillStyle = $(element).data('line-horizontal-indicator-fill');
             }
+            if(typeof $(element).data('line-show-horizontal-highlights') !== 'undefined'){
+                attributes.line.horizontal_highlights.enabled = $(element).data('line-show-horizontal-highlights');
+            }
+            if(typeof $(element).data('line-horizontal-highlights') !== 'undefined'){
+                attributes.line.horizontal_highlights.data = this.parseDataList($(element).data('line-horizontal-highlights'));
+                if(attributes.line.horizontal_highlights.data.length==0 && attributes.line.horizontal_highlights.enabled){
+                    attributes.line.horizontal_highlights.enabled = false;
+                }
+            }
+            if(typeof $(element).data('line-horizontal-highlight-opacity') !== 'undefined'){
+                attributes.line.horizontal_highlights.opacity = $(element).data('line-horizontal-highlight-opacity');
+            }
+            if(typeof $(element).data('line-horizontal-highlight-linewidth') !== 'undefined'){
+                attributes.line.horizontal_highlights.lineWidth = $(element).data('line-horizontal-highlight-width');
+            }
+            if(typeof $(element).data('line-horizontal-highlight-stroke') !== 'undefined'){
+                attributes.line.horizontal_highlights.strokeStyle = $(element).data('line-horizontal-highlight-stroke');
+            }
+            if(typeof $(element).data('line-horizontal-highlight-label-position') !== 'undefined'){
+                attributes.line.horizontal_highlights.label.position = $(element).data('line-horizontal-highlight-label-position');
+            }
+            if(typeof $(element).data('line-horizontal-highlight-label-fill') !== 'undefined'){
+                attributes.line.horizontal_highlights.label.fillStyle = $(element).data('line-horizontal-highlight-label-fill');
+            }
+            if(typeof $(element).data('line-horizontal-highlight-label-size') !== 'undefined'){
+                attributes.line.horizontal_highlights.label.fontSize = $(element).data('line-horizontal-highlight-label-size');
+            }
+            if(typeof $(element).data('line-horizontal-highlight-label-opacity') !== 'undefined'){
+                attributes.line.horizontal_highlights.label.opacity = $(element).data('line-horizontal-highlight-label-opacity');
+            }
+            if(typeof $(element).data('line-show-vertical-segments') !== 'undefined'){
+                attributes.line.vertical_segments.enabled = $(element).data('line-show-vertical-segments');
+            }
+            if(typeof $(element).data('line-vertical-segments') !== 'undefined'){
+                attributes.line.vertical_segments.data = this.parseSegmentList($(element).data('line-vertical-segments'));
+                if(attributes.line.vertical_segments.data.length==0 && attributes.line.vertical_segments.enabled){
+                    attributes.line.vertical_segments.enabled = false;
+                }
+            }
+            if(typeof $(element).data('line-vertical-segment-opacity') !== 'undefined'){
+                attributes.line.vertical_segments.opacity = $(element).data('line-vertical-segment-opacity');
+            }
+            if(typeof $(element).data('line-vertical-segment-label-position') !== 'undefined'){
+                attributes.line.vertical_segments.label.position = $(element).data('line-vertical-segment-label-position');
+            }
+            if(typeof $(element).data('line-vertical-segment-label-fill') !== 'undefined'){
+                attributes.line.vertical_segments.label.fillStyle = $(element).data('line-vertical-segment-label-fill');
+            }
+            if(typeof $(element).data('line-vertical-segment-label-size') !== 'undefined'){
+                attributes.line.vertical_segments.label.fontSize = $(element).data('line-vertical-segment-label-size');
+            }
+            if(typeof $(element).data('line-vertical-segment-label-opacity') !== 'undefined'){
+                attributes.line.vertical_segments.label.opacity = $(element).data('line-vertical-segment-label-opacity');
+            }
             if(typeof $(element).data('line-show-error-bar') !== 'undefined'){
                 attributes.line.error_bar.enabled = $(element).data('line-show-error-bar');
             }
@@ -1068,6 +1172,12 @@ jQuery( document ).ready(function() {
             }
             if(typeof $(element).data('line-tooltip-position') !== 'undefined'){
                 attributes.line.tooltips.position = $(element).data('line-tooltip-position');
+            }
+            if(typeof $(element).data('line-show-legend') !== 'undefined'){
+                attributes.line.legend.enabled = $(element).data('line-show-legend');
+            }
+            if(typeof $(element).data('line-legend-position') !== 'undefined'){
+                attributes.line.legend.position = $(element).data('line-legend-position');
             }
 
             // Scatter
@@ -1175,7 +1285,11 @@ jQuery( document ).ready(function() {
                 $(this.element).attr('data-show-column', this.options.table.show_column);
             }
             if(typeof $(element).data('show-pagination-switch') === 'undefined'){
-                $(this.element).attr('data-show-pagination-switch', this.options.table.show_pagination_switch);
+                if(this.options.show_toolbar){
+                    $(this.element).attr('data-show-pagination-switch', this.options.table.show_pagination_switch);
+                }else{
+                    $(this.element).attr('data-show-pagination-switch', false);
+                }
             }
             if(typeof $(element).data('striped') === 'undefined'){
                 $(this.element).attr('data-striped', this.options.table.striped);
@@ -1204,6 +1318,7 @@ jQuery( document ).ready(function() {
             this.line_chart_data = null;
 
             this.chart_mode = this.options.chart_default_mode;
+            this.table_mode = this.options.table_default_mode;
 
             this.hline_value = [];
             this.hline_index = [];
@@ -1892,6 +2007,7 @@ jQuery( document ).ready(function() {
                     var scale = this.scale;
                     var ctx = chart.chart.ctx;
 
+                    // hline
                     if(chart.config.data.hasOwnProperty('hline') && chart.config.data.hline.enabled && chart.config.data.hline.value !== null){
                         var xaxis = chart.scales['x-axis-0'];
                         var yaxis = chart.scales['y-axis-0'];
@@ -1952,7 +2068,7 @@ jQuery( document ).ready(function() {
                     var scale = this.scale;
                     var ctx = chart.chart.ctx;
 
-                    // Fixed horizontal lines
+                    // Horizontal lines from data
                     if(chart.config.options.hasOwnProperty('horizontal_line') && chart.config.options.horizontal_line.enabled){
                         var xaxis = chart.scales['x-axis-0'];
                         var yaxis = chart.scales['y-axis-0'];
@@ -1984,6 +2100,183 @@ jQuery( document ).ready(function() {
                             ctx.restore();
                         });
                     }
+
+                    // Horizontal highlights
+                    if(chart.config.options.hasOwnProperty('horizontal_highlights') && chart.config.options.horizontal_highlights.enabled){
+
+                        var data = chart.config.options.horizontal_highlights.data;
+                        if(data){
+                            var xaxis = chart.scales['x-axis-0'];
+                            var yaxis = chart.scales['y-axis-0'];
+                            var lineWidth = 2;
+                            if(chart.config.options.horizontal_highlights.hasOwnProperty('lineWidth')){
+                                lineWidth = chart.config.options.horizontal_highlights.lineWidth;
+                            }
+                            var strokeStyle = chart.config.options.horizontal_highlights.strokeStyle;
+
+                            for(var line_id=0; line_id < data.length; line_id++){
+                                var y = yaxis.getPixelForValue(data[line_id].y_value);
+
+                                if(data[line_id].color){
+                                    if(data[line_id].color.startsWith('#')) {
+                                        strokeStyle = self.hexToRGB(data[line_id].color, chart.config.options.horizontal_highlights.opacity).css;
+                                    }
+                                }
+
+                                ctx.save();
+                                ctx.beginPath();
+                                ctx.strokeStyle = strokeStyle;
+                                ctx.lineWidth = lineWidth;
+                                ctx.moveTo(xaxis.left, y);
+                                ctx.lineTo(xaxis.right, y);
+                                ctx.stroke();
+                                ctx.restore();
+
+                                if(data[line_id].label){
+                                    ctx.save();
+                                    ctx.lineWidth = 0;
+                                    var tmp = null;
+                                    if(chart.config.options.horizontal_highlights.label.fillStyle.startsWith('#')){
+                                        tmp = self.hexToRGB(chart.config.options.horizontal_highlights.label.fillStyle, chart.config.options.horizontal_highlights.label.opacity);
+                                    }else if(chart.config.options.horizontal_highlights.label.fillStyle.startsWith('rgba(')){
+                                        tmp = chart.config.options.horizontal_highlights.label.fillStyle;
+
+                                    }else if(chart.config.options.horizontal_highlights.label.fillStyle.startsWith('rgb(')){
+                                        tmp = self.hexToRGB(
+                                            self.RGBToHex(chart.config.options.horizontal_highlights.label.fillStyle), chart.config.options.horizontal_highlights.label.opacity
+                                        );
+                                    }
+
+                                    if(tmp.hasOwnProperty('css')){
+                                        ctx.fillStyle = tmp.css;
+                                    }else if(tmp){
+                                        ctx.fillStyle = tmp;
+                                    }else{
+                                        ctx.fillStyle = self.hexToRGB('#000', chart.config.options.horizontal_highlights.label.opacity);
+                                    }
+
+                                    ctx.font = chart.config.options.horizontal_highlights.label.fontSize + ' ' + chart.config.options.horizontal_highlights.label.font;
+                                    if(chart.config.options.horizontal_highlights.label.position === 'top-left') {
+                                        ctx.textBaseline = 'bottom';
+                                        ctx.textAlign = 'left';
+                                        ctx.fillText(data[line_id].label, xaxis.left + 3, y);
+
+                                    }else if(chart.config.options.horizontal_highlights.label.position === 'top-right') {
+                                        ctx.textBaseline = 'bottom';
+                                        ctx.textAlign = 'right';
+                                        ctx.fillText(data[line_id].label, xaxis.right - 3, y);
+
+                                    }else if(chart.config.options.horizontal_highlights.label.position === 'bottom-left') {
+                                        ctx.textBaseline = 'top';
+                                        ctx.textAlign = 'left';
+                                        ctx.fillText(data[line_id].label, xaxis.left + 3, y+3);
+
+                                    }else if(chart.config.options.horizontal_highlights.label.position === 'bottom-right') {
+                                        ctx.textBaseline = 'top';
+                                        ctx.textAlign = 'right';
+                                        ctx.fillText(data[line_id].label, xaxis.right - 3, y+3);
+                                    }
+
+                                    ctx.restore();
+                                }
+                            }
+                        }
+                    }
+
+                    // Vertical segments
+                    if(chart.config.options.hasOwnProperty('vertical_segments') && chart.config.options.vertical_segments.enabled){
+                        var data = null;
+                        if(chart.config.options.vertical_segments.hasOwnProperty('data')){
+                            data = chart.config.options.vertical_segments.data;
+                            if(data){
+                                var ctx = this.chart.ctx;
+                                var xaxis = chart.scales['x-axis-0'];
+                                var topY = this.chart.scales['y-axis-0'].top;
+                                var bottomY = this.chart.scales['y-axis-0'].bottom;
+
+
+                                for(var segment_id=0; segment_id < data.length; segment_id++){
+                                    var x_start = xaxis.getPixelForValue(data[segment_id].start_value);
+                                    var x_stop = xaxis.getPixelForValue(data[segment_id].stop_value);
+
+                                    if(data[segment_id].color){
+                                        ctx.save();
+                                        ctx.lineWidth = 0;
+                                        var tmp = null;
+                                        
+                                        if(data[segment_id].color.startsWith('#')){
+                                            tmp = self.hexToRGB(data[segment_id].color, chart.config.options.vertical_segments.opacity).css;
+                                        }else if(data[segment_id].color.startsWith('rgb(')){
+                                            tmp = self.hexToRGB(self.RGBToHex(data[segment_id].color),chart.config.options.vertical_segments.opacity).css;
+                                        }else if(data[segment_id].color.startsWith('rgba(')){
+                                            tmp = data[segment_id].color;
+                                        }
+
+                                        ctx.fillStyle = tmp;
+
+                                        ctx.beginPath();
+                                        ctx.fillRect(x_start, topY, (x_stop - x_start), (bottomY - topY));
+                                        ctx.stroke();
+                                        ctx.restore();
+                                    }
+
+                                    if(data[segment_id].label){
+                                        ctx.save();
+                                        ctx.lineWidth = 0;
+                                        var tmp = null;
+                                        if(chart.config.options.vertical_segments.label.fillStyle.startsWith('#')){
+                                            tmp = self.hexToRGB(chart.config.options.vertical_segments.label.fillStyle, chart.config.options.vertical_segments.label.opacity);
+                                        }else if(chart.config.options.vertical_segments.label.fillStyle.startsWith('rgba(')){
+                                            tmp = chart.config.options.vertical_segments.label.fillStyle;
+
+                                        }else if(chart.config.options.vertical_segments.label.fillStyle.startsWith('rgb(')){
+                                            tmp = self.hexToRGB(
+                                                self.RGBToHex(chart.config.options.vertical_segments.label.fillStyle), chart.config.options.vertical_segments.label.opacity
+                                            );
+                                        }
+
+                                        if(tmp.hasOwnProperty('css')){
+                                            ctx.fillStyle = tmp.css;
+                                        }else if(tmp){
+                                            ctx.fillStyle = tmp;
+                                        }else{
+                                            ctx.fillStyle = self.hexToRGB('#000', chart.config.options.vertical_segments.label.opacity);
+                                        }
+
+                                        ctx.font = chart.config.options.vertical_segments.label.fontSize + ' ' + chart.config.options.vertical_segments.label.font;
+                                        if(chart.config.options.vertical_segments.label.position === 'top') {
+                                            ctx.textBaseline = 'bottom';
+                                            ctx.textAlign = 'left';
+
+                                            ctx.translate(x_start, topY); //(bottomY - topY)/2.0);
+                                            ctx.rotate(Math.PI / 2);
+                                            ctx.fillText(data[segment_id].label, 3, -3); //x_start,topY + (bottomY - topY)/2.0);
+
+                                        }else if(chart.config.options.vertical_segments.label.position === 'bottom') {
+                                            ctx.textBaseline = 'bottom';
+                                            ctx.textAlign = 'right';
+
+                                            ctx.translate(x_start, bottomY); //(bottomY - topY)/2.0);
+                                            ctx.rotate(Math.PI / 2);
+                                            ctx.fillText(data[segment_id].label, -3, -3); //x_start,topY + (bottomY - topY)/2.0);
+                                        }else if(chart.config.options.vertical_segments.label.position === 'middle') {
+                                            ctx.textBaseline = 'bottom';
+                                            ctx.textAlign = 'center';
+
+                                            ctx.translate(x_start, topY + (bottomY - topY)/2.0);
+                                            ctx.rotate(Math.PI / 2);
+                                            ctx.fillText(data[segment_id].label,0, 0); //, x_start,topY + (bottomY - topY)/2.0);
+                                        }
+                                        ctx.restore();
+                                    }
+
+
+                                }
+
+                            }
+                        }
+                    }
+
 
                     // Vertical line following the mouse
                     if(chart.config.options.hasOwnProperty('vertical_indicator_line') && chart.config.options.vertical_indicator_line.enabled){
@@ -2072,7 +2365,7 @@ jQuery( document ).ready(function() {
                                     }
                                     ctx.fillStyle = fillStyle;
 
-                                    ctx.beginPath();
+                                    ctxx.beginPath();
                                     ctx.fillRect(left, y_min, right - left, (y_max - y_min));
                                     ctx.stroke();
                                 }
@@ -2578,11 +2871,36 @@ jQuery( document ).ready(function() {
             };
 
             if(this.options.show_chart){
+                this.options.element.chart_mode_selector += this.uniqueId;
+                this.options.element.table_mode_selector += this.uniqueId;
+
                 // Create toolbar html and add it to the DOM
                 var toolbar_html = '';
 
-                toolbar_html += '<div id="datatable_toolbar'+this.uniqueId+'" class="datatable-toolbar">';
-                toolbar_html += '<div class="btn-group" data-toggle="buttons" id="chart_mode_selector'+this.uniqueId+'">';
+                toolbar_html += '<div id="datatable_toolbar'+this.uniqueId+'" class="datatable-toolbar" ';
+                if(!this.options.show_toolbar){
+                    toolbar_html += ' style="display: none;" ';
+                }
+                toolbar_html += '>';
+
+
+                var active = ' ';
+                var pressed = 'false';
+                if (this.options.table_default_mode === 'show') {
+                    active = ' active ';
+                    pressed = 'true';
+                }
+
+                toolbar_html += '<button type="button" class="' + this.options.button_css.table + active + '" id="' + this.options.element.table_mode_selector + '" data-toggle="button" aria-pressed="' + pressed + '" autocomplete="off" ';
+                if(!this.options.show_table_selector) {
+                    toolbar_html += ' style="display: none;" ';
+                }
+                toolbar_html += '>';
+                toolbar_html += this.options.icon.table + ' ' + this.options.label.table;
+                toolbar_html += '</button>&nbsp;';
+
+
+                toolbar_html += '<div class="btn-group" data-toggle="buttons" id="'+this.options.element.chart_mode_selector+'">';
 
                 // Bar chart selection button
                 if(this.options.chart_modes.indexOf('bar') > -1){
@@ -2887,7 +3205,6 @@ jQuery( document ).ready(function() {
                 }
 
                 this.$element.attr('data-toolbar', '#datatable_toolbar'+this.uniqueId);
-                this.options.element.chart_mode_selector = '#chart_mode_selector'+this.uniqueId;
             }
 
             // Event handlers
@@ -2897,9 +3214,19 @@ jQuery( document ).ready(function() {
             });
             $(element).on('post-body.bs.table', function (e, data) {
 
-                $(self.options.element.chart_mode_selector+' .active').each(function(){
+                $('#'+self.options.element.chart_mode_selector+' .active').each(function(){
                     self.chart_mode = $(this).data('mode');
                     self.updateVisualizationVisibility(self.chart_mode);
+                    return false;
+                });
+
+                $('#'+self.options.element.table_mode_selector).each(function(){
+                    if($(this).hasClass('active')){
+                        self.table_mode = 'show';
+                    }else{
+                        self.table_mode = 'hide';
+                    }
+                    self.updateTableVisibility(self.table_mode);
                     return false;
                 });
 
@@ -3006,7 +3333,6 @@ jQuery( document ).ready(function() {
                         options: options
                     });
                 });
-
                 $(element).find('.datatable-inline-bar-vertical-tristate').each(function(){
                     var data = self.parseDataList($(this).data('value'));
                     $(this).attr("width", data.length * (self.options.inline_chart.bar_vertical.item_width + 3) );
@@ -3129,7 +3455,6 @@ jQuery( document ).ready(function() {
                         options: options
                     });
                 });
-
                 $(element).find('.datatable-inline-line').each(function(){
                     $(this).attr("height", self.options.inline_chart.height);
                     var data = self.parseDataList($(this).data('value'));
@@ -3536,8 +3861,17 @@ jQuery( document ).ready(function() {
 
             });
 
-            // Visualization selector buttons
-            $(this.options.element.chart_mode_selector+' label').on('click', function(){
+            // Table selector button
+            $('#'+this.options.element.table_mode_selector).on('click', function(){
+                if($(this).hasClass('active')){
+                    self.table_mode = 'hide';
+                }else{
+                    self.table_mode = 'show';
+                }
+                self.updateTableVisibility(self.table_mode);
+            });
+
+            $('#'+this.options.element.chart_mode_selector+' label').on('click', function(){
                 self.chart_mode = $(this).data('mode');
                 self.updateVisualizationVisibility(self.chart_mode);
             });
@@ -3708,7 +4042,13 @@ jQuery( document ).ready(function() {
                 }
             });
         },
-
+        updateTableVisibility : function(mode){
+            if(mode=='show'){
+                $(this.$element[0].closest('.fixed-table-container')).show(this.options.animation.show_speed);
+            }else if(mode=='hide'){
+                $(this.$element[0].closest('.fixed-table-container')).hide(this.options.animation.show_speed);
+            }
+        },
         updateVisualizationVisibility: function(mode){
             if(mode=='off'){
                 if(this.options.chart_modes.indexOf('bar') > -1){
@@ -4511,7 +4851,9 @@ jQuery( document ).ready(function() {
 
             var show_legend = false;
             if(datasets.length > 1){
-                show_legend = true;
+                if(this.options.line.legend.enabled){
+                    show_legend = true;
+                }
             }
 
             // Tooltip position
@@ -4553,11 +4895,15 @@ jQuery( document ).ready(function() {
 
                 scales: {
                     xAxes: [{
-                        display: this.options.line.show_xaxis,
+                        display: this.options.line.xaxis.display,
                         stacked: false,
                         ticks: {
                             maxRotation: 90
+                        },
+                        gridLines: {
+                            display: this.options.line.xaxis.gridlines
                         }
+
                     }],
                     yAxes: [{
                         stacked: false,
@@ -4566,8 +4912,12 @@ jQuery( document ).ready(function() {
                             beginAtZero: beginAtZero,
                             suggestedMin: all_value_min,
                             suggestedMax: all_value_max
+                        },
+                        gridLines: {
+                            display: this.options.line.yaxis.gridlines
                         }
-                    }]
+                    }],
+
                 },
                 maintainAspectRatio: true,
                 responsive: true,
@@ -4585,7 +4935,21 @@ jQuery( document ).ready(function() {
                 },
                 legend: {
                     display: show_legend,
-                    position: 'right'
+                    position: this.options.line.legend.position
+                },
+                horizontal_highlights: {
+                    enabled: this.options.line.horizontal_highlights.enabled,
+                    data: this.options.line.horizontal_highlights.data,
+                    opacity: this.options.line.horizontal_highlights.opacity,
+                    lineWidth: this.options.line.horizontal_highlights.lineWidth,
+                    strokeStyle: this.options.line.horizontal_highlights.strokeStyle,
+                    label: {
+                        fillStyle: this.options.line.horizontal_highlights.label.fillStyle,
+                        font: this.options.line.horizontal_highlights.label.font,
+                        fontSize: this.options.line.horizontal_highlights.label.fontSize,
+                        position: this.options.line.horizontal_highlights.label.position,
+                        opacity: this.options.line.horizontal_highlights.label.opacity
+                    }
                 },
                 horizontal_line: {
                     enabled: this.options.line.horizontal_line.enabled,
@@ -4596,6 +4960,18 @@ jQuery( document ).ready(function() {
                     enabled: this.options.line.vertical_indicator_line.enabled,
                     lineWidth: this.options.line.vertical_indicator_line.lineWidth,
                     strokeStyle: this.options.line.vertical_indicator_line.strokeStyle
+                },
+                vertical_segments: {
+                    enabled: this.options.line.vertical_segments.enabled,
+                    data: this.options.line.vertical_segments.data,
+                    opacity: this.options.line.vertical_segments.opacity,
+                    label: {
+                        fillStyle: this.options.line.vertical_segments.label.fillStyle,
+                        font: this.options.line.vertical_segments.label.font,
+                        fontSize: this.options.line.vertical_segments.label.fontSize,
+                        position: this.options.line.vertical_segments.label.position,
+                        opacity: this.options.line.vertical_segments.label.opacity
+                    }
                 },
                 horizontal_indicator_line: {
                     enabled: this.options.line.horizontal_indicator_line.enabled,
@@ -5864,6 +6240,72 @@ jQuery( document ).ready(function() {
                             }
                         }
 
+                        data.push(data_item);
+                    }
+                }
+            }
+            return data;
+        },
+        parseSegmentList: function(list_string){
+            var data = new Array();
+            if(list_string){
+                var items = list_string.split(',');
+                if(items.length > 0) {
+                    for (var i = 0; i < items.length; i++) {
+                        var fields = this.htmlDecode(items[i]).split(';');
+
+                        var data_item = {
+                            'start_value': null,
+                            'stop_value': null,
+                            'label': null,
+                            'color': null
+                        };
+                        if(fields.length >= 1){
+                            var field_data = fields[0].trim();
+                            var date_value = new Date(field_data).getTime() > 0;
+                            if(date_value){
+                                data_item['start_value'] = field_data;
+                            }else {
+                                var numeric_value = parseFloat(field_data);
+                                if (isNaN(numeric_value)) {
+                                    data_item['start_value'] = field_data;
+                                } else {
+                                    data_item['start_value'] = numeric_value;
+                                }
+                            }
+                        }
+                        if(fields.length >= 2){
+                            var field_data = fields[1].trim();
+                            var date_value = new Date(field_data).getTime() > 0;
+                            if(date_value){
+                                data_item['stop_value'] = field_data;
+                            }else {
+                                var numeric_value = parseFloat(field_data);
+                                if (isNaN(numeric_value)) {
+                                    data_item['stop_value'] = field_data;
+                                } else {
+                                    data_item['stop_value'] = numeric_value;
+                                }
+                            }
+                        }
+                        if(fields.length >= 3){
+                            var field_data = fields[2].trim();
+                            if(field_data.charAt(0) == '#' || field_data.startsWith('rgb(') || field_data.startsWith('rgba(') ){
+                                data_item['color'] = field_data;
+                            }else{
+                                // Text label given
+                                data_item['label'] = field_data;
+                            }
+                        }
+                        if(fields.length >= 4){
+                            var field_data = fields[3].trim();
+                            if(field_data.charAt(0) == '#' || field_data.startsWith('rgb(') || field_data.startsWith('rgba(') ){
+                                data_item['color'] = field_data;
+                            }else{
+                                // Text label given
+                                data_item['label'] = field_data;
+                            }
+                        }
                         data.push(data_item);
                     }
                 }
