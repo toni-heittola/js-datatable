@@ -408,9 +408,25 @@ To see plugin in action, check <a href="http://www.cs.tut.fi/sgn/arg/dcase2016/t
                             <td>Comma separated list of fields to be show in the line plot. If undefined, all field shown.</td>
                         </tr>
                         <tr>
+                            <td>Line / fill</td>
+                            <td>data-line-fill</td>
+                            <td>line.fill</td>
+                            <td>Boolen</td>
+                            <td>false</td>
+                            <td>Fill area under the line.</td>
+                        </tr>
+                        <tr>
+                            <td>Line / Show X-axis</td>
+                            <td>data-show-xaxis</td>
+                            <td>line.xaxis.display</td>
+                            <td>Boolen</td>
+                            <td>true</td>
+                            <td>Show x-axis.</td>
+                        </tr>
+                        <tr>
                             <td>Line / X-axis field</td>
                             <td>data-line-xaxis-field</td>
-                            <td>line.xaxis_field</td>
+                            <td>line.xaxis.field</td>
                             <td>String</td>
                             <td>undefined</td>
                             <td>Data field to be used on x-axis.</td>
@@ -418,10 +434,66 @@ To see plugin in action, check <a href="http://www.cs.tut.fi/sgn/arg/dcase2016/t
                         <tr>
                             <td>Line / Sorted X-axis</td>
                             <td>data-line-xaxis-sorted</td>
-                            <td>line.xaxis_sorted</td>
+                            <td>line.xaxis.sorted</td>
                             <td>Boolean</td>
                             <td>false</td>
                             <td>Should the data be sorted based on x-axis field.</td>
+                        </tr>
+                        <tr>
+                            <td>Line / X-axis time unit</td>
+                            <td>data-line-xaxis-timeunit</td>
+                            <td>line.xaxis.timeunit</td>
+                            <td>String</td>
+                            <td>undefined</td>
+                            <td>Time unit used. Possible values e.g. minute,hour,day,month,year</td>
+                        </tr>
+                        <tr>
+                            <td>Line / X-axis time step size</td>
+                            <td>data-line-xaxis-timestepsize</td>
+                            <td>line.xaxis.timestepsize</td>
+                            <td>Number</td>
+                            <td>undefined</td>
+                            <td>Step size.</td>
+                        </tr>
+                        <tr>
+                            <td>Line / X-axis gridlines</td>
+                            <td>data-line-xaxis-gridlines</td>
+                            <td>line.xaxis.gridlines</td>
+                            <td>Boolean</td>
+                            <td>true</td>
+                            <td>Show x-axis gridlines.</td>
+                        </tr>
+                        <tr>
+                            <td>Line / Y-axis beginatzero</td>
+                            <td>data-line-yaxis-beginatzero</td>
+                            <td>line.yaxis.beginatzero</td>
+                            <td>Boolean</td>
+                            <td>false</td>
+                            <td>Start y-axis from zero.</td>
+                        </tr>
+                        <tr>
+                            <td>Line / Y-axis label</td>
+                            <td>data-line-yaxis-label</td>
+                            <td>line.yaxis.label</td>
+                            <td>String</td>
+                            <td>undefined</td>
+                            <td>Label for y-axis.</td>
+                        </tr>
+                        <tr>
+                            <td>Line / Y-axis scale</td>
+                            <td>data-line-yaxis-scale</td>
+                            <td>line.yaxis.scale</td>
+                            <td>String</td>
+                            <td>undefined</td>
+                            <td>Scale for y-axis. Possible values 'log', 'log_unit', 'log_exp', 'log10', 'log10_unit', and 'log10_exp'.</td>
+                        </tr>
+                        <tr>
+                            <td>Line / Y-axis gridlines</td>
+                            <td>data-line-yaxis-gridlines</td>
+                            <td>line.yaxis.gridlines</td>
+                            <td>Boolean</td>
+                            <td>true</td>
+                            <td>Show y-axis gridlines.</td>
                         </tr>
                         <tr>
                             <td>Line / Height</td>
@@ -522,6 +594,135 @@ To see plugin in action, check <a href="http://www.cs.tut.fi/sgn/arg/dcase2016/t
                             <td>rgba(160,160,160,0.5)</td>
                             <td>Horizontal indicator fill color.</td>
                         </tr>
+                        <tr>
+                            <td>Line / Show horizontal highlights</td>
+                            <td>data-line-show-horizontal-highlights</td>
+                            <td>line.horizontal_highlights.enabled</td>
+                            <td>Boolean</td>
+                            <td>true</td>
+                            <td>Show horizontal highlights.</td>
+                        </tr>
+                        <tr>
+                            <td>Line / Horizontal highlights</td>
+                            <td>data-line-horizontal-highlights</td>
+                            <td>line.horizontal_highlights.data</td>
+                            <td>String</td>
+                            <td>undefined</td>
+                            <td>Data structure to contain data for highlights in format: value1;title;color,value2;title2;color</td>
+                        </tr>
+                        <tr>
+                            <td>Line / Horizontal highlight line opacity</td>
+                            <td>data-line-horizontal-highlight-opacity</td>
+                            <td>line.horizontal_highlights.opacity</td>
+                            <td>Number</td>
+                            <td>0.1</td>
+                            <td>Line opacity.</td>
+                        </tr>
+                        <tr>
+                            <td>Line / Horizontal highlight line width</td>
+                            <td>data-line-horizontal-highlight-linewidth</td>
+                            <td>line.horizontal_highlights.linewidth</td>
+                            <td>Number</td>
+                            <td>1</td>
+                            <td>Line width.</td>
+                        </tr>
+                        <tr>
+                            <td>Line / Horizontal highlight line color</td>
+                            <td>data-line-horizontal-highlight-stroke</td>
+                            <td>line.horizontal_highlights.stroke</td>
+                            <td>String</td>
+                            <td>rgba(112, 187, 225 ,1.0)</td>
+                            <td>Line color.</td>
+                        </tr>
+                        <tr>
+                            <td>Line / Horizontal highlight label position</td>
+                            <td>data-line-horizontal-highlight-label-position</td>
+                            <td>line.horizontal_highlights.label.position</td>
+                            <td>String</td>
+                            <td>'bottom-right'</td>
+                            <td>Line title position, possible values: top-left, top-right, bottom-left, bottom-right</td>
+                        </tr>
+                        <tr>
+                            <td>Line / Horizontal highlight label color</td>
+                            <td>data-line-horizontal-highlight-label-fill</td>
+                            <td>line.horizontal_highlights.label.fillStyle</td>
+                            <td>String</td>
+                            <td>#000</td>
+                            <td>Line title color.</td>
+                        </tr>
+                        <tr>
+                            <td>Line / Horizontal highlight label size</td>
+                            <td>data-line-horizontal-highlight-label-size</td>
+                            <td>line.horizontal_highlights.label.fontSize</td>
+                            <td>String</td>
+                            <td>'12px'</td>
+                            <td>Line title size.</td>
+                        </tr>
+                        <tr>
+                            <td>Line / Horizontal highlight label opacity</td>
+                            <td>data-line-horizontal-highlight-label-opacity</td>
+                            <td>line.horizontal_highlights.label.opacity</td>
+                            <td>Number</td>
+                            <td>0.2</td>
+                            <td>Line title opacity.</td>
+                        </tr>
+
+                        <tr>
+                            <td>Line / Show vertical segments</td>
+                            <td>data-line-show-vertical-segments</td>
+                            <td>line.vertical_segments.enabled</td>
+                            <td>Boolean</td>
+                            <td>true</td>
+                            <td>Show vertical segments.</td>
+                        </tr>
+                        <tr>
+                            <td>Line / Vertical segments</td>
+                            <td>data-line-vertical-segments</td>
+                            <td>line.vertical_segments.data</td>
+                            <td>String</td>
+                            <td>undefined</td>
+                            <td>Data structure to contain data for segments in format: start_value1;stop_value1;title;color,start_value2;stop_value2;title2;color</td>
+                        </tr>
+                        <tr>
+                            <td>Line / Vertical segments opacity</td>
+                            <td>data-line-vertical-segment-opacity</td>
+                            <td>line.vertical_segments.opacity</td>
+                            <td>Number</td>
+                            <td>0.1</td>
+                            <td>Segment opacity.</td>
+                        </tr>
+                        <tr>
+                            <td>Line / Vertical segment label position</td>
+                            <td>data-line-vertical-segment-label-position</td>
+                            <td>line.vertical_segments.label.position</td>
+                            <td>String</td>
+                            <td>'bottom-right'</td>
+                            <td>Segment title position, possible values: top, bottom, middle</td>
+                        </tr>
+                        <tr>
+                            <td>Line / Vertical segment label color</td>
+                            <td>data-line-vertical-segment-label-fill</td>
+                            <td>line.vertical_segments.label.fillStyle</td>
+                            <td>String</td>
+                            <td>#000</td>
+                            <td>Segment title color.</td>
+                        </tr>
+                        <tr>
+                            <td>Line / Vertical segment label size</td>
+                            <td>data-line-vertical-segment-label-size</td>
+                            <td>line.vertical_segments.label.fontSize</td>
+                            <td>String</td>
+                            <td>'12px'</td>
+                            <td>Segment title size.</td>
+                        </tr>
+                        <tr>
+                            <td>Line / Vertical segment label opacity</td>
+                            <td>data-line-vertical-segment-label-opacity</td>
+                            <td>line.vertical_segments.label.opacity</td>
+                            <td>Number</td>
+                            <td>0.2</td>
+                            <td>Segment title opacity.</td>
+                        </tr>
 
                         <tr>
                             <td>Line / Show error bars</td>
@@ -589,7 +790,22 @@ To see plugin in action, check <a href="http://www.cs.tut.fi/sgn/arg/dcase2016/t
                             <td>'top'</td>
                             <td>Tooltip position, possible values: <ul><li>average</li><li>top</li><li>bottom</li></ul></td>
                         </tr>
-
+                        <tr>
+                            <td>Line / Show legend</td>
+                            <td>data-line-show-legend</td>
+                            <td>line.legend.enabled</td>
+                            <td>Boolean</td>
+                            <td>true</td>
+                            <td>Show legend. </td>
+                        </tr>
+                        <tr>
+                            <td>Line / Legend position</td>
+                            <td>data-line-legend-position</td>
+                            <td>line.legend.position</td>
+                            <td>String</td>
+                            <td>'right'</td>
+                            <td>Legend position, possible values: <ul><li>top</li><li>bottom</li><li>left</li><li>right</li></ul></td>
+                        </tr>
 
 
                         <tr>
