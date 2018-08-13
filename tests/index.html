@@ -70,6 +70,10 @@
                     data-sort-order="desc"
                     data-pagination="false"
                     data-show-pagination-switch="false"
+                    data-line-horizontal-highlights="100000;Baseline;#333"
+                    data-line-horizontal-highlight-opacity="0.1"
+                    data-line-horizontal-highlight-label-position="bottom-left"
+                    data-line-horizontal-highlight-label-opacity="0.1"
             >
                 <thead>
                 <tr>
@@ -251,8 +255,6 @@
                     data-table-default-mode="hide"
                     data-sort-name="date"
                     data-sort-order="asc"
-                    data-pagination="true"
-                    data-show-pagination-switch="false"
                     data-line-height="500"
                     data-line-show-xaxis="true"
                     data-line-fields2="max_team_public_lb,top5team_interval_public_lb"
@@ -342,6 +344,12 @@
                     data-pagination="true"
                     data-show-pagination-switch="true"
                     data-column-hover="true"
+
+
+                    data-bar-horizontal-highlights="20;Value 1;#333,55;Value 2;#000"
+                    data-bar-horizontal-highlight-opacity="0.5"
+                    data-bar-horizontal-highlight-label-position="bottom-right"
+                    data-bar-horizontal-highlight-label-opacity="0.1"
             >
                 <thead>
                 <tr>
@@ -663,8 +671,9 @@
     <script type="text/javascript" src="../js/Chart.bundle.js"></script>
     <script type="text/javascript" src="../js/moment.js"></script>
     <script type="text/javascript" src="../js/js-yaml.js"></script>
-
     <script type="text/javascript" src="../js/datatable.js"></script>
-
+    <!---
+    <script type="text/javascript" src="../js.min/datatable.bundle.min.js"></script>
+    -->
 </body>
 </html>
