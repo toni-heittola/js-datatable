@@ -21,8 +21,7 @@ To use plugin, following javascripts and css files are required:
 
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script type="text/javascript" src="js.min/datatable.bundle.min.js"></script>
-    <link rel="stylesheet" href="css.min/bootstrap-table.mim.css">
-    <link rel="stylesheet" href="css.min/datatable.min.css">
+    <link rel="stylesheet" href="css.min/datatable.bundle.min.css">
 
 You can use also non-minified versions in case debugging is required:
 

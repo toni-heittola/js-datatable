@@ -78,6 +78,21 @@ def minify_css_directory2(source, target):
                         with open(os.path.join(target, current_file.replace('.css', '.min.css')), "w") as minified_file:
                             minified_file.write(rcssmin.cssmin(css_file.read(), keep_bang_comments=True))
 
+        bundle_data = []
+        for root, dirs, files in os.walk(target):
+            for current_file in files:
+                if current_file.endswith(".css") and current_file !=  'datatable.bundle.min.css':
+                    current_file_path = os.path.join(root, current_file)
+                    css_file = open(current_file_path, "r")
+                    bundle_data += css_file.readlines()
+                    css_file.close()
+
+        bundle_filename = os.path.join(target, 'datatable.bundle.min.css')
+        bundle_file = open(bundle_filename, 'w+')
+        bundle_file.write(''.join(bundle_data))
+        bundle_file.close()
+
+        print(" " + bundle_filename)
 
 def minify_js_directory(source, target):
     """
