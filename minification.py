@@ -53,7 +53,7 @@ def minify_css_directory(source, target):
             for current_file in files:
                 if current_file.endswith(".css"):
                     current_file_path = os.path.join(root, current_file)
-                    print " ", current_file_path
+                    print(" " + current_file_path)
                     with open(current_file_path) as css_file:
                         with open(os.path.join(target, current_file.replace('.css', '.min.css')), "w") as minified_file:
                             minified_file.write(compress(css_file.read()))
@@ -73,7 +73,7 @@ def minify_css_directory2(source, target):
             for current_file in files:
                 if current_file.endswith(".css"):
                     current_file_path = os.path.join(root, current_file)
-                    print " ", current_file_path
+                    print(" " + current_file_path)
                     with open(current_file_path) as css_file:
                         with open(os.path.join(target, current_file.replace('.css', '.min.css')), "w") as minified_file:
                             minified_file.write(rcssmin.cssmin(css_file.read(), keep_bang_comments=True))
@@ -94,10 +94,26 @@ def minify_js_directory(source, target):
             for current_file in files:
                 if current_file.endswith(".js"):
                     current_file_path = os.path.join(root, current_file)
-                    print " ", current_file_path
+                    print(" " + current_file_path)
                     with open(current_file_path) as js_file:
                         with open(os.path.join(target, current_file.replace('.js', '.min.js')), "w") as minified_file:
                             minified_file.write(jsmin(js_file.read()))
+
+        bundle_data = []
+        for root, dirs, files in os.walk(target):
+            for current_file in files:
+                if current_file.endswith(".js") and current_file !=  'datatable.bundle.min.js':
+                    current_file_path = os.path.join(root, current_file)
+                    js_file = open(current_file_path, "r")
+                    bundle_data += js_file.readlines()
+                    js_file.close()
+
+        bundle_filename = os.path.join(target, 'datatable.bundle.min.js')
+        bundle_file = open(bundle_filename, 'w+')
+        bundle_file.write(''.join(bundle_data))
+        bundle_file.close()
+
+        print(" " + bundle_filename)
 
 if __name__ == "__main__":
     try:
