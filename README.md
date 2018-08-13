@@ -20,9 +20,7 @@ Installation instructions
 To use plugin, following javascripts and css files are required:
 
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script type="text/javascript" src="js.min/bootstrap-table.min.js"></script>
-    <script type="text/javascript" src="js.min/Chart.bundle.min.js"></script>
-    <script type="text/javascript" src="js.min/datatable.min.js"></script>
+    <script type="text/javascript" src="js.min/datatable.bundle.min.js"></script>
     <link rel="stylesheet" href="css.min/bootstrap-table.mim.css">
     <link rel="stylesheet" href="css.min/datatable.min.css">
 
@@ -31,6 +29,7 @@ You can use also non-minified versions in case debugging is required:
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script type="text/javascript" src="js/bootstrap-table.js"></script>
     <script type="text/javascript" src="js/Chart.bundle.js"></script>
+    <script type="text/javascript" src="js/moment.js"></script>
     <script type="text/javascript" src="js/datatable.js"></script>
     <link rel="stylesheet" href="css/bootstrap-table.css">
     <link rel="stylesheet" href="css/datatable.css">
@@ -231,6 +230,14 @@ In case an extensive customization is required, the datatable can be created wit
 | data-bar-horizontal-indicator-linewidth | 4      | Horizontal indicator line width.                                              |
 | data-bar-horizontal-indicator-stroke | rgba(0,0,0,0.2) | Horizontal indicator line color.                                        |
 | data-bar-horizontal-indicator-fill  | rgba(0,0,0,0.1) | Horizontal indicator fill color.                                         |
+| data-bar-horizontal-highlights        | undefined | Data structure to contain data for highlights in format: value1;title;color,value2;title2;color |
+| data-bar-horizontal-highlight-opacity | 0.1 | Line opacity. |
+| data-bar-horizontal-highlight-linewidth | 1 | Line width. |
+| data-bar-horizontal-highlight-stroke | rgba(112, 187, 225 ,1.0) | Line color. |
+| data-bar-horizontal-highlight-label-position | 'bottom-right' | Line title position, possible values: top-left, top-right, bottom-left, bottom-right |
+| data-bar-horizontal-highlight-label-fill | #000 | Line title color. |
+| data-bar-horizontal-highlight-label-size | '12px' | Line title size. |
+| data-bar-horizontal-highlight-label-opacity | 0.2 | Line title opacity. |
 | data-bar-show-error-bar   | true                 | Show error bar for data point (if interval is defined).                       |
 | data-bar-error-bar-linewidth | 2                 | Error bar line width.                                                         |
 | data-bar-error-bar-tipwidth  | undefined         | Error bar tip width. If null give, then tip width is defined automatically.   |
@@ -382,7 +389,9 @@ Essential Bootstraptable specific parameters are collected here for completeness
 - Add new value formatters float1-exp, float2-exp, float3-exp, float4-exp, numeric-unit.
 - Update line plot to handle time.
 - Update line plot to support logarithmic y-axis.
-- Update line plot to support vertical segments and horizontal highlight lines.  
+- Update line plot to support vertical segments and horizontal highlight lines.
+- Update bar plot to support horizontal highlight lines.
+- Add parameter to hide toolbar and table.
 
 **v1.1.0**
 
