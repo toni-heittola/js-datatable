@@ -99,6 +99,20 @@ jQuery( document ).ready(function() {
             bar: {
                 height: 240,
                 show_xaxis: true,
+                horizontal_highlights: {
+                    enabled: true,
+                    data: null,
+                    opacity: 0.1,
+                    strokeStyle: 'rgba(112, 187, 225 ,1.0)',
+                    lineWidth: 2,
+                    label: {
+                        fillStyle: '#000',
+                        fontSize: '12px',
+                        font: 'Arial',
+                        opacity: 0.2,
+                        position: 'bottom-right'
+                    }
+                },
                 horizontal_line: {
                     enabled: false,
                     strokeStyle: 'rgba(112, 187, 225 ,0.5)',
@@ -983,6 +997,33 @@ jQuery( document ).ready(function() {
             if(typeof $(element).data('bar-show-xaxis') !== 'undefined'){
                 attributes.bar.show_xaxis = $(element).data('bar-show-xaxis');
             }
+            if(typeof $(element).data('bar-horizontal-highlights') !== 'undefined'){
+                attributes.bar.horizontal_highlights.data = this.parseDataList($(element).data('bar-horizontal-highlights'));
+                if(attributes.bar.horizontal_highlights.data.length==0 && attributes.bar.horizontal_highlights.enabled){
+                    attributes.bar.horizontal_highlights.enabled = false;
+                }
+            }
+            if(typeof $(element).data('bar-horizontal-highlight-opacity') !== 'undefined'){
+                attributes.bar.horizontal_highlights.opacity = $(element).data('bar-horizontal-highlight-opacity');
+            }
+            if(typeof $(element).data('bar-horizontal-highlight-linewidth') !== 'undefined'){
+                attributes.bar.horizontal_highlights.lineWidth = $(element).data('bar-horizontal-highlight-width');
+            }
+            if(typeof $(element).data('bar-horizontal-highlight-stroke') !== 'undefined'){
+                attributes.bar.horizontal_highlights.strokeStyle = $(element).data('bar-horizontal-highlight-stroke');
+            }
+            if(typeof $(element).data('bar-horizontal-highlight-label-position') !== 'undefined'){
+                attributes.bar.horizontal_highlights.label.position = $(element).data('bar-horizontal-highlight-label-position');
+            }
+            if(typeof $(element).data('bar-horizontal-highlight-label-fill') !== 'undefined'){
+                attributes.bar.horizontal_highlights.label.fillStyle = $(element).data('bar-horizontal-highlight-label-fill');
+            }
+            if(typeof $(element).data('bar-horizontal-highlight-label-size') !== 'undefined'){
+                attributes.bar.horizontal_highlights.label.fontSize = $(element).data('bar-horizontal-highlight-label-size');
+            }
+            if(typeof $(element).data('bar-horizontal-highlight-label-opacity') !== 'undefined'){
+                attributes.bar.horizontal_highlights.label.opacity = $(element).data('bar-horizontal-highlight-label-opacity');
+            }
             if(typeof $(element).data('bar-show-vertical-indicator') !== 'undefined'){
                 attributes.bar.vertical_indicator_line.enabled = $(element).data('bar-show-vertical-indicator');
             }
@@ -1299,6 +1340,13 @@ jQuery( document ).ready(function() {
             this.options.chart_modes = this.options.chart_modes.split(',');
             if(this.options.chart_modes.length == 1 && this.options.chart_modes[0] != this.options.chart_default_mode && this.options.chart_default_mode != 'off'){
                 this.options.chart_default_mode = this.options.chart_modes[0];
+            }
+
+            if(!this.options.show_toolbar && this.options.table_default_mode === 'hide'){
+                $(this.element).attr('data-height', 1);
+                $(this.element).attr('data-page-size', 1);
+                $(this.element).attr('data-pagination', false);
+                $(this.element).attr('data-show-pagination-switch', false);
             }
 
             // Initialization flag
@@ -2277,7 +2325,6 @@ jQuery( document ).ready(function() {
                         }
                     }
 
-
                     // Vertical line following the mouse
                     if(chart.config.options.hasOwnProperty('vertical_indicator_line') && chart.config.options.vertical_indicator_line.enabled){
                         if (this.chart.tooltip._active && this.chart.tooltip._active.length) {
@@ -2711,6 +2758,7 @@ jQuery( document ).ready(function() {
 
                     this.rendered = true;
 
+                    // Horizontal lines from data
                     if(chart.config.options.hasOwnProperty('horizontal_indicator_line') && chart.config.options.horizontal_indicator_line.enabled){
                         if (this.chart.tooltip._active && this.chart.tooltip._active.length) {
                             var current_point = this.chart.tooltip._active[0];
@@ -2757,6 +2805,88 @@ jQuery( document ).ready(function() {
                             ctx.stroke();
 
                             ctx.restore();
+                        }
+                    }
+
+                    // Horizontal highlights
+                    if(chart.config.options.hasOwnProperty('horizontal_highlights') && chart.config.options.horizontal_highlights.enabled){
+
+                        var data = chart.config.options.horizontal_highlights.data;
+                        if(data){
+                            var xaxis = chart.scales['x-axis-0'];
+                            var yaxis = chart.scales['y-axis-0'];
+                            var lineWidth = 2;
+                            if(chart.config.options.horizontal_highlights.hasOwnProperty('lineWidth')){
+                                lineWidth = chart.config.options.horizontal_highlights.lineWidth;
+                            }
+                            var strokeStyle = chart.config.options.horizontal_highlights.strokeStyle;
+
+                            for(var line_id=0; line_id < data.length; line_id++){
+                                var y = yaxis.getPixelForValue(data[line_id].y_value);
+
+                                if(data[line_id].color){
+                                    if(data[line_id].color.startsWith('#')) {
+                                        strokeStyle = self.hexToRGB(data[line_id].color, chart.config.options.horizontal_highlights.opacity).css;
+                                    }
+                                }
+
+                                ctx.save();
+                                ctx.beginPath();
+                                ctx.strokeStyle = strokeStyle;
+                                ctx.lineWidth = lineWidth;
+                                ctx.moveTo(xaxis.left, y);
+                                ctx.lineTo(xaxis.right, y);
+                                ctx.stroke();
+                                ctx.restore();
+
+                                if(data[line_id].label){
+                                    ctx.save();
+                                    ctx.lineWidth = 0;
+                                    var tmp = null;
+                                    if(chart.config.options.horizontal_highlights.label.fillStyle.startsWith('#')){
+                                        tmp = self.hexToRGB(chart.config.options.horizontal_highlights.label.fillStyle, chart.config.options.horizontal_highlights.label.opacity);
+                                    }else if(chart.config.options.horizontal_highlights.label.fillStyle.startsWith('rgba(')){
+                                        tmp = chart.config.options.horizontal_highlights.label.fillStyle;
+
+                                    }else if(chart.config.options.horizontal_highlights.label.fillStyle.startsWith('rgb(')){
+                                        tmp = self.hexToRGB(
+                                            self.RGBToHex(chart.config.options.horizontal_highlights.label.fillStyle), chart.config.options.horizontal_highlights.label.opacity
+                                        );
+                                    }
+
+                                    if(tmp.hasOwnProperty('css')){
+                                        ctx.fillStyle = tmp.css;
+                                    }else if(tmp){
+                                        ctx.fillStyle = tmp;
+                                    }else{
+                                        ctx.fillStyle = self.hexToRGB('#000', chart.config.options.horizontal_highlights.label.opacity);
+                                    }
+
+                                    ctx.font = chart.config.options.horizontal_highlights.label.fontSize + ' ' + chart.config.options.horizontal_highlights.label.font;
+                                    if(chart.config.options.horizontal_highlights.label.position === 'top-left') {
+                                        ctx.textBaseline = 'bottom';
+                                        ctx.textAlign = 'left';
+                                        ctx.fillText(data[line_id].label, xaxis.left + 3, y);
+
+                                    }else if(chart.config.options.horizontal_highlights.label.position === 'top-right') {
+                                        ctx.textBaseline = 'bottom';
+                                        ctx.textAlign = 'right';
+                                        ctx.fillText(data[line_id].label, xaxis.right - 3, y);
+
+                                    }else if(chart.config.options.horizontal_highlights.label.position === 'bottom-left') {
+                                        ctx.textBaseline = 'top';
+                                        ctx.textAlign = 'left';
+                                        ctx.fillText(data[line_id].label, xaxis.left + 3, y+3);
+
+                                    }else if(chart.config.options.horizontal_highlights.label.position === 'bottom-right') {
+                                        ctx.textBaseline = 'top';
+                                        ctx.textAlign = 'right';
+                                        ctx.fillText(data[line_id].label, xaxis.right - 3, y+3);
+                                    }
+
+                                    ctx.restore();
+                                }
+                            }
                         }
                     }
 
@@ -4444,6 +4574,20 @@ jQuery( document ).ready(function() {
                         enabled: this.options.bar.vertical_indicator_line.enabled,
                         lineWidth: this.options.bar.vertical_indicator_line.lineWidth,
                         strokeStyle: this.options.bar.vertical_indicator_line.strokeStyle
+                    },
+                    horizontal_highlights: {
+                        enabled: this.options.bar.horizontal_highlights.enabled,
+                        data: this.options.bar.horizontal_highlights.data,
+                        opacity: this.options.bar.horizontal_highlights.opacity,
+                        lineWidth: this.options.bar.horizontal_highlights.lineWidth,
+                        strokeStyle: this.options.bar.horizontal_highlights.strokeStyle,
+                        label: {
+                            fillStyle: this.options.bar.horizontal_highlights.label.fillStyle,
+                            font: this.options.bar.horizontal_highlights.label.font,
+                            fontSize: this.options.bar.horizontal_highlights.label.fontSize,
+                            position: this.options.bar.horizontal_highlights.label.position,
+                            opacity: this.options.bar.horizontal_highlights.label.opacity
+                        }
                     },
                     horizontal_line: {
                         enabled: this.options.bar.horizontal_line.enabled
