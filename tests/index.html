@@ -17,6 +17,11 @@
     <link rel="stylesheet" href="../css.min/bootstrap-table.min.css">
     <link rel="stylesheet" href="../css.min/bootstrap-table-filter-control.min.css">
     <link rel="stylesheet" href="../css/datatable.css">
+
+    <!--
+    <link rel="stylesheet" href="../css.min/datatable.bundle.min.css">
+    -->
+
     <style>
         nav[data-toggle='toc'] {
             margin-top: 30px;
@@ -40,13 +45,185 @@
 
 <body data-spy="scroll" data-target="#toc">
 
-<div class="container">
-    <div class="row">
-        <div class="col-md-3">
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="col-md-2">
             <nav id="toc" data-spy="affix" data-toggle="toc"></nav>
         </div>
-        <div class="col-md-9">
+        <div class="col-md-10">
             <h1 class="page-header" id="js-table">js-datatable development tests</h1>
+
+            <h2 id="datatable-defaults">Default datatable</h2>
+            <table
+                    class="datatable table"
+                    data-json="data4.json"
+                    data-show-chart="true"
+                    data-id-field="code"
+                    data-rank-mode="grouped_muted"
+                    data-chart-modes="bar,scatter,comparison,line"
+                    data-chart-default-mode="line"
+                    data-bar-hline="true"
+                    data-bar-show-horizontal-indicator="true"
+                    data-bar-show-vertical-indicator="true"
+                    data-scatter-x="value1"
+                    data-scatter-y="value2"
+                    data-comparison-row-id-field="code"
+                    data-comparison-sets-json='[{"title": "All values","data_axis_title": "Value axis", "fields": ["value1", "value2", "value3", "value4"], "field_titles": ["custom title 1","custom title 2","custom title 3","custom title 4"]},{"title": "Sub comparison 1","data_axis_title": "Value", "fields": ["value1", "value2"]},{"title": "Sub comparison 2", "data_axis_title": "Accuracy", "fields": ["value3", "value4"]}]'
+                    data-comparison-active-set="All values"
+                    data-comparison-a-row="Red"
+                    data-comparison-b-row="Blue"
+
+                    data-sort-name="hbar"
+                    data-sort-order="desc"
+                    data-pagination="false"
+                    data-show-pagination-switch="false"
+                    data-column-hover="true"
+
+                    data-bar-show-legend="true"
+                    data-bar-legend-position="bottom"
+            >
+                <thead>
+                <tr>
+                    <th data-sortable="false" data-rank="true">
+                        <span class="text-muted">Rank</span>
+                    </th>
+                    <th class="sep-left-cell"
+                        data-chartable="false"
+                        data-field="code"
+                        data-sortable="true">
+                        System
+                    </th>
+                    <th class="sep-left-cell"
+                        data-field="value1"
+                        data-align="center"
+                        data-chartable="true"
+                        data-sortable="true"
+                        data-value-type="float1-percentage-interval-muted"
+                        data-chart-mode="bar"
+                        data-bar-show-xaxis="false"
+                        data-bar-sort-field="code"
+                        data-bar-horizontal-highlights="20;Value 1;#333,55;Value 2;#000"
+                        data-bar-horizontal-highlight-opacity="0.5"
+                        data-bar-horizontal-highlight-label-position="bottom-right"
+                        data-bar-horizontal-highlight-label-opacity="0.5"
+                        data-line-show-xaxis="false"
+                        data-line-xaxis-field="code"
+                        data-line-xaxis-sorted="true"
+                        data-line-extra-fields="value3"
+                        data-line-show-legend="false"
+                        data-line-horizontal-highlights="20;Value 1;#666,55;Value 2;#EEEEEE"
+                        data-line-horizontal-highlight-opacity="0.5"
+                        data-line-horizontal-highlight-label-position="bottom-right"
+                        data-line-horizontal-highlight-label-opacity="0.5"
+                    >
+                        Value with interval
+                    </th>
+
+                    <th class="sep-left-cell"
+                        data-align="center"
+                        data-beginatzero="false"
+                        data-chartable="true"
+                        data-field="value2"
+                        data-sortable="true"
+                        data-visible="true"
+                        data-value-type="float1-percentage"
+                        data-axis-label="Label B"
+                        data-chart-mode="line"
+                        data-line-show-xaxis="true"
+                        data-line-xaxis-field="code"
+                        data-line-xaxis-sorted="true"
+                        data-line-horizontal-highlights="40;Baseline;#333"
+                    >
+                        Sparse value
+                    </th>
+                    <th class="sep-left-cell"
+                        data-align="center"
+                        data-beginatzero="false"
+                        data-chartable="true"
+                        data-field="value3"
+                        data-sortable="true"
+                        data-visible="true"
+                        data-value-type="float1-percentage-plusminus-muted"
+                        data-axis-label="Label B"
+                        data-chart-mode="line"
+                        data-line-show-point="false"
+                    >
+                        Value3
+                    </th>
+                    <th class="sep-left-cell"
+                        data-align="center"
+                        data-beginatzero="false"
+                        data-chartable="true"
+                        data-field="hbar"
+                        data-sortable="true"
+                        data-visible="true"
+                        data-value-type="inline-bar-horizontal-thin-percentage"
+                        data-bar-sort-field="code"
+                        data-line-height="200"
+                        data-line-show-legend="false"
+                        data-line-show-point="false"
+                        data-line-show-xaxis="false"
+                        data-dataset-labels="Set A,Set B,Set C,Set D,Set E,Set F"
+                        data-dataset-colors2="#5cb85c,#5bc0de,#f0ad4e,#d9534f">
+                        Inline bar, percentage
+                    </th>
+                </tr>
+                </thead>
+            </table>
+
+            <h2 id="datatable-hidden">Hide datatable</h2>
+            <table
+                    class="datatable table"
+                    data-json="data4.json"
+                    data-show-chart="true"
+                    data-show-toolbar="true"
+                    data-show-table-selector="true"
+                    data-table-default-mode="hide"
+                    data-id-field="code"
+                    data-rank-mode="grouped_muted"
+                    data-chart-modes="line"
+                    data-chart-default-mode="line"
+                    data-line-fields="value5"
+                    data-line-xaxis-field="code"
+                    data-line-xaxis-gridlines="false"
+                    data-line-yaxis-gridlines="false"
+                    data-line-show-line="true"
+                    data-line-show-point="true"
+                    data-sort-name="value5"
+                    data-sort-order="desc"
+                    data-pagination="false"
+                    data-show-pagination-switch="false"
+                    data-line-horizontal-highlights="100000;Baseline;#333"
+                    data-line-horizontal-highlight-opacity="0.1"
+                    data-line-horizontal-highlight-label-position="bottom-left"
+                    data-line-horizontal-highlight-label-opacity="0.1"
+            >
+                <thead>
+                <tr>
+                    <th data-sortable="false" data-rank="true">
+                        <span class="text-muted">Rank</span>
+                    </th>
+                    <th class="sep-left-cell"
+                        data-chartable="false"
+                        data-field="code"
+                        data-sortable="true"
+                        data-visible="true">
+                        System
+                    </th>
+                    <th class="sep-left-cell"
+                        data-align="center"
+                        data-beginatzero="false"
+                        data-chartable="true"
+                        data-axis-scale="log10_unit"
+                        data-field="value5"
+                        data-sortable="true"
+                        data-value-type="numeric-unit"
+                        data-visible="true">
+                        Value Y
+                    </th>
+                </tr>
+                </thead>
+            </table>
 
             <h2 id="visualization-baseline">Horizontal line</h2>
             <table
@@ -56,24 +233,29 @@
                     data-id-field="code"
                     data-rank-mode="grouped_muted"
                     data-row-highlighting="true"
-                    data-chart-modes="bar,scatter,comparison"
-                    data-chart-default-mode="bar"
-                    data-bar-baseline="false"
+                    data-chart-modes="bar,scatter,comparison,line"
+                    data-chart-default-mode="line"
                     data-bar-hline="true"
-
+                    data-bar-show-horizontal-indicator="true"
+                    data-bar-show-vertical-indicator="true"
+                    data-bar-height="250"
+                    data-bar-tooltip-position="top"
                     data-scatter-x="value1"
                     data-scatter-y="value2"
-
                     data-comparison-row-id-field="code"
                     data-comparison-sets-json='[{"title": "All values","data_axis_title": "Value axis", "fields": ["value1", "value2", "value3", "value4"], "field_titles": ["custom title 1","custom title 2","custom title 3","custom title 4"]},{"title": "Sub comparison 1","data_axis_title": "Value", "fields": ["value1", "value2"]},{"title": "Sub comparison 2", "data_axis_title": "Accuracy", "fields": ["value3", "value4"]}]'
                     data-comparison-active-set="All values"
                     data-comparison-a-row="Red"
                     data-comparison-b-row="Blue"
 
-                    data-sort-name="value1"
+                    data-sort-name="hbar"
                     data-sort-order="desc"
-                    data-pagination="false"
-                    data-show-pagination-switch="false"
+                    data-pagination="true"
+                    data-show-pagination-switch="true"
+                    data-column-hover="true"
+
+                    data-bar-show-legend="true"
+                    data-bar-legend-position="bottom"
             >
                 <thead>
                 <tr>
@@ -95,18 +277,39 @@
                         data-sortable="true"
                         data-visible="true"
                         data-value-type="float1-percentage-interval-muted"
-                        data-axis-label="Label"
+                        data-axis-label="Label A"
+                        data-chart-mode="bar"
+                        data-bar-show-xaxis="false"
+                        data-bar-sort-field="code"
+                        data-bar-horizontal-highlights="20;Value 1;#333,55;Value 2;#000"
+                        data-bar-horizontal-highlight-opacity="0.5"
+                        data-bar-horizontal-highlight-label-position="bottom-right"
+                        data-bar-horizontal-highlight-label-opacity="0.5"
+                        data-line-show-xaxis="false"
+                        data-line-xaxis-field="code"
+                        data-line-xaxis-sorted="true"
+                        data-line-extra-fields="value3"
+                        data-line-show-legend="false"
                     >
-                        Value 1
+                        Value with interval
                     </th>
+
                     <th class="sep-left-cell"
                         data-align="center"
                         data-beginatzero="false"
                         data-chartable="true"
                         data-field="value2"
                         data-sortable="true"
-                        data-visible="true">
-                        Value 2
+                        data-visible="true"
+                        data-value-type="float1-percentage"
+                        data-axis-label="Label B"
+                        data-chart-mode="line"
+                        data-line-show-xaxis="true"
+                        data-line-xaxis-field="code"
+                        data-line-xaxis-sorted="true"
+                        data-line-horizontal-highlights="40;Baseline;#333"
+                    >
+                        Sparse value
                     </th>
                     <th class="sep-left-cell"
                         data-align="center"
@@ -114,21 +317,300 @@
                         data-chartable="true"
                         data-field="value3"
                         data-sortable="true"
-                        data-visible="true">
-                        Value 3
+                        data-visible="true"
+                        data-value-type="float1-percentage-plusminus-muted"
+                        data-axis-label="Label B"
+                        data-chart-mode="line"
+                    >
+                        Value3
                     </th>
                     <th class="sep-left-cell"
                         data-align="center"
                         data-beginatzero="false"
                         data-chartable="true"
-                        data-field="value4"
+                        data-field="hbar"
                         data-sortable="true"
-                        data-visible="true">
-                        Value 4
+                        data-visible="true"
+                        data-value-type="inline-bar-horizontal-thin-percentage"
+                        data-bar-sort-field="code"
+                        data-line-height="350"
+                        data-line-show-legend="true"
+                        data-dataset-labels="Set A,Set B,Set C,Set D,Set E,Set F"
+                        data-dataset-colors2="#5cb85c,#5bc0de,#f0ad4e,#d9534f">
+                        Inline bar, percentage
+                    </th>
+                    <th class="sep-left-cell"
+                        data-align="center"
+                        data-beginatzero="false"
+                        data-chartable="true"
+                        data-field="line"
+                        data-sortable="true"
+                        data-visible="true"
+                        data-value-type="inline-bar-vertical-tristate">
+                        Tristate1
+                    </th>
+                    <th class="sep-left-cell"
+                        data-align="center"
+                        data-beginatzero="false"
+                        data-chartable="true"
+                        data-field="line"
+                        data-sortable="true"
+                        data-visible="true"
+                        data-value-type="inline-indicator-tristate">
+                        Tristate2
+                    </th>
+                    <th class="sep-left-cell"
+                        data-align="center"
+                        data-beginatzero="false"
+                        data-chartable="true"
+                        data-field="timeline"
+                        data-sortable="true"
+                        data-visible="true"
+                        data-value-type="inline-line-steps">
+                        Line steps
                     </th>
                 </tr>
                 </thead>
             </table>
+
+            <h2 id="visualization-timeline-datatable">Timeline datatable</h2>
+            <table
+                    class="datatable table"
+                    data-json="data_time.json"
+                    data-show-chart="false"
+                    data-id-field="time"
+
+                    data-sort-name="time"
+                    data-sort-order="desc"
+                    data-pagination="true"
+                    data-show-pagination-switch="true"
+                    data-column-hover="true"
+            >
+                <thead>
+                <tr>
+                    <th class=""
+                        data-chartable="false"
+                        data-field="time"
+                        data-sortable="true"
+                        data-visible="true">
+                        Time
+                    </th>
+                    <th class="sep-left-cell"
+                        data-chartable="false"
+                        data-field="valueA"
+                        data-sortable="true"
+                        data-visible="true">
+                        valueA
+                    </th>
+                </tr>
+                </thead>
+            </table>
+
+            <h2>Timeline plots</h2>
+            <div class="row">
+                <div class="col-md-4">
+                    <h4>Teams</h4>
+                    <table
+                            class="datatable table"
+                            data-json="data6.json"
+                            data-show-chart="true"
+                            data-id-field="date"
+                            data-chart-modes="line"
+                            data-show-toolbar="false"
+                            data-table-default-mode="hide"
+                            data-sort-name="date"
+                            data-sort-order="asc"
+                            data-line-height="200"
+                            data-line-show-xaxis="false"
+                            data-line-show-point="false"
+                            data-line-xaxis-field="date"
+                            data-line-xaxis-sorted="true"
+                            data-line-xaxis-timeunit="day"
+                            data-line-xaxis-timestepsize="14"
+                            data-line-yaxis-label="Teams"
+                            data-line-xaxis-gridlines="false"
+                            data-line-yaxis-gridlines="true"
+                            data-line-tooltip-position="average"
+                            data-line-vertical-segments="2018-05-24;2018-06-30;Development stage;#CCC,2018-06-30;2018-08-01;Evaluation stage;#EEE"
+                    >
+                        <thead>
+                        <tr>
+                            <th class=""
+                                data-chartable="false"
+                                data-field="date"
+                                data-sortable="true"
+                                data-visible="true">
+                                Date
+                            </th>
+                            <th class="sep-left-cell"
+                                data-field="teams"
+                                data-sortable="true"
+                                data-chartable="true"
+                                data-value-type="int"
+                                data-beginatzero="false"
+                                data-visible="true">
+                                Teams
+                            </th>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+                <div class="col-md-4">
+                    <h4>Total entries</h4>
+                    <table
+                            class="datatable table"
+                            data-json="data6.json"
+                            data-show-chart="true"
+                            data-id-field="date"
+                            data-chart-modes="line"
+                            data-show-toolbar="false"
+                            data-table-default-mode="hide"
+                            data-sort-name="date"
+                            data-sort-order="asc"
+                            data-line-height="200"
+                            data-line-show-xaxis="false"
+                            data-line-show-point="false"
+                            data-line-xaxis-field="date"
+                            data-line-xaxis-sorted="true"
+                            data-line-xaxis-timeunit="day"
+                            data-line-xaxis-timestepsize="14"
+                            data-line-yaxis-label="Entries"
+                            data-line-xaxis-gridlines="false"
+                            data-line-yaxis-gridlines="true"
+                            data-line-tooltip-position="average"
+                            data-line-vertical-segments="2018-05-24;2018-06-30;Development stage;#CCC,2018-06-30;2018-08-01;Evaluation stage;#EEE"
+                    >
+                        <thead>
+                        <tr>
+                            <th class=""
+                                data-chartable="false"
+                                data-field="date"
+                                data-sortable="true"
+                                data-visible="true">
+                                Date
+                            </th>
+                            <th class="sep-left-cell"
+                                data-field="total_entries"
+                                data-sortable="true"
+                                data-chartable="true"
+                                data-value-type="int"
+                                data-beginatzero="false"
+                                data-visible="true">
+                                Entries
+                            </th>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+                <div class="col-md-4">
+                    <h4>Entries per day</h4>
+                    <table
+                            class="datatable table"
+                            data-json="data6.json"
+                            data-show-chart="true"
+                            data-id-field="date"
+                            data-chart-modes="line"
+                            data-show-toolbar="false"
+                            data-table-default-mode="hide"
+                            data-sort-name="date"
+                            data-sort-order="asc"
+                            data-line-height="200"
+                            data-line-show-xaxis="false"
+                            data-line-show-point="false"
+                            data-line-xaxis-field="date"
+                            data-line-xaxis-sorted="true"
+                            data-line-xaxis-timeunit="day"
+                            data-line-xaxis-timestepsize="14"
+                            data-line-yaxis-label="Entries"
+                            data-line-xaxis-gridlines="false"
+                            data-line-yaxis-gridlines="true"
+                            data-line-tooltip-position="average"
+                            data-line-vertical-segments="2018-05-24;2018-06-30;Development stage;#CCC,2018-06-30;2018-08-01;Evaluation stage;#EEE"
+                    >
+                        <thead>
+                        <tr>
+                            <th class=""
+                                data-chartable="false"
+                                data-field="date"
+                                data-sortable="true"
+                                data-visible="true">
+                                Date
+                            </th>
+                            <th class="sep-left-cell"
+                                data-field="current_entries"
+                                data-sortable="true"
+                                data-chartable="true"
+                                data-value-type="int"
+                                data-beginatzero="false"
+                                data-visible="true">
+                                Entries per day
+                            </th>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+            <table
+                    class="datatable table"
+                    data-json="data5.json"
+                    data-show-chart="true"
+                    data-id-field="date"
+                    data-chart-modes="line"
+                    data-show-toolbar="false"
+                    data-table-default-mode="hide"
+                    data-sort-name="date"
+                    data-sort-order="asc"
+                    data-line-height="500"
+                    data-line-show-xaxis="true"
+                    data-line-fields2="max_team_public_lb,top5team_interval_public_lb"
+                    data-line-show-legend="true"
+                    data-line-legend-position="top"
+                    data-line-hline="false"
+                    data-line-show-point="false"
+                    data-line-xaxis-field="date"
+                    data-line-xaxis-sorted="true"
+                    data-line-xaxis-timeunit="day"
+                    data-line-xaxis-timestepsize="14"
+                    data-line-xaxis-gridlines="false"
+                    data-line-yaxis-label="Accuracy"
+                    data-line-yaxis-gridlines="true"
+                    data-line-tooltip-position="bottom"
+                    data-line-vertical-segments="2018-05-24;2018-06-30;Development stage;#CCC,2018-06-30;2018-08-01;Evaluation stage"
+                    data-line-horizontal-highlights="62.5;Baseline;#333"
+                    data-line-horizontal-highlight-opacity="0.1"
+                    data-line-horizontal-highlight-label-position="bottom-left"
+                    data-line-horizontal-highlight-label-opacity="0.1"
+            >
+                <thead>
+                <tr>
+                    <th class=""
+                        data-chartable="false"
+                        data-field="date"
+                        data-sortable="true"
+                        data-visible="true">
+                        Date
+                    </th>
+                    <th class="sep-left-cell"
+                        data-field="max_team_public_lb"
+                        data-sortable="true"
+                        data-chartable="true"
+                        data-value-type="float1-percentage"
+                        data-beginatzero="false"
+                        data-visible="true">
+                        Top Team
+                    </th>
+                    <th class="sep-left-cell"
+                        data-field="top10team_median_interval_public_lb"
+                        data-sortable="true"
+                        data-chartable="true"
+                        data-value-type="float1-percentage-interval"
+                        data-visible="true">
+                        Top 10 Team median
+                    </th>
+                </tr>
+                </thead>
+            </table>
+
 
             <h2 id="visualization-comparison">Comparison</h2>
             <table
@@ -167,6 +649,7 @@
                         data-chartable="true"
                         data-field="value1"
                         data-sortable="true"
+                        data-value-type="float1-interval-muted"
                         data-visible="true">
                         Value 1
                     </th>
@@ -176,6 +659,7 @@
                         data-chartable="true"
                         data-field="value2"
                         data-sortable="true"
+                        data-value-type="int"
                         data-visible="true">
                         Value 2
                     </th>
@@ -185,6 +669,7 @@
                         data-chartable="true"
                         data-field="value3"
                         data-sortable="true"
+                        data-value-type="float1-plusminus-muted"
                         data-visible="true">
                         Value 3
                     </th>
@@ -194,6 +679,7 @@
                         data-chartable="true"
                         data-field="value4"
                         data-sortable="true"
+                        data-value-type="float1-plusminus-muted"
                         data-visible="true">
                         Value 4
                     </th>
@@ -211,7 +697,7 @@
                    data-rank-mode="grouped_muted"
                    data-show-chart="true"
                    data-chart-modes="bar,scatter"
-                   data-chart-default-mode="scatter"
+                   data-chart-default-mode="bar"
                    data-show-bar-chart-xaxis="true"
                    data-filter-control="true"
                    data-filter-show-clear="true"
@@ -227,6 +713,7 @@
                     <th data-align="center"
                         data-field="value1"
                         data-chartable="true"
+                        data-value-type="float1-interval-muted"
                         data-sortable="true">
                         Value 1
                     </th>
@@ -237,45 +724,81 @@
                         data-sortable="true">
                         Value 2
                     </th>
-                    <th data-align="center"
-                        data-field="value3"
-                        data-reversed="true"
-                        data-chartable="true"
-                        data-sortable="true">
-                        Value 3
-                    </th>
-                    <th class="sep-left-cell"
-                        data-align="center"
-                        data-field="feature1"
-                        data-sortable="true"
-                        data-tag="true"
-                        data-filter-control="select">
-                        Feature 1
-                    </th>
                     <th class="sep-left-cell"
                         data-align="center"
                         data-field="feature2"
                         data-sortable="true"
-                        data-tag="true"
-                        data-filter-control="select">
+                        data-filter-control="select"
+                        data-tag="true">
                         Feature 2
                     </th>
                     <th class="sep-left-cell"
                         data-align="center"
-                        data-field="list"
-                        data-tag="false"
-                        data-value-type="list2"
+                        data-field="feature3"
                         data-sortable="true"
-                        data-filter-control="select">
-                        List
+                        data-filter-control="select"
+                        data-filter-strict-search="true"
+                        data-tag="true">
+                        Feature 3
                     </th>
                 </tr>
                 </thead>
             </table>
 
+            <h2 id="visualization-log">Logarithmic data</h2>
 
-
-
+            <table
+                    class="datatable table"
+                    data-json="data4.json"
+                    data-show-chart="true"
+                    data-id-field="code"
+                    data-rank-mode="grouped_muted"
+                    data-chart-modes="bar,scatter,line"
+                    data-chart-default-mode="scatter"
+                    data-scatter-x="value5"
+                    data-scatter-y="value1"
+                    data-line-fields="value5"
+                    data-sort-name="value5"
+                    data-sort-order="desc"
+                    data-pagination="false"
+                    data-show-pagination-switch="false"
+            >
+                <thead>
+                <tr>
+                    <th data-sortable="false" data-rank="true">
+                        <span class="text-muted">Rank</span>
+                    </th>
+                    <th class="sep-left-cell"
+                        data-chartable="false"
+                        data-field="code"
+                        data-sortable="true"
+                        data-visible="true">
+                        System
+                    </th>
+                    <th class="sep-left-cell"
+                        data-align="center"
+                        data-beginatzero="false"
+                        data-chartable="true"
+                        data-field="value1"
+                        data-sortable="true"
+                        data-value-type="float1-interval-muted"
+                        data-visible="true">
+                        Value X
+                    </th>
+                    <th class="sep-left-cell"
+                        data-align="center"
+                        data-beginatzero="false"
+                        data-chartable="true"
+                        data-axis-scale="log10_unit"
+                        data-field="value5"
+                        data-sortable="true"
+                        data-value-type="numeric-unit"
+                        data-visible="true">
+                        Value Y
+                    </th>
+                </tr>
+                </thead>
+            </table>
 
         </div>
     </div>
@@ -293,9 +816,11 @@
     <script type="text/javascript" src="../js/bootstrap-table-filter-control.js"></script>
 
     <script type="text/javascript" src="../js/Chart.bundle.js"></script>
-    <script type="text/javascript" src="../js.min/js-yaml.min.js"></script>
-
+    <script type="text/javascript" src="../js/moment.js"></script>
+    <script type="text/javascript" src="../js/js-yaml.js"></script>
     <script type="text/javascript" src="../js/datatable.js"></script>
-
+    <!---
+    <script type="text/javascript" src="../js.min/datatable.bundle.min.js"></script>
+    -->
 </body>
 </html>
