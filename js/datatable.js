@@ -2,10 +2,7 @@
 // datatable jQuery plug-in
 // ========================================
 //
-// datatable.js
-// Version: 0.2.6
-//
-// Copyright 2015-2017 Toni Heittola (toni.heittola@gmail.com)
+// Copyright 2015-2018 Toni Heittola (toni.heittola@gmail.com)
 // Released under the MIT license
 //
 // ========================================
@@ -41,8 +38,11 @@ jQuery( document ).ready(function() {
             rank_mode: 'normal',    // 'normal', 'grouped-muted', 'grouped-empty'
             tag_mode: 'column',     // global, column
             show_chart: false,
+            show_toolbar: true,
+            show_table_selector: false,
             chart_modes: 'bar',
             chart_default_mode: 'bar',
+            table_default_mode: 'show',
             list_separator: ',',
             css: {
                 active: 'active'
@@ -67,7 +67,17 @@ jQuery( document ).ready(function() {
                     'HH:mm',
                     'HH:mm:ss',
                     'HH:mm:ss.SSS'
-                ]
+                ],
+                display_formats: {
+                    'second': 'hh:mm:ss',
+                    'minute': 'hh:mm',
+                    'hour': 'hh',
+                    'day': 'YYYY-MM-DD',
+                    'week': 'll',
+                    'month': 'MMM YYYY',
+                    'quarter': '[Q]Q - YYYY',
+                    'year': 'YYYY'
+                }
             },
             table: {
                 id_field: 'id',
@@ -89,6 +99,20 @@ jQuery( document ).ready(function() {
             bar: {
                 height: 240,
                 show_xaxis: true,
+                horizontal_highlights: {
+                    enabled: true,
+                    data: null,
+                    opacity: 0.1,
+                    strokeStyle: 'rgba(112, 187, 225 ,1.0)',
+                    lineWidth: 2,
+                    label: {
+                        fillStyle: '#000',
+                        fontSize: '12px',
+                        font: 'Arial',
+                        opacity: 0.2,
+                        position: 'bottom-right'
+                    }
+                },
                 horizontal_line: {
                     enabled: false,
                     strokeStyle: 'rgba(112, 187, 225 ,0.5)',
@@ -98,6 +122,11 @@ jQuery( document ).ready(function() {
                     enabled: true,
                     strokeStyle: 'rgba(160,160,160,0.5)',
                     fillStyle: 'rgba(160,160,160,0.2)',
+                    lineWidth: 4
+                },
+                vertical_indicator_line: {
+                    enabled: false,
+                    strokeStyle: 'rgba(160,160,160,0.5)',
                     lineWidth: 4
                 },
                 error_bar: {
@@ -178,9 +207,21 @@ jQuery( document ).ready(function() {
             },
             line: {
                 height: 240,
-                xaxis: null,
-                xaxis_field: null,
-                xaxis_sorted: false,
+                xaxis: {
+                    display: true,
+                    field: null,
+                    sorted: false,
+                    timeunit: null,
+                    timestepsize: null,
+                    gridlines: true
+                },
+                yaxis: {
+                    beginatzero: false,
+                    label: null,
+                    scale: null,
+                    gridlines: true
+                },
+                fill: false,
                 fields: null,
                 point: {
                     enabled: true,
@@ -194,6 +235,32 @@ jQuery( document ).ready(function() {
                     enabled: true,
                     tension: 0
                 },
+                vertical_segments: {
+                    enabled: true,
+                    data: null,
+                    opacity: 0.1,
+                    label: {
+                        fillStyle: '#000',
+                        fontSize: '12px',
+                        font: 'Arial',
+                        opacity: 0.2,
+                        position: 'top'
+                    }
+                },
+                horizontal_highlights: {
+                    enabled: true,
+                    data: null,
+                    opacity: 0.1,
+                    strokeStyle: 'rgba(112, 187, 225 ,1.0)',
+                    lineWidth: 2,
+                    label: {
+                        fillStyle: '#000',
+                        fontSize: '12px',
+                        font: 'Arial',
+                        opacity: 0.2,
+                        position: 'bottom-right'
+                    }
+                },
                 horizontal_line: {
                     enabled: false,
                     strokeStyle: 'rgba(112, 187, 225 ,1.0)',
@@ -202,13 +269,13 @@ jQuery( document ).ready(function() {
                 vertical_indicator_line: {
                     enabled: true,
                     strokeStyle: 'rgba(160,160,160,0.5)',
-                    lineWidth: 4
+                    lineWidth: 2
                 },
                 horizontal_indicator_line: {
                     enabled: true,
-                    strokeStyle: 'rgba(160,160,160,0.5)',
+                    strokeStyle: null, //'rgba(160,160,160,0.5)',
                     fillStyle: 'rgba(160,160,160,0.2)',
-                    lineWidth: 4
+                    lineWidth: 2
                 },
                 error_bar: {
                     enabled: false,
@@ -310,6 +377,10 @@ jQuery( document ).ready(function() {
                     titleFontSize: 18,
                     bodyFontSize: 14,
                     position: 'top'
+                },
+                legend: {
+                    enabled: true,
+                    position: 'right'
                 }
             },
             scatter: {
@@ -436,7 +507,8 @@ jQuery( document ).ready(function() {
                 }
             },
             element: {
-                chart_mode_selector: '#chart_selector',
+                chart_mode_selector: 'chart_mode_selector',
+                table_mode_selector: 'table_mode_selector',
                 bar: {
                     div: '#bar_div',
                     canvas: '#bar_canvas'
@@ -466,6 +538,7 @@ jQuery( document ).ready(function() {
                 }
             },
             icon: {
+                table: '<span class="glyphicon glyphicon-list-alt"></span>',
                 bar: '<span class="glyphicon glyphicon-stats"></span>',
                 line: '<span class="glyphicon glyphicon-random"></span>',
                 scatter: '<span class="glyphicon glyphicon-th-large"></span>',
@@ -478,6 +551,7 @@ jQuery( document ).ready(function() {
                 anchor: '<span class="glyphicon glyphicon-expand" aria-hidden="true"></span>'
             },
             label: {
+                table: '',
                 bar: 'Bar',
                 line: 'Line',
                 scatter: 'Scatter',
@@ -490,6 +564,7 @@ jQuery( document ).ready(function() {
                 select_b_row: 'Select row B'
             },
             button_css:{
+                table: 'btn btn-default',
                 bar: 'btn btn-info selector-button',
                 line: 'btn btn-info selector-button',
                 scatter: 'btn btn-info selector-button',
@@ -876,6 +951,16 @@ jQuery( document ).ready(function() {
             if(typeof $(element).data('show-chart') !== 'undefined'){
                 attributes.show_chart = $(element).data('show-chart');
             }
+            if(typeof $(element).data('show-toolbar') !== 'undefined'){
+                attributes.show_toolbar = $(element).data('show-toolbar');
+            }
+            if(typeof $(element).data('show-table-selector') !== 'undefined') {
+                attributes.show_table_selector = $(element).data('show-table-selector');
+            }
+            if(typeof $(element).data('table-default-mode') !== 'undefined'){
+                attributes.table_default_mode = $(element).data('table-default-mode');
+            }
+
             if(typeof $(element).data('row-highlighting') !== 'undefined'){
                 attributes.table.row_highlighting = $(element).data('row-highlighting');
             }
@@ -911,6 +996,33 @@ jQuery( document ).ready(function() {
             }
             if(typeof $(element).data('bar-show-xaxis') !== 'undefined'){
                 attributes.bar.show_xaxis = $(element).data('bar-show-xaxis');
+            }
+            if(typeof $(element).data('bar-horizontal-highlights') !== 'undefined'){
+                attributes.bar.horizontal_highlights.data = this.parseDataList($(element).data('bar-horizontal-highlights'));
+                if(attributes.bar.horizontal_highlights.data.length==0 && attributes.bar.horizontal_highlights.enabled){
+                    attributes.bar.horizontal_highlights.enabled = false;
+                }
+            }
+            if(typeof $(element).data('bar-horizontal-highlight-opacity') !== 'undefined'){
+                attributes.bar.horizontal_highlights.opacity = $(element).data('bar-horizontal-highlight-opacity');
+            }
+            if(typeof $(element).data('bar-horizontal-highlight-linewidth') !== 'undefined'){
+                attributes.bar.horizontal_highlights.lineWidth = $(element).data('bar-horizontal-highlight-width');
+            }
+            if(typeof $(element).data('bar-horizontal-highlight-stroke') !== 'undefined'){
+                attributes.bar.horizontal_highlights.strokeStyle = $(element).data('bar-horizontal-highlight-stroke');
+            }
+            if(typeof $(element).data('bar-horizontal-highlight-label-position') !== 'undefined'){
+                attributes.bar.horizontal_highlights.label.position = $(element).data('bar-horizontal-highlight-label-position');
+            }
+            if(typeof $(element).data('bar-horizontal-highlight-label-fill') !== 'undefined'){
+                attributes.bar.horizontal_highlights.label.fillStyle = $(element).data('bar-horizontal-highlight-label-fill');
+            }
+            if(typeof $(element).data('bar-horizontal-highlight-label-size') !== 'undefined'){
+                attributes.bar.horizontal_highlights.label.fontSize = $(element).data('bar-horizontal-highlight-label-size');
+            }
+            if(typeof $(element).data('bar-horizontal-highlight-label-opacity') !== 'undefined'){
+                attributes.bar.horizontal_highlights.label.opacity = $(element).data('bar-horizontal-highlight-label-opacity');
             }
             if(typeof $(element).data('bar-show-vertical-indicator') !== 'undefined'){
                 attributes.bar.vertical_indicator_line.enabled = $(element).data('bar-show-vertical-indicator');
@@ -951,13 +1063,42 @@ jQuery( document ).ready(function() {
 
             // Line
             if(typeof $(element).data('line-fields') !== 'undefined'){
-                attributes.line.fields = $(element).data('line-fields').split(',');
+                attributes.line.fields = $(element).data('line-fields').split(',').map(function(item) {
+                    return item.trim();
+                });
+            }
+            if(typeof $(element).data('line-fill') !== 'undefined'){
+                attributes.line.fill = $(element).data('line-fill');
+            }
+            if(typeof $(element).data('line-show-xaxis') !== 'undefined'){
+                attributes.line.xaxis.display = $(element).data('line-show-xaxis');
             }
             if(typeof $(element).data('line-xaxis-field') !== 'undefined'){
-                attributes.line.xaxis_field = $(element).data('line-xaxis-field');
+                attributes.line.xaxis.field = $(element).data('line-xaxis-field');
             }
             if(typeof $(element).data('line-xaxis-sorted') !== 'undefined'){
-                attributes.line.xaxis_sorted = $(element).data('line-xaxis-sorted');
+                attributes.line.xaxis.sorted = $(element).data('line-xaxis-sorted');
+            }
+            if(typeof $(element).data('line-xaxis-timeunit') !== 'undefined'){
+                attributes.line.xaxis.timeunit = $(element).data('line-xaxis-timeunit');
+            }
+            if(typeof $(element).data('line-xaxis-timestepsize') !== 'undefined'){
+                attributes.line.xaxis.timestepsize = $(element).data('line-xaxis-timestepsize');
+            }
+            if(typeof $(element).data('line-xaxis-gridlines') !== 'undefined'){
+                attributes.line.xaxis.gridlines = $(element).data('line-xaxis-gridlines');
+            }
+            if(typeof $(element).data('line-yaxis-beginatzero') !== 'undefined'){
+                attributes.line.yaxis.beginatzero = $(element).data('line-yaxis-beginatzero');
+            }
+            if(typeof $(element).data('line-yaxis-label') !== 'undefined'){
+                attributes.line.yaxis.label = $(element).data('line-yaxis-label');
+            }
+            if(typeof $(element).data('line-yaxis-scale') !== 'undefined'){
+                attributes.line.yaxis.scale = $(element).data('line-yaxis-scale');
+            }
+            if(typeof $(element).data('line-yaxis-gridlines') !== 'undefined'){
+                attributes.line.yaxis.gridlines = $(element).data('line-yaxis-gridlines');
             }
             if(typeof $(element).data('line-height') !== 'undefined'){
                 attributes.line.height = $(element).data('line-height');
@@ -995,6 +1136,60 @@ jQuery( document ).ready(function() {
             if(typeof $(element).data('line-horizontal-indicator-fill') !== 'undefined'){
                 attributes.line.horizontal_indicator_line.fillStyle = $(element).data('line-horizontal-indicator-fill');
             }
+            if(typeof $(element).data('line-show-horizontal-highlights') !== 'undefined'){
+                attributes.line.horizontal_highlights.enabled = $(element).data('line-show-horizontal-highlights');
+            }
+            if(typeof $(element).data('line-horizontal-highlights') !== 'undefined'){
+                attributes.line.horizontal_highlights.data = this.parseDataList($(element).data('line-horizontal-highlights'));
+                if(attributes.line.horizontal_highlights.data.length==0 && attributes.line.horizontal_highlights.enabled){
+                    attributes.line.horizontal_highlights.enabled = false;
+                }
+            }
+            if(typeof $(element).data('line-horizontal-highlight-opacity') !== 'undefined'){
+                attributes.line.horizontal_highlights.opacity = $(element).data('line-horizontal-highlight-opacity');
+            }
+            if(typeof $(element).data('line-horizontal-highlight-linewidth') !== 'undefined'){
+                attributes.line.horizontal_highlights.lineWidth = $(element).data('line-horizontal-highlight-width');
+            }
+            if(typeof $(element).data('line-horizontal-highlight-stroke') !== 'undefined'){
+                attributes.line.horizontal_highlights.strokeStyle = $(element).data('line-horizontal-highlight-stroke');
+            }
+            if(typeof $(element).data('line-horizontal-highlight-label-position') !== 'undefined'){
+                attributes.line.horizontal_highlights.label.position = $(element).data('line-horizontal-highlight-label-position');
+            }
+            if(typeof $(element).data('line-horizontal-highlight-label-fill') !== 'undefined'){
+                attributes.line.horizontal_highlights.label.fillStyle = $(element).data('line-horizontal-highlight-label-fill');
+            }
+            if(typeof $(element).data('line-horizontal-highlight-label-size') !== 'undefined'){
+                attributes.line.horizontal_highlights.label.fontSize = $(element).data('line-horizontal-highlight-label-size');
+            }
+            if(typeof $(element).data('line-horizontal-highlight-label-opacity') !== 'undefined'){
+                attributes.line.horizontal_highlights.label.opacity = $(element).data('line-horizontal-highlight-label-opacity');
+            }
+            if(typeof $(element).data('line-show-vertical-segments') !== 'undefined'){
+                attributes.line.vertical_segments.enabled = $(element).data('line-show-vertical-segments');
+            }
+            if(typeof $(element).data('line-vertical-segments') !== 'undefined'){
+                attributes.line.vertical_segments.data = this.parseSegmentList($(element).data('line-vertical-segments'));
+                if(attributes.line.vertical_segments.data.length==0 && attributes.line.vertical_segments.enabled){
+                    attributes.line.vertical_segments.enabled = false;
+                }
+            }
+            if(typeof $(element).data('line-vertical-segment-opacity') !== 'undefined'){
+                attributes.line.vertical_segments.opacity = $(element).data('line-vertical-segment-opacity');
+            }
+            if(typeof $(element).data('line-vertical-segment-label-position') !== 'undefined'){
+                attributes.line.vertical_segments.label.position = $(element).data('line-vertical-segment-label-position');
+            }
+            if(typeof $(element).data('line-vertical-segment-label-fill') !== 'undefined'){
+                attributes.line.vertical_segments.label.fillStyle = $(element).data('line-vertical-segment-label-fill');
+            }
+            if(typeof $(element).data('line-vertical-segment-label-size') !== 'undefined'){
+                attributes.line.vertical_segments.label.fontSize = $(element).data('line-vertical-segment-label-size');
+            }
+            if(typeof $(element).data('line-vertical-segment-label-opacity') !== 'undefined'){
+                attributes.line.vertical_segments.label.opacity = $(element).data('line-vertical-segment-label-opacity');
+            }
             if(typeof $(element).data('line-show-error-bar') !== 'undefined'){
                 attributes.line.error_bar.enabled = $(element).data('line-show-error-bar');
             }
@@ -1018,6 +1213,12 @@ jQuery( document ).ready(function() {
             }
             if(typeof $(element).data('line-tooltip-position') !== 'undefined'){
                 attributes.line.tooltips.position = $(element).data('line-tooltip-position');
+            }
+            if(typeof $(element).data('line-show-legend') !== 'undefined'){
+                attributes.line.legend.enabled = $(element).data('line-show-legend');
+            }
+            if(typeof $(element).data('line-legend-position') !== 'undefined'){
+                attributes.line.legend.position = $(element).data('line-legend-position');
             }
 
             // Scatter
@@ -1125,7 +1326,11 @@ jQuery( document ).ready(function() {
                 $(this.element).attr('data-show-column', this.options.table.show_column);
             }
             if(typeof $(element).data('show-pagination-switch') === 'undefined'){
-                $(this.element).attr('data-show-pagination-switch', this.options.table.show_pagination_switch);
+                if(this.options.show_toolbar){
+                    $(this.element).attr('data-show-pagination-switch', this.options.table.show_pagination_switch);
+                }else{
+                    $(this.element).attr('data-show-pagination-switch', false);
+                }
             }
             if(typeof $(element).data('striped') === 'undefined'){
                 $(this.element).attr('data-striped', this.options.table.striped);
@@ -1135,6 +1340,13 @@ jQuery( document ).ready(function() {
             this.options.chart_modes = this.options.chart_modes.split(',');
             if(this.options.chart_modes.length == 1 && this.options.chart_modes[0] != this.options.chart_default_mode && this.options.chart_default_mode != 'off'){
                 this.options.chart_default_mode = this.options.chart_modes[0];
+            }
+
+            if(!this.options.show_toolbar && this.options.table_default_mode === 'hide'){
+                $(this.element).attr('data-height', 1);
+                $(this.element).attr('data-page-size', 1);
+                $(this.element).attr('data-pagination', false);
+                $(this.element).attr('data-show-pagination-switch', false);
             }
 
             // Initialization flag
@@ -1154,6 +1366,7 @@ jQuery( document ).ready(function() {
             this.line_chart_data = null;
 
             this.chart_mode = this.options.chart_default_mode;
+            this.table_mode = this.options.table_default_mode;
 
             this.hline_value = [];
             this.hline_index = [];
@@ -1227,6 +1440,34 @@ jQuery( document ).ready(function() {
                         break;
                     case 'float4':
                         $(this).attr('data-formatter','valueFormatter_float4');
+                        break;
+
+                    // large integers
+                    case 'float1-exp':
+                        $(this).attr('data-formatter','valueFormatter_float1_exp');
+                        break;
+                    case 'float2-exp':
+                        $(this).attr('data-formatter','valueFormatter_float2_exp');
+                        break;
+                    case 'float3-exp':
+                        $(this).attr('data-formatter','valueFormatter_float3_exp');
+                        break;
+                    case 'float4-exp':
+                        $(this).attr('data-formatter','valueFormatter_float4_exp');
+                        break;
+
+                    case 'numeric-unit':
+                        window['valueFormatter_numeric_unit'+this.uniqueId] = function (value, row, index){
+                            if($.isNumeric(value)){
+                                value = parseFloat(value);
+                                return self.addNumberPrefix(value);
+
+                            }else{
+                                return value;
+                            }
+                        };
+
+                        $(this).attr('data-formatter', 'valueFormatter_numeric_unit'+this.uniqueId);
                         break;
 
                     // numeric with interval
@@ -1623,7 +1864,6 @@ jQuery( document ).ready(function() {
                     case 'inline-indicator-binary':
                         window['valueFormatter_inline_indicator_binary_svg'+this.uniqueId] = function (value, row, index){
                             var data = self.parseDataList(value);
-                            console.log(data);
                             var html = '';
                             if(data.length > 0) {
                                 for (var i = 0; i < data.length; i++) {
@@ -1815,6 +2055,7 @@ jQuery( document ).ready(function() {
                     var scale = this.scale;
                     var ctx = chart.chart.ctx;
 
+                    // hline
                     if(chart.config.data.hasOwnProperty('hline') && chart.config.data.hline.enabled && chart.config.data.hline.value !== null){
                         var xaxis = chart.scales['x-axis-0'];
                         var yaxis = chart.scales['y-axis-0'];
@@ -1875,7 +2116,7 @@ jQuery( document ).ready(function() {
                     var scale = this.scale;
                     var ctx = chart.chart.ctx;
 
-                    // Fixed horizontal lines
+                    // Horizontal lines from data
                     if(chart.config.options.hasOwnProperty('horizontal_line') && chart.config.options.horizontal_line.enabled){
                         var xaxis = chart.scales['x-axis-0'];
                         var yaxis = chart.scales['y-axis-0'];
@@ -1908,12 +2149,186 @@ jQuery( document ).ready(function() {
                         });
                     }
 
+                    // Horizontal highlights
+                    if(chart.config.options.hasOwnProperty('horizontal_highlights') && chart.config.options.horizontal_highlights.enabled){
+
+                        var data = chart.config.options.horizontal_highlights.data;
+                        if(data){
+                            var xaxis = chart.scales['x-axis-0'];
+                            var yaxis = chart.scales['y-axis-0'];
+                            var lineWidth = 2;
+                            if(chart.config.options.horizontal_highlights.hasOwnProperty('lineWidth')){
+                                lineWidth = chart.config.options.horizontal_highlights.lineWidth;
+                            }
+                            var strokeStyle = chart.config.options.horizontal_highlights.strokeStyle;
+
+                            for(var line_id=0; line_id < data.length; line_id++){
+                                var y = yaxis.getPixelForValue(data[line_id].y_value);
+
+                                if(data[line_id].color){
+                                    if(data[line_id].color.startsWith('#')) {
+                                        strokeStyle = self.hexToRGB(data[line_id].color, chart.config.options.horizontal_highlights.opacity).css;
+                                    }
+                                }
+
+                                ctx.save();
+                                ctx.beginPath();
+                                ctx.strokeStyle = strokeStyle;
+                                ctx.lineWidth = lineWidth;
+                                ctx.moveTo(xaxis.left, y);
+                                ctx.lineTo(xaxis.right, y);
+                                ctx.stroke();
+                                ctx.restore();
+
+                                if(data[line_id].label){
+                                    ctx.save();
+                                    ctx.lineWidth = 0;
+                                    var tmp = null;
+                                    if(chart.config.options.horizontal_highlights.label.fillStyle.startsWith('#')){
+                                        tmp = self.hexToRGB(chart.config.options.horizontal_highlights.label.fillStyle, chart.config.options.horizontal_highlights.label.opacity);
+                                    }else if(chart.config.options.horizontal_highlights.label.fillStyle.startsWith('rgba(')){
+                                        tmp = chart.config.options.horizontal_highlights.label.fillStyle;
+
+                                    }else if(chart.config.options.horizontal_highlights.label.fillStyle.startsWith('rgb(')){
+                                        tmp = self.hexToRGB(
+                                            self.RGBToHex(chart.config.options.horizontal_highlights.label.fillStyle), chart.config.options.horizontal_highlights.label.opacity
+                                        );
+                                    }
+
+                                    if(tmp.hasOwnProperty('css')){
+                                        ctx.fillStyle = tmp.css;
+                                    }else if(tmp){
+                                        ctx.fillStyle = tmp;
+                                    }else{
+                                        ctx.fillStyle = self.hexToRGB('#000', chart.config.options.horizontal_highlights.label.opacity);
+                                    }
+
+                                    ctx.font = chart.config.options.horizontal_highlights.label.fontSize + ' ' + chart.config.options.horizontal_highlights.label.font;
+                                    if(chart.config.options.horizontal_highlights.label.position === 'top-left') {
+                                        ctx.textBaseline = 'bottom';
+                                        ctx.textAlign = 'left';
+                                        ctx.fillText(data[line_id].label, xaxis.left + 3, y);
+
+                                    }else if(chart.config.options.horizontal_highlights.label.position === 'top-right') {
+                                        ctx.textBaseline = 'bottom';
+                                        ctx.textAlign = 'right';
+                                        ctx.fillText(data[line_id].label, xaxis.right - 3, y);
+
+                                    }else if(chart.config.options.horizontal_highlights.label.position === 'bottom-left') {
+                                        ctx.textBaseline = 'top';
+                                        ctx.textAlign = 'left';
+                                        ctx.fillText(data[line_id].label, xaxis.left + 3, y+3);
+
+                                    }else if(chart.config.options.horizontal_highlights.label.position === 'bottom-right') {
+                                        ctx.textBaseline = 'top';
+                                        ctx.textAlign = 'right';
+                                        ctx.fillText(data[line_id].label, xaxis.right - 3, y+3);
+                                    }
+
+                                    ctx.restore();
+                                }
+                            }
+                        }
+                    }
+
+                    // Vertical segments
+                    if(chart.config.options.hasOwnProperty('vertical_segments') && chart.config.options.vertical_segments.enabled){
+                        var data = null;
+                        if(chart.config.options.vertical_segments.hasOwnProperty('data')){
+                            data = chart.config.options.vertical_segments.data;
+                            if(data){
+                                var ctx = this.chart.ctx;
+                                var xaxis = chart.scales['x-axis-0'];
+                                var topY = this.chart.scales['y-axis-0'].top;
+                                var bottomY = this.chart.scales['y-axis-0'].bottom;
+
+
+                                for(var segment_id=0; segment_id < data.length; segment_id++){
+                                    var x_start = xaxis.getPixelForValue(data[segment_id].start_value);
+                                    var x_stop = xaxis.getPixelForValue(data[segment_id].stop_value);
+
+                                    if(data[segment_id].color){
+                                        ctx.save();
+                                        ctx.lineWidth = 0;
+                                        var tmp = null;
+                                        
+                                        if(data[segment_id].color.startsWith('#')){
+                                            tmp = self.hexToRGB(data[segment_id].color, chart.config.options.vertical_segments.opacity).css;
+                                        }else if(data[segment_id].color.startsWith('rgb(')){
+                                            tmp = self.hexToRGB(self.RGBToHex(data[segment_id].color),chart.config.options.vertical_segments.opacity).css;
+                                        }else if(data[segment_id].color.startsWith('rgba(')){
+                                            tmp = data[segment_id].color;
+                                        }
+
+                                        ctx.fillStyle = tmp;
+
+                                        ctx.beginPath();
+                                        ctx.fillRect(x_start, topY, (x_stop - x_start), (bottomY - topY));
+                                        ctx.stroke();
+                                        ctx.restore();
+                                    }
+
+                                    if(data[segment_id].label){
+                                        ctx.save();
+                                        ctx.lineWidth = 0;
+                                        var tmp = null;
+                                        if(chart.config.options.vertical_segments.label.fillStyle.startsWith('#')){
+                                            tmp = self.hexToRGB(chart.config.options.vertical_segments.label.fillStyle, chart.config.options.vertical_segments.label.opacity);
+                                        }else if(chart.config.options.vertical_segments.label.fillStyle.startsWith('rgba(')){
+                                            tmp = chart.config.options.vertical_segments.label.fillStyle;
+
+                                        }else if(chart.config.options.vertical_segments.label.fillStyle.startsWith('rgb(')){
+                                            tmp = self.hexToRGB(
+                                                self.RGBToHex(chart.config.options.vertical_segments.label.fillStyle), chart.config.options.vertical_segments.label.opacity
+                                            );
+                                        }
+
+                                        if(tmp.hasOwnProperty('css')){
+                                            ctx.fillStyle = tmp.css;
+                                        }else if(tmp){
+                                            ctx.fillStyle = tmp;
+                                        }else{
+                                            ctx.fillStyle = self.hexToRGB('#000', chart.config.options.vertical_segments.label.opacity);
+                                        }
+
+                                        ctx.font = chart.config.options.vertical_segments.label.fontSize + ' ' + chart.config.options.vertical_segments.label.font;
+                                        if(chart.config.options.vertical_segments.label.position === 'top') {
+                                            ctx.textBaseline = 'bottom';
+                                            ctx.textAlign = 'left';
+
+                                            ctx.translate(x_start, topY); //(bottomY - topY)/2.0);
+                                            ctx.rotate(Math.PI / 2);
+                                            ctx.fillText(data[segment_id].label, 3, -3); //x_start,topY + (bottomY - topY)/2.0);
+
+                                        }else if(chart.config.options.vertical_segments.label.position === 'bottom') {
+                                            ctx.textBaseline = 'bottom';
+                                            ctx.textAlign = 'right';
+
+                                            ctx.translate(x_start, bottomY); //(bottomY - topY)/2.0);
+                                            ctx.rotate(Math.PI / 2);
+                                            ctx.fillText(data[segment_id].label, -3, -3); //x_start,topY + (bottomY - topY)/2.0);
+                                        }else if(chart.config.options.vertical_segments.label.position === 'middle') {
+                                            ctx.textBaseline = 'bottom';
+                                            ctx.textAlign = 'center';
+
+                                            ctx.translate(x_start, topY + (bottomY - topY)/2.0);
+                                            ctx.rotate(Math.PI / 2);
+                                            ctx.fillText(data[segment_id].label,0, 0); //, x_start,topY + (bottomY - topY)/2.0);
+                                        }
+                                        ctx.restore();
+                                    }
+
+
+                                }
+
+                            }
+                        }
+                    }
+
                     // Vertical line following the mouse
                     if(chart.config.options.hasOwnProperty('vertical_indicator_line') && chart.config.options.vertical_indicator_line.enabled){
                         if (this.chart.tooltip._active && this.chart.tooltip._active.length) {
-                            var current_point = this.chart.tooltip._active[0];
                             var ctx = this.chart.ctx;
-                            var x = current_point.tooltipPosition().x;
                             var topY = this.chart.scales['y-axis-0'].top;
                             var bottomY = this.chart.scales['y-axis-0'].bottom;
 
@@ -1927,14 +2342,20 @@ jQuery( document ).ready(function() {
                                 strokeStyle = chart.config.options.vertical_indicator_line.strokeStyle;
                             }
 
-                            // Draw line
                             ctx.save();
-                            ctx.beginPath();
-                            ctx.moveTo(x, topY);
-                            ctx.lineTo(x, bottomY);
                             ctx.lineWidth = lineWidth;
                             ctx.strokeStyle = strokeStyle;
-                            ctx.stroke();
+                            for (var i = 0; i < this.chart.tooltip._active.length; i++) {
+                                var current_point = this.chart.tooltip._active[0];
+                                var x = current_point.tooltipPosition().x;
+                                // Draw line
+
+                                ctx.beginPath();
+                                ctx.moveTo(x, topY);
+                                ctx.lineTo(x, bottomY);
+                                ctx.stroke();
+
+                            }
                             ctx.restore();
                         }
                     }
@@ -1942,61 +2363,65 @@ jQuery( document ).ready(function() {
                     // Horizontal line following the mouse
                     if(chart.config.options.hasOwnProperty('horizontal_indicator_line') && chart.config.options.horizontal_indicator_line.enabled){
                         if (this.chart.tooltip._active && this.chart.tooltip._active.length) {
-                            var yaxis = chart.scales['y-axis-0'];
-                            var current_point = this.chart.tooltip._active[0];
-
-                            var ctx = this.chart.ctx;
-                            var x = current_point._model.x;
-                            var y = current_point._model.y;
-                            var y_max = yaxis.getPixelForValue(this.getDataset().data_max[current_point._index]);
-                            var y_min = yaxis.getPixelForValue(this.getDataset().data_min[current_point._index]);
-
-                            var left = this.chart.scales['x-axis-0'].left;
-                            var right = this.chart.scales['x-axis-0'].right;
-
                             var lineWidth = 2;
                             if(chart.config.options.horizontal_indicator_line.hasOwnProperty('lineWidth')){
                                 lineWidth = chart.config.options.horizontal_indicator_line.lineWidth;
                             }
 
                             var strokeStyle = 'rgba(0,0,0,0.8)';
-                            if(chart.config.options.horizontal_indicator_line.hasOwnProperty('strokeStyle')){
-                                strokeStyle = chart.config.options.horizontal_indicator_line.strokeStyle;
-                            }
 
                             // Draw line
                             ctx.save();
                             ctx.lineWidth = lineWidth;
-                            ctx.strokeStyle = strokeStyle;
 
-                            if(chart.config.options.hasOwnProperty('error_bar') && chart.config.options.error_bar.enabled){
-                                var fillStyle = 'rgba(0,0,0,0.1)';
-                                if(chart.config.options.horizontal_indicator_line.hasOwnProperty('fillStyle')){
-                                    fillStyle = chart.config.options.horizontal_indicator_line.fillStyle;
+                            var yaxis = chart.scales['y-axis-0'];
+                            for (var i = 0; i < this.chart.tooltip._active.length; i++) {
+                                var current_point = this.chart.tooltip._active[i];
+
+                                if(chart.config.options.horizontal_indicator_line.hasOwnProperty('strokeStyle') && chart.config.options.horizontal_indicator_line.strokeStyle){
+                                    strokeStyle = chart.config.options.horizontal_indicator_line.strokeStyle;
+                                }else{
+
+                                    var color = null;
+                                    if(current_point._model.borderColor.startsWith('rgb')){
+                                        color = self.hexToRGB(self.RGBToHex(current_point._model.borderColor), 0.15);
+                                    }else{
+                                        color = self.hexToRGB(current_point._model.borderColor, 0.15);
+                                    }
+
+                                    if(color){
+                                        strokeStyle = color.css;
+                                    }
                                 }
-                                ctx.fillStyle = fillStyle;
+                                ctx.strokeStyle = strokeStyle;
+
+                                var ctx = this.chart.ctx;
+                                var x = current_point._model.x;
+                                var y = current_point._model.y;
+                                var y_max = yaxis.getPixelForValue(this.getDataset().data_max[current_point._index]);
+                                var y_min = yaxis.getPixelForValue(this.getDataset().data_min[current_point._index]);
+
+                                var left = this.chart.scales['x-axis-0'].left;
+                                var right = this.chart.scales['x-axis-0'].right;
+
+
+                                if (chart.config.options.hasOwnProperty('error_bar') && chart.config.options.error_bar.enabled) {
+                                    var fillStyle = 'rgba(0,0,0,0.1)';
+                                    if (chart.config.options.horizontal_indicator_line.hasOwnProperty('fillStyle')) {
+                                        fillStyle = chart.config.options.horizontal_indicator_line.fillStyle;
+                                    }
+                                    ctx.fillStyle = fillStyle;
+
+                                    ctxx.beginPath();
+                                    ctx.fillRect(left, y_min, right - left, (y_max - y_min));
+                                    ctx.stroke();
+                                }
 
                                 ctx.beginPath();
-                                ctx.fillRect(left,y_min,right-left,(y_max-y_min));
+                                ctx.moveTo(left, y);
+                                ctx.lineTo(right, y);
                                 ctx.stroke();
-                                /*
-                                ctx.beginPath();
-                                ctx.moveTo(left, y_min);
-                                ctx.lineTo(right, y_min);
-                                ctx.stroke();
-
-                                ctx.beginPath();
-                                ctx.moveTo(left, y_max);
-                                ctx.lineTo(right, y_max);
-                                ctx.stroke();
-                                */
                             }
-
-                            ctx.beginPath();
-                            ctx.moveTo(left, y);
-                            ctx.lineTo(right, y);
-                            ctx.stroke();
-
                             ctx.restore();
                         }
                     }
@@ -2094,7 +2519,6 @@ jQuery( document ).ready(function() {
                         var yaxis = chart.scales['y-axis-0'];
 
                         var dataset = this.getDataset();
-                        //console.log(chart.getDatasetMeta(0).data[1]._model.x - chart.getDatasetMeta(0).data[0]._model.x);
                         if (data_min && data_max) {
                             var x_tipWidth_pixel = 1.0;
                             var y_tipWidth_pixel = 1.0;
@@ -2110,7 +2534,7 @@ jQuery( document ).ready(function() {
                                     strokeStyle = chart.config.options.error_bar.strokeStyle;
                                 }
 
-                                ctx.strokeStyle = strokeStyle; //dataset.borderColor[index]; //'rgba(112, 187, 225 ,0.99)';
+                                ctx.strokeStyle = strokeStyle;
 
                                 var lineWidth = dataset.borderWidth;
                                 if(chart.config.options.error_bar.hasOwnProperty('lineWidth')){
@@ -2123,12 +2547,8 @@ jQuery( document ).ready(function() {
 
                                 if(typeof data_max[index] === 'object' && typeof data_min[index] === 'object'){
                                     if(data_max[index]){
-                                        //console.log(chart.getDatasetMeta(0));
                                         var x_max = xaxis.getPixelForValue(data_max[index].x);
                                         var x_min = xaxis.getPixelForValue(data_min[index].x);
-                                        //x_tipWidth = xaxis.getPixelForValue(x_tipWidth) - xaxis.getPixelForValue(0);
-                                        //y_tipWidth = xaxis.getPixelForValue(y_tipWidth) - yaxis.getPixelForValue(0);
-                                        //var tipWidth_ratio = 0.5;
 
                                         x_tipWidth_pixel = 10;
                                         y_tipWidth_pixel = 10;
@@ -2136,7 +2556,6 @@ jQuery( document ).ready(function() {
                                             x_tipWidth_pixel = chart.config.options.error_bar.tipWidth;
                                             y_tipWidth_pixel = chart.config.options.error_bar.tipWidth;
                                         }
-
 
                                         // X
                                         ctx.beginPath();
@@ -2339,6 +2758,7 @@ jQuery( document ).ready(function() {
 
                     this.rendered = true;
 
+                    // Horizontal lines from data
                     if(chart.config.options.hasOwnProperty('horizontal_indicator_line') && chart.config.options.horizontal_indicator_line.enabled){
                         if (this.chart.tooltip._active && this.chart.tooltip._active.length) {
                             var current_point = this.chart.tooltip._active[0];
@@ -2384,6 +2804,119 @@ jQuery( document ).ready(function() {
                             ctx.lineTo(right, y);
                             ctx.stroke();
 
+                            ctx.restore();
+                        }
+                    }
+
+                    // Horizontal highlights
+                    if(chart.config.options.hasOwnProperty('horizontal_highlights') && chart.config.options.horizontal_highlights.enabled){
+
+                        var data = chart.config.options.horizontal_highlights.data;
+                        if(data){
+                            var xaxis = chart.scales['x-axis-0'];
+                            var yaxis = chart.scales['y-axis-0'];
+                            var lineWidth = 2;
+                            if(chart.config.options.horizontal_highlights.hasOwnProperty('lineWidth')){
+                                lineWidth = chart.config.options.horizontal_highlights.lineWidth;
+                            }
+                            var strokeStyle = chart.config.options.horizontal_highlights.strokeStyle;
+
+                            for(var line_id=0; line_id < data.length; line_id++){
+                                var y = yaxis.getPixelForValue(data[line_id].y_value);
+
+                                if(data[line_id].color){
+                                    if(data[line_id].color.startsWith('#')) {
+                                        strokeStyle = self.hexToRGB(data[line_id].color, chart.config.options.horizontal_highlights.opacity).css;
+                                    }
+                                }
+
+                                ctx.save();
+                                ctx.beginPath();
+                                ctx.strokeStyle = strokeStyle;
+                                ctx.lineWidth = lineWidth;
+                                ctx.moveTo(xaxis.left, y);
+                                ctx.lineTo(xaxis.right, y);
+                                ctx.stroke();
+                                ctx.restore();
+
+                                if(data[line_id].label){
+                                    ctx.save();
+                                    ctx.lineWidth = 0;
+                                    var tmp = null;
+                                    if(chart.config.options.horizontal_highlights.label.fillStyle.startsWith('#')){
+                                        tmp = self.hexToRGB(chart.config.options.horizontal_highlights.label.fillStyle, chart.config.options.horizontal_highlights.label.opacity);
+                                    }else if(chart.config.options.horizontal_highlights.label.fillStyle.startsWith('rgba(')){
+                                        tmp = chart.config.options.horizontal_highlights.label.fillStyle;
+
+                                    }else if(chart.config.options.horizontal_highlights.label.fillStyle.startsWith('rgb(')){
+                                        tmp = self.hexToRGB(
+                                            self.RGBToHex(chart.config.options.horizontal_highlights.label.fillStyle), chart.config.options.horizontal_highlights.label.opacity
+                                        );
+                                    }
+
+                                    if(tmp.hasOwnProperty('css')){
+                                        ctx.fillStyle = tmp.css;
+                                    }else if(tmp){
+                                        ctx.fillStyle = tmp;
+                                    }else{
+                                        ctx.fillStyle = self.hexToRGB('#000', chart.config.options.horizontal_highlights.label.opacity);
+                                    }
+
+                                    ctx.font = chart.config.options.horizontal_highlights.label.fontSize + ' ' + chart.config.options.horizontal_highlights.label.font;
+                                    if(chart.config.options.horizontal_highlights.label.position === 'top-left') {
+                                        ctx.textBaseline = 'bottom';
+                                        ctx.textAlign = 'left';
+                                        ctx.fillText(data[line_id].label, xaxis.left + 3, y);
+
+                                    }else if(chart.config.options.horizontal_highlights.label.position === 'top-right') {
+                                        ctx.textBaseline = 'bottom';
+                                        ctx.textAlign = 'right';
+                                        ctx.fillText(data[line_id].label, xaxis.right - 3, y);
+
+                                    }else if(chart.config.options.horizontal_highlights.label.position === 'bottom-left') {
+                                        ctx.textBaseline = 'top';
+                                        ctx.textAlign = 'left';
+                                        ctx.fillText(data[line_id].label, xaxis.left + 3, y+3);
+
+                                    }else if(chart.config.options.horizontal_highlights.label.position === 'bottom-right') {
+                                        ctx.textBaseline = 'top';
+                                        ctx.textAlign = 'right';
+                                        ctx.fillText(data[line_id].label, xaxis.right - 3, y+3);
+                                    }
+
+                                    ctx.restore();
+                                }
+                            }
+                        }
+                    }
+
+                    // Vertical line following the mouse
+                    if(chart.config.options.hasOwnProperty('vertical_indicator_line') && chart.config.options.vertical_indicator_line.enabled){
+                        if (this.chart.tooltip._active && this.chart.tooltip._active.length) {
+                            var current_point = this.chart.tooltip._active[0];
+                            var ctx = this.chart.ctx;
+                            var x = current_point.tooltipPosition().x;
+                            var topY = this.chart.scales['y-axis-0'].top;
+                            var bottomY = this.chart.scales['y-axis-0'].bottom;
+
+                            var lineWidth = 4;
+                            if(chart.config.options.vertical_indicator_line.hasOwnProperty('lineWidth')){
+                                lineWidth = chart.config.options.vertical_indicator_line.lineWidth;
+                            }
+
+                            var strokeStyle = 'rgba(0,0,0,0.2)';
+                            if(chart.config.options.vertical_indicator_line.hasOwnProperty('strokeStyle')){
+                                strokeStyle = chart.config.options.vertical_indicator_line.strokeStyle;
+                            }
+
+                            // Draw line
+                            ctx.save();
+                            ctx.beginPath();
+                            ctx.moveTo(x, topY);
+                            ctx.lineTo(x, bottomY);
+                            ctx.lineWidth = lineWidth;
+                            ctx.strokeStyle = strokeStyle;
+                            ctx.stroke();
                             ctx.restore();
                         }
                     }
@@ -2449,33 +2982,55 @@ jQuery( document ).ready(function() {
 
             // Tooltip positioners
             Chart.Tooltip.positioners.line_centered_top = function(elements, eventPosition) {
-                //var tooltip = this;
                 return {
                     x: elements[0]._model.x,
                     y: 0
                 };
             };
             Chart.Tooltip.positioners.line_centered_bottom = function(elements, eventPosition) {
-                //var tooltip = this;
                 return {
                     x: elements[0]._model.x,
-                    y: self.options.line.height
+                    y: elements[0]._chart.height
                 };
             };
             Chart.Tooltip.positioners.inline_centered_bottom = function(elements, eventPosition) {
-                //var tooltip = this;
                 return {
                     x: elements[0]._model.x,
-                    y: self.options.inline_chart.height
+                    y: elements[0]._chart.height
                 };
             };
 
             if(this.options.show_chart){
+                this.options.element.chart_mode_selector += this.uniqueId;
+                this.options.element.table_mode_selector += this.uniqueId;
+
                 // Create toolbar html and add it to the DOM
                 var toolbar_html = '';
 
-                toolbar_html += '<div id="datatable_toolbar'+this.uniqueId+'" class="datatable-toolbar">';
-                toolbar_html += '<div class="btn-group" data-toggle="buttons" id="chart_mode_selector'+this.uniqueId+'">';
+                toolbar_html += '<div id="datatable_toolbar'+this.uniqueId+'" class="datatable-toolbar" ';
+                if(!this.options.show_toolbar){
+                    toolbar_html += ' style="display: none;" ';
+                }
+                toolbar_html += '>';
+
+
+                var active = ' ';
+                var pressed = 'false';
+                if (this.options.table_default_mode === 'show') {
+                    active = ' active ';
+                    pressed = 'true';
+                }
+
+                toolbar_html += '<button type="button" class="' + this.options.button_css.table + active + '" id="' + this.options.element.table_mode_selector + '" data-toggle="button" aria-pressed="' + pressed + '" autocomplete="off" ';
+                if(!this.options.show_table_selector) {
+                    toolbar_html += ' style="display: none;" ';
+                }
+                toolbar_html += '>';
+                toolbar_html += this.options.icon.table + ' ' + this.options.label.table;
+                toolbar_html += '</button>&nbsp;';
+
+
+                toolbar_html += '<div class="btn-group" data-toggle="buttons" id="'+this.options.element.chart_mode_selector+'">';
 
                 // Bar chart selection button
                 if(this.options.chart_modes.indexOf('bar') > -1){
@@ -2780,7 +3335,6 @@ jQuery( document ).ready(function() {
                 }
 
                 this.$element.attr('data-toolbar', '#datatable_toolbar'+this.uniqueId);
-                this.options.element.chart_mode_selector = '#chart_mode_selector'+this.uniqueId;
             }
 
             // Event handlers
@@ -2790,9 +3344,19 @@ jQuery( document ).ready(function() {
             });
             $(element).on('post-body.bs.table', function (e, data) {
 
-                $(self.options.element.chart_mode_selector+' .active').each(function(){
+                $('#'+self.options.element.chart_mode_selector+' .active').each(function(){
                     self.chart_mode = $(this).data('mode');
                     self.updateVisualizationVisibility(self.chart_mode);
+                    return false;
+                });
+
+                $('#'+self.options.element.table_mode_selector).each(function(){
+                    if($(this).hasClass('active')){
+                        self.table_mode = 'show';
+                    }else{
+                        self.table_mode = 'hide';
+                    }
+                    self.updateTableVisibility(self.table_mode);
                     return false;
                 });
 
@@ -2899,7 +3463,6 @@ jQuery( document ).ready(function() {
                         options: options
                     });
                 });
-
                 $(element).find('.datatable-inline-bar-vertical-tristate').each(function(){
                     var data = self.parseDataList($(this).data('value'));
                     $(this).attr("width", data.length * (self.options.inline_chart.bar_vertical.item_width + 3) );
@@ -3000,7 +3563,7 @@ jQuery( document ).ready(function() {
                                 data: values_,
                                 backgroundColor: bg_colors
                             })
-                        ]
+                        ];
                         options.scales.yAxes[0].stacked = true;
                         options.scales.xAxes[0].stacked = true;
 
@@ -3022,7 +3585,6 @@ jQuery( document ).ready(function() {
                         options: options
                     });
                 });
-
                 $(element).find('.datatable-inline-line').each(function(){
                     $(this).attr("height", self.options.inline_chart.height);
                     var data = self.parseDataList($(this).data('value'));
@@ -3429,8 +3991,17 @@ jQuery( document ).ready(function() {
 
             });
 
-            // Visualization selector buttons
-            $(this.options.element.chart_mode_selector+' label').on('click', function(){
+            // Table selector button
+            $('#'+this.options.element.table_mode_selector).on('click', function(){
+                if($(this).hasClass('active')){
+                    self.table_mode = 'hide';
+                }else{
+                    self.table_mode = 'show';
+                }
+                self.updateTableVisibility(self.table_mode);
+            });
+
+            $('#'+this.options.element.chart_mode_selector+' label').on('click', function(){
                 self.chart_mode = $(this).data('mode');
                 self.updateVisualizationVisibility(self.chart_mode);
             });
@@ -3575,6 +4146,12 @@ jQuery( document ).ready(function() {
                 if(typeof $(this).data('beginatzero') !== 'undefined' ){
                     meta.beginatzero = $(this).data('beginatzero');
                 }
+                if(typeof $(this).data('axis-label') !== 'undefined' ){
+                    meta.axis_label = $(this).data('axis-label');
+                }
+                if(typeof $(this).data('axis-scale') !== 'undefined' ){
+                    meta.axis_scale = $(this).data('axis-scale');
+                }
                 if(typeof $(this).data('align') !== 'undefined' ){
                     meta.align = $(this).data('align');
                 }
@@ -3595,7 +4172,13 @@ jQuery( document ).ready(function() {
                 }
             });
         },
-
+        updateTableVisibility : function(mode){
+            if(mode=='show'){
+                $(this.$element[0].closest('.fixed-table-container')).show(this.options.animation.show_speed);
+            }else if(mode=='hide'){
+                $(this.$element[0].closest('.fixed-table-container')).hide(this.options.animation.show_speed);
+            }
+        },
         updateVisualizationVisibility: function(mode){
             if(mode=='off'){
                 if(this.options.chart_modes.indexOf('bar') > -1){
@@ -3668,6 +4251,7 @@ jQuery( document ).ready(function() {
             $(this.element).bootstrapTable();
             $(this.element).trigger('post-body.bs.table');
         },
+
         updateChart: function () {
             if(this.options.show_chart){
                 if(this.chart_mode == 'off'){
@@ -3686,6 +4270,7 @@ jQuery( document ).ready(function() {
                 }
             }
         },
+
         validBar: function () {
             var table_options = $(this.element).bootstrapTable('getOptions');
             var sort_name = table_options.sortName;
@@ -3791,6 +4376,13 @@ jQuery( document ).ready(function() {
                 // Make sure lower and upper limits are valid
                 var value_max = item.value_max;
                 var value_min = item.value_min;
+
+                if(all_value_max < item.value){
+                    all_value_max = item.value;
+                }
+                if(all_value_min > item.value){
+                    all_value_min = item.value;
+                }
                 if(value_min !== null && value_max !== null){
                     if(value_max < value_min) {
                         // Flip max and min
@@ -3799,16 +4391,10 @@ jQuery( document ).ready(function() {
                         var value_max = value_tmp;
                     }
 
-                    if(all_value_max < item.value){
-                        all_value_max = item.value;
-                    }
                     if(all_value_max < value_max){
                         all_value_max = value_max;
                     }
 
-                    if(all_value_min > item.value){
-                        all_value_min = item.value;
-                    }
                     if(all_value_min > value_min){
                         all_value_min = value_min;
                     }
@@ -3861,6 +4447,34 @@ jQuery( document ).ready(function() {
                 $(this.options.element.bar.div).show(0);
                 var begin_at_zero = $(this.element).find('thead tr th[data-field=\"'+sort_name+'\"]').data('beginatzero');
 
+
+                // Axis scaling
+                var axis_scale = 'linear';
+                var axis_scale_type =null;
+                if(typeof header.data('axis-scale') !== 'undefined'){
+
+                    if(header.data('axis-scale').startsWith('log')) {
+                        axis_scale = 'logarithmic';
+                        axis_scale_type = 'log';
+
+                        if(header.data('axis-scale') === 'log_unit') {
+                            axis_scale_type = 'log_unit';
+
+                        }else if(header.data('axis-scale') === 'log_exp'){
+                            axis_scale_type = 'log_exp';
+
+                        }else if(header.data('axis-scale') === 'log10'){
+                            axis_scale_type = 'log10';
+
+                        }else if(header.data('axis-scale') === 'log10_unit'){
+                            axis_scale_type = 'log10_unit';
+
+                        }else if(header.data('axis-scale') === 'log10_exp'){
+                            axis_scale_type = 'log10_exp';
+                        }
+                    }
+                }
+
                 var chart_data = {
                     labels: labels,
                     datasets: [
@@ -3894,7 +4508,7 @@ jQuery( document ).ready(function() {
                 };
                 var caretSize = 5;
                 var caretPadding = 2;
-                if(this.options.bar.tooltips.position == 'top'){
+                if(this.options.bar.tooltips.position === 'top'){
                     tooltip_position = 'line_centered_top';
                     padding = {
                         left: 0,
@@ -3905,7 +4519,7 @@ jQuery( document ).ready(function() {
                     caretSize = 0;
                     caretPadding = 0;
 
-                }else if(this.options.bar.tooltips.position == 'bottom'){
+                }else if(this.options.bar.tooltips.position === 'bottom'){
                     tooltip_position = 'line_centered_bottom';
                     padding = {
                         left: 0,
@@ -3932,7 +4546,7 @@ jQuery( document ).ready(function() {
                         }],
                         yAxes: [{
                             stacked: false,
-                            type: 'linear',
+                            type: axis_scale,
                             ticks: {
                                 beginAtZero: begin_at_zero,
                                 suggestedMax: all_value_max,
@@ -3955,6 +4569,25 @@ jQuery( document ).ready(function() {
                     },
                     legend: {
                         display: false
+                    },
+                    vertical_indicator_line: {
+                        enabled: this.options.bar.vertical_indicator_line.enabled,
+                        lineWidth: this.options.bar.vertical_indicator_line.lineWidth,
+                        strokeStyle: this.options.bar.vertical_indicator_line.strokeStyle
+                    },
+                    horizontal_highlights: {
+                        enabled: this.options.bar.horizontal_highlights.enabled,
+                        data: this.options.bar.horizontal_highlights.data,
+                        opacity: this.options.bar.horizontal_highlights.opacity,
+                        lineWidth: this.options.bar.horizontal_highlights.lineWidth,
+                        strokeStyle: this.options.bar.horizontal_highlights.strokeStyle,
+                        label: {
+                            fillStyle: this.options.bar.horizontal_highlights.label.fillStyle,
+                            font: this.options.bar.horizontal_highlights.label.font,
+                            fontSize: this.options.bar.horizontal_highlights.label.fontSize,
+                            position: this.options.bar.horizontal_highlights.label.position,
+                            opacity: this.options.bar.horizontal_highlights.label.opacity
+                        }
                     },
                     horizontal_line: {
                         enabled: this.options.bar.horizontal_line.enabled
@@ -4020,6 +4653,35 @@ jQuery( document ).ready(function() {
                     }
                 };
 
+                if(axis_scale === 'logarithmic'){
+                    chart_options.scales.yAxes[0].ticks.callback = function (value, index, values) {
+
+                        if(axis_scale_type.startsWith('log10')) {
+                            if (!(value === 1e1 || value === 1e2 ||
+                                value === 1e3 || value === 1e4 ||
+                                value === 1e5 || value === 1e6 ||
+                                value === 1e7 || value === 1e8 ||
+                                value === 1e9 || value === 1e10)) {
+                                return '';
+                            }
+                        }else if(axis_scale_type.startsWith('log')){
+                            if(values.length > 10){
+                                if(index % Math.ceil(values.length / 10.0) !== 0){
+                                    return '';
+                                }
+                            }
+                        }
+
+                        if(axis_scale_type.endsWith('_unit')){
+                            return self.addNumberPrefix(value);
+                        }else if(axis_scale_type.endsWith('_exp')){
+                            return value.toExponential(2);
+                        }else{
+                            return value;
+                        }
+                    }
+                }
+
                 this.bar_chart = new Chart(chart_ctx, {
                     type: 'barError',
                     data: chart_data,
@@ -4051,11 +4713,11 @@ jQuery( document ).ready(function() {
 
             // Get xaxis_field
             var xaxis_field = table_options.idField;
-            if(this.options.line.xaxis_field){
-                xaxis_field = this.options.line.xaxis_field
+            if(this.options.line.xaxis.field){
+                xaxis_field = this.options.line.xaxis.field
             }
 
-            if(this.options.line.xaxis_sorted){
+            if(this.options.line.xaxis.sorted){
                 // Sort data
                 table_data.sort(function(a, b){
                     a = self.convertValue(a[xaxis_field], -Infinity);
@@ -4082,13 +4744,28 @@ jQuery( document ).ready(function() {
                 labels.push(label);
             }
 
+            // Axis scaling
+            var axis_scale = 'linear';
+            var axis_scale_type = null;
+
+            var time_mode = false;
+            if((new Date(labels[0])).getTime() > 0){
+                time_mode = true;
+            }
             // Create datasets
             var datasets = [];
             var dataset_id = 0;
             var all_value_max = -Infinity;
             var all_value_min = Infinity;
+
+            var beginAtZero = this.options.line.yaxis.beginatzero;
+
             $(this.element).find("thead tr th[data-field!=''][data-field]").each(function(index, header) {
                 if(typeof $(this).data('chartable') !== 'undefined' && $(this).data('chartable')){
+                    if(!beginAtZero){
+                        beginAtZero = $(this).data('beginatzero');
+                    }
+
                     var dataset_name = self.cleanFieldValue($(this).html());
                     var field_name = $(this).data('field');
 
@@ -4097,7 +4774,6 @@ jQuery( document ).ready(function() {
                         if(self.options.line.fields.includes(field_name)){
                             valid_dataset = true;
                         }
-
                     }else{
                         valid_dataset = true;
                     }
@@ -4108,6 +4784,30 @@ jQuery( document ).ready(function() {
                         var value_formatter = null;
                         if(typeof $(this).data('formatter') !== 'undefined'){
                             value_formatter = $(this).data('formatter');
+                        }
+
+                        if(typeof $(this).data('axis-scale') !== 'undefined'){
+
+                            if($(this).data('axis-scale').startsWith('log')) {
+                                axis_scale = 'logarithmic';
+                                axis_scale_type = 'log';
+
+                                if($(this).data('axis-scale') === 'log_unit') {
+                                    axis_scale_type = 'log_unit';
+
+                                }else if($(this).data('axis-scale') === 'log_exp'){
+                                    axis_scale_type = 'log_exp';
+
+                                }else if($(this).data('axis-scale') === 'log10'){
+                                    axis_scale_type = 'log10';
+
+                                }else if($(this).data('axis-scale') === 'log10_unit'){
+                                    axis_scale_type = 'log10_unit';
+
+                                }else if($(this).data('axis-scale') === 'log10_exp'){
+                                    axis_scale_type = 'log10_exp';
+                                }
+                            }
                         }
 
                         var data = [];
@@ -4136,8 +4836,18 @@ jQuery( document ).ready(function() {
 
                             // Convert value to float
                             var item = self.parseNumericValue(table_data[i][field_name]);
+                            if(time_mode){
+                                var time_label = $("<div/>").html(table_data[i][xaxis_field]).text().trim().replace(/<(?:.|\n)*?>/gm, '').replace('_',' ');
+                                data.push(
+                                    {
+                                        x: time_label, //new Date(time_label),
+                                        y: item.value
+                                    }
+                                );
 
-                            data.push(item.value);
+                            }else{
+                                data.push(item.value);
+                            }
 
                             // Make sure lower and upper limits are valid
                             var value_max = item.value_max;
@@ -4174,20 +4884,38 @@ jQuery( document ).ready(function() {
                                     point_bg_colors.push(self.options.line.colors[table_data[i]['_class']].bg.normal);
                                     point_bg_hover_colors.push(self.options.line.colors[table_data[i]['_class']].border.hover);
                                 }else{
-                                    point_border_colors.push(self.options.line.colors.default.border.normal);
-                                    point_border_hover_colors.push(self.options.line.colors.default.border.hover);
-                                    point_bg_colors.push(self.options.line.colors.default.bg.normal);
-                                    point_bg_hover_colors.push(self.options.line.colors.default.bg.hover);
+                                    point_border_colors.push(
+                                        self.hexToRGB(self.options.line.colors.datasets[dataset_id], 0.5).css
+                                    );
+                                    point_border_hover_colors.push(self.hexToRGB(self.options.line.colors.datasets[dataset_id], 0.8).css);
+
+                                    point_bg_colors.push(
+                                        self.hexToRGB(self.options.line.colors.datasets[dataset_id], 0.5).css
+                                    );
+                                    point_bg_hover_colors.push(
+                                        self.hexToRGB(self.options.line.colors.datasets[dataset_id], 0.8).css
+                                    );
                                 }
                             }else{
-                                point_border_colors.push(self.options.line.colors.default.border.normal);
-                                point_border_hover_colors.push(self.options.line.colors.default.border.hover);
-                                point_bg_colors.push(self.options.line.colors.default.bg.normal);
-                                point_bg_hover_colors.push(self.options.line.colors.default.bg.hover);
-                            }
+                                point_border_colors.push(
+                                    self.hexToRGB(self.options.line.colors.datasets[dataset_id], 0.5).css
+                                );
+                                point_border_hover_colors.push(self.hexToRGB(self.options.line.colors.datasets[dataset_id], 0.8).css);
 
-                            point_radius.push(self.options.line.point.radius.normal);
-                            point_hover_radius.push(self.options.line.point.radius.hover);
+                                point_bg_colors.push(
+                                    self.hexToRGB(self.options.line.colors.datasets[dataset_id], 0.5).css
+                                );
+                                point_bg_hover_colors.push(
+                                    self.hexToRGB(self.options.line.colors.datasets[dataset_id], 0.8).css
+                                );
+                            }
+                            if(self.options.line.point.enabled){
+                                point_radius.push(self.options.line.point.radius.normal);
+                                point_hover_radius.push(self.options.line.point.radius.hover);
+                            }else{
+                                point_radius.push(0);
+                                point_hover_radius.push(0);
+                            }
                         }
 
                         var value_postfix = '';
@@ -4206,42 +4934,73 @@ jQuery( document ).ready(function() {
 
                             horizontal_line_value: horizontal_line_value,
 
-                            borderWidth: 2,
-                            borderColor: self.options.line.colors.datasets[dataset_id],
-                            backgroundColor: self.hexToRGB(self.options.line.colors.datasets[dataset_id], 0.20).css, //self.options.line.colors.datasets[dataset_id],
-                            fill: false,
                             value_postfix: value_postfix,
+
+                            // Border line
+                            borderWidth: 2,
+                            borderColor: self.hexToRGB(self.options.line.colors.datasets[dataset_id]).css,
                             lineTension: 0,
                             spanGaps: true,
 
+                            // Background
+                            fill: self.options.line.fill,
+                            backgroundColor: self.hexToRGB(self.options.line.colors.datasets[dataset_id], 0.10).css,
+
+                            // Point
+                            pointRadius: point_radius,
+                            pointHoverRadius: point_hover_radius,
                             pointBackgroundColor: point_bg_colors,
                             pointBorderWidth: point_border_colors,
                             pointHoverBackgroundColor: point_bg_hover_colors,
-                            pointHoverBorderColor: point_border_hover_colors,
-                            pointRadius: point_radius,
-                            pointHoverRadius: point_hover_radius
+                            pointHoverBorderColor: point_border_hover_colors
+
                         });
                         dataset_id++;
                     }
                 }
             });
 
-            $(this.options.element.line.div).show(0);
+            if(!axis_scale_type){
+                // Update y-axis scele
+                if(this.options.line.yaxis.scale){
 
+                    if(this.options.line.yaxis.scale.startsWith('log')) {
+                        axis_scale = 'logarithmic';
+                        axis_scale_type = 'log';
+
+                        if(this.options.line.yaxis.scale === 'log_unit') {
+                            axis_scale_type = 'log_unit';
+
+                        }else if(this.options.line.yaxis.scale === 'log_exp'){
+                            axis_scale_type = 'log_exp';
+
+                        }else if(this.options.line.yaxis.scale === 'log10'){
+                            axis_scale_type = 'log10';
+
+                        }else if(this.options.line.yaxis.scale === 'log10_unit'){
+                            axis_scale_type = 'log10_unit';
+
+                        }else if(this.options.line.yaxis.scale === 'log10_exp'){
+                            axis_scale_type = 'log10_exp';
+                        }
+                    }
+                }
+            }
+
+            $(this.options.element.line.div).show(0);
             var chart_data = {
                 labels: labels,
                 datasets: datasets
-                //hline_index: this.hline_index,
-                //hline_value: this.hline_value,
-                //hline_color: this.hline_color,
-                //hline_enabled: this.options.line.horizontal_line.enabled
             };
 
             var show_legend = false;
             if(datasets.length > 1){
-                show_legend = true;
+                if(this.options.line.legend.enabled){
+                    show_legend = true;
+                }
             }
 
+            // Tooltip position
             var tooltip_position = 'average';
             var padding = {
                 left: 0,
@@ -4254,7 +5013,7 @@ jQuery( document ).ready(function() {
                 padding = {
                     left: 0,
                     right: 0,
-                    top: 45,
+                    top: 40 + datasets.length *12,
                     bottom: 0
                 };
             }else if(this.options.line.tooltips.position == 'bottom'){
@@ -4263,7 +5022,7 @@ jQuery( document ).ready(function() {
                     left: 0,
                     right: 0,
                     top: 0,
-                    bottom: 45
+                    bottom: 40 + datasets.length *12
                 };
             }
 
@@ -4277,37 +5036,35 @@ jQuery( document ).ready(function() {
                 layout: {
                     padding: padding
                 },
+
                 scales: {
                     xAxes: [{
-                        //display: this.options.line.show_chart_xaxis,
+                        display: this.options.line.xaxis.display,
                         stacked: false,
-                        //type: 'time',
                         ticks: {
-                            //autoSkip: false,
                             maxRotation: 90
                         },
-                        distribution: 'linear'
+                        gridLines: {
+                            display: this.options.line.xaxis.gridlines
+                        }
+
                     }],
                     yAxes: [{
                         stacked: false,
-                        type: 'linear',
+                        type: axis_scale,
                         ticks: {
-                            beginAtZero: true,
+                            beginAtZero: beginAtZero,
                             suggestedMin: all_value_min,
                             suggestedMax: all_value_max
                         },
-                        scaleLabel: {
-                            display: true,
-                            //labelString: value_label,
-                            fontColor: 'black'
+                        gridLines: {
+                            display: this.options.line.yaxis.gridlines
                         }
-                    }]
+                    }],
+
                 },
                 maintainAspectRatio: true,
                 responsive: true,
-                /*animation: {
-                    duration: 100
-                },*/
 
                 animation: {
                     duration: 0 // general animation time
@@ -4322,7 +5079,21 @@ jQuery( document ).ready(function() {
                 },
                 legend: {
                     display: show_legend,
-                    position: 'right'
+                    position: this.options.line.legend.position
+                },
+                horizontal_highlights: {
+                    enabled: this.options.line.horizontal_highlights.enabled,
+                    data: this.options.line.horizontal_highlights.data,
+                    opacity: this.options.line.horizontal_highlights.opacity,
+                    lineWidth: this.options.line.horizontal_highlights.lineWidth,
+                    strokeStyle: this.options.line.horizontal_highlights.strokeStyle,
+                    label: {
+                        fillStyle: this.options.line.horizontal_highlights.label.fillStyle,
+                        font: this.options.line.horizontal_highlights.label.font,
+                        fontSize: this.options.line.horizontal_highlights.label.fontSize,
+                        position: this.options.line.horizontal_highlights.label.position,
+                        opacity: this.options.line.horizontal_highlights.label.opacity
+                    }
                 },
                 horizontal_line: {
                     enabled: this.options.line.horizontal_line.enabled,
@@ -4333,6 +5104,18 @@ jQuery( document ).ready(function() {
                     enabled: this.options.line.vertical_indicator_line.enabled,
                     lineWidth: this.options.line.vertical_indicator_line.lineWidth,
                     strokeStyle: this.options.line.vertical_indicator_line.strokeStyle
+                },
+                vertical_segments: {
+                    enabled: this.options.line.vertical_segments.enabled,
+                    data: this.options.line.vertical_segments.data,
+                    opacity: this.options.line.vertical_segments.opacity,
+                    label: {
+                        fillStyle: this.options.line.vertical_segments.label.fillStyle,
+                        font: this.options.line.vertical_segments.label.font,
+                        fontSize: this.options.line.vertical_segments.label.fontSize,
+                        position: this.options.line.vertical_segments.label.position,
+                        opacity: this.options.line.vertical_segments.label.opacity
+                    }
                 },
                 horizontal_indicator_line: {
                     enabled: this.options.line.horizontal_indicator_line.enabled,
@@ -4371,7 +5154,8 @@ jQuery( document ).ready(function() {
                         label: function(tooltipItems, data){
                             var data_string = data.datasets[tooltipItems.datasetIndex].data_string[tooltipItems.index];
 
-                            return data.datasets[tooltipItems.datasetIndex].label +': ' + data_string;
+                            return data_string + ' (' + data.datasets[tooltipItems.datasetIndex].label + ')';
+                            //return data.datasets[tooltipItems.datasetIndex].label + ': ' + data_string;
                         }
                     }
                 },
@@ -4391,28 +5175,76 @@ jQuery( document ).ready(function() {
 
                             var value_index = elements[0]._index;
                             var table_options = $(self.element).bootstrapTable('getOptions');
-                            //var row_index = value_index;
+
                             $(self.element).find('tbody td:contains('+table_options.data[value_index][table_options.idField]+')').parent('tr').find('td').addClass('row-hover')
                         }
                     }
                 }
             };
 
-            if((new Date(labels[0])).getTime() > 0){
+            // X-axis is time
+            if(time_mode){
                 chart_options.scales.xAxes[0].type = 'time';
-                chart_options.scales.xAxes[0].time = {
-                    displayFormats: {
-                        hour: 'hh:mm:ss'
-                    },
-                    unit: 'hour'
-                };
+                chart_options.scales.xAxes[0].distribution = 'linear';
+                chart_options.scales.xAxes[0].time = {};
+                chart_options.scales.xAxes[0].time.displayFormats = this.options.time.display_formats;
+
+                if(this.options.line.xaxis.timeunit){
+                    chart_options.scales.xAxes[0].time.unit = this.options.line.xaxis.timeunit;
+                }
+                if(this.options.line.xaxis.timestepsize){
+                    chart_options.scales.xAxes[0].time.stepSize = this.options.line.xaxis.timestepsize;
+                }
+                chart_options.scales.xAxes[0].ticks = {};
             }
 
+            // Add y-axis label
+            if(this.options.line.yaxis.label){
+                chart_options.scales.yAxes[0].scaleLabel = {
+                    display: true,
+                    labelString: this.options.line.yaxis.label,
+                    fontColor: 'black'
+                }
+            }
+
+            // Handle y-axis scale
+            if(axis_scale === 'logarithmic'){
+                chart_options.scales.yAxes[0].ticks.callback = function (value, index, values) {
+
+                    if(axis_scale_type.startsWith('log10')) {
+                        if (!(value === 1e1 || value === 1e2 ||
+                            value === 1e3 || value === 1e4 ||
+                            value === 1e5 || value === 1e6 ||
+                            value === 1e7 || value === 1e8 ||
+                            value === 1e9 || value === 1e10)) {
+                            return '';
+                        }
+                    }else if(axis_scale_type.startsWith('log')){
+                        if(values.length > 10){
+                            if(index % Math.ceil(values.length / 10.0) !== 0){
+                                return '';
+                            }
+                        }
+                    }
+
+                    if(axis_scale_type.endsWith('_unit')){
+                        return self.addNumberPrefix(value);
+                    }else if(axis_scale_type.endsWith('_exp')){
+                        return value.toExponential(2);
+                    }else{
+                        return value;
+                    }
+                }
+            }
+
+
             this.line_chart = new Chart(chart_ctx, {
-                type: 'stripe', //'lineWithLine',
+                type: 'stripe',
                 data: chart_data,
                 options: chart_options
             });
+
+
 
             this.line_chart_data = chart_data;
         },
@@ -4552,6 +5384,13 @@ jQuery( document ).ready(function() {
                 var x_value_max = x_item.value_max;
                 var x_value_min = x_item.value_min;
 
+                if(x_all_value_max < x_item.value){
+                    x_all_value_max = x_item.value;
+                }
+                if(x_all_value_min > x_item.value){
+                    x_all_value_min = x_item.value;
+                }
+
                 if(x_value_min !== null && x_value_max !== null){
                     if(x_value_max < x_value_min) {
                         // Flip max and min
@@ -4571,6 +5410,13 @@ jQuery( document ).ready(function() {
 
                 var y_value_max = y_item.value_max;
                 var y_value_min = y_item.value_min;
+
+                if(y_all_value_max < y_item.value){
+                    y_all_value_max = y_item.value;
+                }
+                if(y_all_value_min > y_item.value){
+                    y_all_value_min = y_item.value;
+                }
 
                 if(y_value_min !== null && y_value_max !== null){
                     if(y_value_max < y_value_min) {
@@ -4600,6 +5446,59 @@ jQuery( document ).ready(function() {
 
                 point_radius.push(this.options.scatter.point.radius.normal);
                 point_hover_radius.push(this.options.scatter.point.radius.hover);
+            }
+
+            // Axis scaling
+            var axis_x_scale = 'linear';
+            var axis_x_scale_type =null;
+            if(typeof header_x.data('axis-scale') !== 'undefined'){
+
+                if(header_x.data('axis-scale').startsWith('log')) {
+                    axis_x_scale = 'logarithmic';
+                    axis_x_scale_type = 'log';
+
+                    if(header_x.data('axis-scale') === 'log_unit') {
+                        axis_x_scale_type = 'log_unit';
+
+                    }else if(header_x.data('axis-scale') === 'log_exp'){
+                        axis_x_scale_type = 'log_exp';
+
+                    }else if(header_x.data('axis-scale') === 'log10'){
+                        axis_x_scale_type = 'log10';
+
+                    }else if(header_x.data('axis-scale') === 'log10_unit'){
+                        axis_x_scale_type = 'log10_unit';
+
+                    }else if(header_x.data('axis-scale') === 'log10_exp'){
+                        axis_x_scale_type = 'log10_exp';
+                    }
+                }
+            }
+
+            var axis_y_scale = 'linear';
+            var axis_y_scale_type =null;
+            if(typeof header_y.data('axis-scale') !== 'undefined'){
+
+                if(header_y.data('axis-scale').startsWith('log')) {
+                    axis_y_scale = 'logarithmic';
+                    axis_y_scale_type = 'log';
+
+                    if(header_y.data('axis-scale') === 'log_unit') {
+                        axis_y_scale_type = 'log_unit';
+
+                    }else if(header_y.data('axis-scale') === 'log_exp'){
+                        axis_y_scale_type = 'log_exp';
+
+                    }else if(header_y.data('axis-scale') === 'log10'){
+                        axis_y_scale_type = 'log10';
+
+                    }else if(header_y.data('axis-scale') === 'log10_unit'){
+                        axis_y_scale_type = 'log10_unit';
+
+                    }else if(header_y.data('axis-scale') === 'log10_exp'){
+                        axis_y_scale_type = 'log10_exp';
+                    }
+                }
             }
 
             var chart_ctx = document.getElementById(this.options.element.scatter.canvas.replace('#',''));
@@ -4661,7 +5560,7 @@ jQuery( document ).ready(function() {
                 scales: {
                     xAxes: [{
                         position: 'bottom',
-                        type: 'linear',
+                        type: axis_x_scale,
                         ticks: {
                             reverse: x_scale_reverse,
                             suggestedMin: x_all_value_min,
@@ -4675,7 +5574,7 @@ jQuery( document ).ready(function() {
                     }],
                     yAxes: [{
                         position: 'left',
-                        type: 'linear',
+                        type: axis_y_scale,
                         ticks: {
                             reverse: y_scale_reverse,
                             suggestedMin: y_all_value_min,
@@ -4693,9 +5592,9 @@ jQuery( document ).ready(function() {
                     backgroundColor: this.options.scatter.colors.background
                 },
                 onHover: function(event, elements){
-                    if(event.type == 'mouseout' || event.type == 'touchend'){
+                    if(event.type === 'mouseout' || event.type === 'touchend'){
                         $(self.element).find('tr td').removeClass('row-hover');
-                    }else if(event.type == 'mousemove'){
+                    }else if(event.type === 'mousemove'){
                         if(elements.length > 0){
                             $(self.element).find('tr td').removeClass('row-hover');
 
@@ -4704,7 +5603,7 @@ jQuery( document ).ready(function() {
                             var row_index = value_index;
                             if(table_options.pagination){
                                 var page_number = Math.floor(value_index / table_options.pageSize)+1;
-                                if(page_number == table_options.pageNumber){
+                                if(page_number === table_options.pageNumber){
                                     row_index = value_index % table_options.pageSize;
                                     $(self.element).find('tbody tr:nth-child('+(row_index+1)+') td').addClass('row-hover');
                                 }
@@ -4715,6 +5614,65 @@ jQuery( document ).ready(function() {
                     }
                 }
             };
+
+            if(axis_x_scale === 'logarithmic'){
+                chart_options.scales.xAxes[0].ticks.callback = function (value, index, values) {
+
+                    if(axis_x_scale_type.startsWith('log10')) {
+                        if (!(value === 1e1 || value === 1e2 ||
+                            value === 1e3 || value === 1e4 ||
+                            value === 1e5 || value === 1e6 ||
+                            value === 1e7 || value === 1e8 ||
+                            value === 1e9 || value === 1e10)) {
+                            return '';
+                        }
+                    }else if(axis_x_scale_type.startsWith('log')){
+                        if(values.length > 10){
+                            if(index % Math.ceil(values.length / 10.0) !== 0){
+                                return '';
+                            }
+                        }
+                    }
+
+                    if(axis_x_scale_type.endsWith('_unit')){
+                        return self.addNumberPrefix(value);
+                    }else if(axis_x_scale_type.endsWith('_exp')){
+                        return value.toExponential(2);
+                    }else{
+                        return value;
+                    }
+                }
+            }
+
+            if(axis_y_scale === 'logarithmic'){
+                chart_options.scales.yAxes[0].ticks.callback = function (value, index, values) {
+
+                    if(axis_y_scale_type.startsWith('log10')) {
+                        if (!(value === 1e1 || value === 1e2 ||
+                            value === 1e3 || value === 1e4 ||
+                            value === 1e5 || value === 1e6 ||
+                            value === 1e7 || value === 1e8 ||
+                            value === 1e9 || value === 1e10)) {
+                            return '';
+                        }
+                    }else if(axis_y_scale_type.startsWith('log')){
+                        if(values.length > 10){
+                            if(index % Math.ceil(values.length / 10.0) !== 0){
+                                return '';
+                            }
+                        }
+                    }
+
+                    if(axis_y_scale_type.endsWith('_unit')){
+                        return self.addNumberPrefix(value);
+                    }else if(axis_y_scale_type.endsWith('_exp')){
+                        return value.toExponential(2);
+                    }else{
+                        return value;
+                    }
+                }
+            }
+
             var chart_data = {
                 labels: labels,
                 datasets: [{
@@ -5113,12 +6071,10 @@ jQuery( document ).ready(function() {
 
         showLineChart: function (){
             var self = this;
-            if(this.validBar()){
-                if($(this.options.element.line.div).is(":hidden")){
-                    $(this.options.element.line.div).show(this.options.animation.show_speed, function(){
-                        self.updateLine();
-                    });
-                }
+            if($(this.options.element.line.div).is(":hidden")){
+                $(this.options.element.line.div).show(this.options.animation.show_speed, function(){
+                    self.updateLine();
+                });
             }
         },
         hideLineChart: function (){
@@ -5242,7 +6198,7 @@ jQuery( document ).ready(function() {
                                     var tag_css = self.options.tags.css[self.options.tags.css.length-1];
                                 }
                                 html += '<span class="'+tag_css+'">'+item.trim()+'</span>';
-                            })
+                            });
                             $(this).find('td').eq(index).html(html);
                         })
                     }
@@ -5378,8 +6334,8 @@ jQuery( document ).ready(function() {
                             if(field_data.charAt(0) == '#' || field_data.startsWith('rgb(') || field_data.startsWith('rgba(') ) {
                                 data_item['color'] = field_data;
                             }else {
-                                var patt = new RegExp(/[(](.+)[:](.+)[)]/g);
-                                var res = patt.test(field_data);
+                                var pattern = new RegExp(/[(](.+)[:](.+)[)]/g);
+                                var res = pattern.test(field_data);
                                 if(res){
                                     var value_fields = field_data.substring(1,field_data.length-1).split(':');
 
@@ -5397,7 +6353,7 @@ jQuery( document ).ready(function() {
                                     }
 
                                 }else{
-                                    // Singel value given
+                                    // Single value given
                                     var numeric_value = parseFloat(field_data);
                                     if(isNaN(numeric_value)){
                                         data_item['y_value'] = field_data;
@@ -5434,9 +6390,74 @@ jQuery( document ).ready(function() {
             }
             return data;
         },
+        parseSegmentList: function(list_string){
+            var data = new Array();
+            if(list_string){
+                var items = list_string.split(',');
+                if(items.length > 0) {
+                    for (var i = 0; i < items.length; i++) {
+                        var fields = this.htmlDecode(items[i]).split(';');
+
+                        var data_item = {
+                            'start_value': null,
+                            'stop_value': null,
+                            'label': null,
+                            'color': null
+                        };
+                        if(fields.length >= 1){
+                            var field_data = fields[0].trim();
+                            var date_value = new Date(field_data).getTime() > 0;
+                            if(date_value){
+                                data_item['start_value'] = field_data;
+                            }else {
+                                var numeric_value = parseFloat(field_data);
+                                if (isNaN(numeric_value)) {
+                                    data_item['start_value'] = field_data;
+                                } else {
+                                    data_item['start_value'] = numeric_value;
+                                }
+                            }
+                        }
+                        if(fields.length >= 2){
+                            var field_data = fields[1].trim();
+                            var date_value = new Date(field_data).getTime() > 0;
+                            if(date_value){
+                                data_item['stop_value'] = field_data;
+                            }else {
+                                var numeric_value = parseFloat(field_data);
+                                if (isNaN(numeric_value)) {
+                                    data_item['stop_value'] = field_data;
+                                } else {
+                                    data_item['stop_value'] = numeric_value;
+                                }
+                            }
+                        }
+                        if(fields.length >= 3){
+                            var field_data = fields[2].trim();
+                            if(field_data.charAt(0) == '#' || field_data.startsWith('rgb(') || field_data.startsWith('rgba(') ){
+                                data_item['color'] = field_data;
+                            }else{
+                                // Text label given
+                                data_item['label'] = field_data;
+                            }
+                        }
+                        if(fields.length >= 4){
+                            var field_data = fields[3].trim();
+                            if(field_data.charAt(0) == '#' || field_data.startsWith('rgb(') || field_data.startsWith('rgba(') ){
+                                data_item['color'] = field_data;
+                            }else{
+                                // Text label given
+                                data_item['label'] = field_data;
+                            }
+                        }
+                        data.push(data_item);
+                    }
+                }
+            }
+            return data;
+        },
         cleanFieldValue: function(value){
-            var label = $("<div/>").html(value).text().trim().replace(/<(?:.|\n)*?>/gm, '').replace('_',' ');
-            return label;
+            return $("<div/>").html(value).text().trim().replace(/<(?:.|\n)*?>/gm, '').replace('_',' ');
         },
 
         valueSorter: function (a, b, direction){
@@ -5459,6 +6480,7 @@ jQuery( document ).ready(function() {
             if (moment(value, this.options.time.valid_formats, true).isValid() && !$.isNumeric(value)){
                 // We have date
                 value = moment(value).unix();
+
             }else{
                 if(value){
                     if(value.trim()){
@@ -5592,6 +6614,28 @@ jQuery( document ).ready(function() {
             rgb.css += (opacity ? ',' + opacity : '') + ')';
 
             return rgb;
+        },
+        RGBToHex: function (rgb){
+            rgb = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
+            return (rgb && rgb.length === 4) ? "#" +
+                ("0" + parseInt(rgb[1],10).toString(16)).slice(-2) +
+                ("0" + parseInt(rgb[2],10).toString(16)).slice(-2) +
+                ("0" + parseInt(rgb[3],10).toString(16)).slice(-2) : '';
+        },
+
+        addNumberPrefix: function(value, min) {
+            min = min || 1e3;
+
+            if (value >= min) {
+                var units = ["k", "M", "B", "T"];
+
+                var order = Math.floor(Math.log(value) / Math.log(1000));
+
+                return Math.floor(value / Math.pow(1000, order)) + units[(order - 1)];
+            }
+
+            // return formatted original number
+            return value.toLocaleString();
         }
     };
 
@@ -5639,7 +6683,7 @@ jQuery( document ).ready(function() {
 // ========================================
 // Helper functions for bootstrap-table.js
 // ========================================
-function valueFormatter_generic(value, row, index, precision, muted, prefix, postfix){
+function valueFormatter_generic_fixed(value, row, index, precision, muted, prefix, postfix){
     if(typeof prefix === 'undefined') {
         prefix = ''
     }
@@ -5660,57 +6704,91 @@ function valueFormatter_generic(value, row, index, precision, muted, prefix, pos
 }
 
 function percentageFormatter(value, row, index){
-    return valueFormatter_generic(value, row, index, undefined, false, undefined, ' %');
+    return valueFormatter_generic_fixed(value, row, index, undefined, false, undefined, ' %');
 }
 
 function valueFormatter_int(value, row, index){
-    return valueFormatter_generic(value, row, index, 0);
+    return valueFormatter_generic_fixed(value, row, index, 0);
 }
+
 function valueFormatter_float1(value, row, index){
-    return valueFormatter_generic(value, row, index, 1);
+    return valueFormatter_generic_fixed(value, row, index, 1);
 }
 function valueFormatter_float2(value, row, index){
-    return valueFormatter_generic(value, row, index, 2);
+    return valueFormatter_generic_fixed(value, row, index, 2);
 }
 function valueFormatter_float3(value, row, index){
-    return valueFormatter_generic(value, row, index, 3);
+    return valueFormatter_generic_fixed(value, row, index, 3);
 }
 function valueFormatter_float4(value, row, index){
-    return valueFormatter_generic(value, row, index, 4);
+    return valueFormatter_generic_fixed(value, row, index, 4);
+}
+
+function valueFormatter_generic_exponential(value, row, index, precision, muted, prefix, postfix){
+    if(typeof prefix === 'undefined') {
+        prefix = ''
+    }
+    if(typeof postfix === 'undefined') {
+        postfix = ''
+    }
+
+    if($.isNumeric(value)){
+        value = parseFloat(value);
+        if(typeof precision !== 'undefined') {
+            value = value.toExponential(precision);
+        }
+        return prefix + value + postfix;
+
+    }else{
+        return value;
+    }
+}
+
+function valueFormatter_float1_exp(value, row, index) {
+    return valueFormatter_generic_exponential(value, row, index, 1);
+}
+function valueFormatter_float2_exp(value, row, index) {
+    return valueFormatter_generic_exponential(value, row, index, 2);
+}
+function valueFormatter_float3_exp(value, row, index) {
+    return valueFormatter_generic_exponential(value, row, index, 3);
+}
+function valueFormatter_float4_exp(value, row, index) {
+    return valueFormatter_generic_exponential(value, row, index, 4);
 }
 
 // percentage values
 function valueFormatter_int_percentage(value, row, index){
-    return valueFormatter_generic(value, row, index, 0, false, undefined, ' %');
+    return valueFormatter_generic_fixed(value, row, index, 0, false, undefined, ' %');
 }
 function valueFormatter_float1_percentage(value, row, index){
-    return valueFormatter_generic(value, row, index, 1, false, undefined, ' %');
+    return valueFormatter_generic_fixed(value, row, index, 1, false, undefined, ' %');
 }
 function valueFormatter_float2_percentage(value, row, index){
-    return valueFormatter_generic(value, row, index, 2, false, undefined, ' %');
+    return valueFormatter_generic_fixed(value, row, index, 2, false, undefined, ' %');
 }
 function valueFormatter_float3_percentage(value, row, index){
-    return valueFormatter_generic(value, row, index, 3, false, undefined, ' %');
+    return valueFormatter_generic_fixed(value, row, index, 3, false, undefined, ' %');
 }
 function valueFormatter_float4_percentage(value, row, index){
-    return valueFormatter_generic(value, row, index, 4, false, undefined, ' %');
+    return valueFormatter_generic_fixed(value, row, index, 4, false, undefined, ' %');
 }
 
 // error values
 function valueFormatter_int_error(value, row, index){
-    return valueFormatter_generic(value, row, index, 0, false, '±');
+    return valueFormatter_generic_fixed(value, row, index, 0, false, '±');
 }
 function valueFormatter_float1_error(value, row, index){
-    return valueFormatter_generic(value, row, index, 1, false, '±');
+    return valueFormatter_generic_fixed(value, row, index, 1, false, '±');
 }
 function valueFormatter_float2_error(value, row, index){
-    return valueFormatter_generic(value, row, index, 2, false, '±');
+    return valueFormatter_generic_fixed(value, row, index, 2, false, '±');
 }
 function valueFormatter_float3_error(value, row, index){
-    return valueFormatter_generic(value, row, index, 3, false, '±');
+    return valueFormatter_generic_fixed(value, row, index, 3, false, '±');
 }
 function valueFormatter_float4_error(value, row, index){
-    return valueFormatter_generic(value, row, index, 4, false, '±');
+    return valueFormatter_generic_fixed(value, row, index, 4, false, '±');
 }
 
 function valueFormatter_numeric_with_interval(value, row, index, precision, muted){
@@ -5974,20 +7052,12 @@ function runningFormatter(value, row, index){
 function isNumericWithInterval(value) {
     // Check if value has format [value] ([interval1] - [interval2])
     var regex = /[+-]?\d+(?:\.\d+)\s+\([+-]?\d+(?:\.\d+)\s+-\s+[+-]?\d+(?:\.\d+)\)/g;
-    var patt = new RegExp(regex);
-    if (patt.test(value)) {
-        return true;
-    }else{
-        return false;
-    }
+    var pattern = new RegExp(regex);
+    return pattern.test(value);
 }
 function isNumericWithError(value) {
     var pattern_plusminus = new RegExp(/([+-]?([0-9]*[.])?[0-9]+)(\s+)?[±](\s+)?(([0-9]*[.])?[0-9]+)/);
-    if (pattern_plusminus.test(value)) {
-        return true;
-    }else{
-        return false;
-    }
+    return pattern_plusminus.test(value);
 }
 function numericToFloat(value, precision){
     if (typeof value === 'string' || value instanceof String){

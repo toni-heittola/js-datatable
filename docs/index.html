@@ -14,9 +14,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/themes/prism-okaidia.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/plugins/unescaped-markup/prism-unescaped-markup.css">
 
-    <link rel="stylesheet" href="https://cdn.rawgit.com/toni-heittola/js-datatable/master/css.min/bootstrap-table.min.css">
-    <link rel="stylesheet" href="https://cdn.rawgit.com/toni-heittola/js-datatable/master/css.min/bootstrap-table-filter-control.min.css">
-    <link rel="stylesheet" href="https://cdn.rawgit.com/toni-heittola/js-datatable/master/css.min/datatable.min.css">
+    <link rel="stylesheet" href="https://cdn.rawgit.com/toni-heittola/js-datatable/v1.1.0/css.min/bootstrap-table.min.css">
+    <link rel="stylesheet" href="https://cdn.rawgit.com/toni-heittola/js-datatable/v1.1.0/css.min/bootstrap-table-filter-control.min.css">
+    <link rel="stylesheet" href="https://cdn.rawgit.com/toni-heittola/js-datatable/v1.1.0/css.min/datatable.min.css">
     <!--
     <link rel="stylesheet" href="../css.min/bootstrap-table.min.css">
     <link rel="stylesheet" href="../css.min/bootstrap-table-filter-control.min.css">
@@ -68,11 +68,8 @@ To see plugin in action, check <a href="http://www.cs.tut.fi/sgn/arg/dcase2016/t
 
                 <pre><code class="language-markup">
 &lt;script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"&gt;&lt;/script&gt;
-&lt;script type="text/javascript" src="js.min/bootstrap-table.min.js"&gt;&lt;/script&gt;
-&lt;script type="text/javascript" src="js.min/Chart.bundle.min.js"&gt;&lt;/script&gt;
-&lt;script type="text/javascript" src="js.min/datatable.min.js"&gt;&lt;/script&gt;
-&lt;link rel="stylesheet" href="css.min/bootstrap-table.min.css"&gt;
-&lt;link rel="stylesheet" href="css.min/datatable.min.css"&gt;
+&lt;script type="text/javascript" src="js.min/datatable.bundle.min.js"&gt;&lt;/script&gt;
+&lt;link rel="stylesheet" href="css.min/datatable.bundle.min.css"&gt;
                 </code></pre>
 
                 <p>You can use also non-minified versions in case debugging is required:</p>
@@ -81,6 +78,7 @@ To see plugin in action, check <a href="http://www.cs.tut.fi/sgn/arg/dcase2016/t
 &lt;script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"&gt;&lt;/script&gt;
 &lt;script type="text/javascript" src="js/bootstrap-table.js"&gt;&lt;/script&gt;
 &lt;script type="text/javascript" src="js/Chart.bundle.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="js/moment.js"&gt;&lt;/script&gt;
 &lt;script type="text/javascript" src="js/datatable.js"&gt;&lt;/script&gt;
 &lt;link rel="stylesheet" href="css/bootstrap-table.css"&gt;
 &lt;link rel="stylesheet" href="css/datatable.css"&gt;
@@ -408,9 +406,25 @@ To see plugin in action, check <a href="http://www.cs.tut.fi/sgn/arg/dcase2016/t
                             <td>Comma separated list of fields to be show in the line plot. If undefined, all field shown.</td>
                         </tr>
                         <tr>
+                            <td>Line / fill</td>
+                            <td>data-line-fill</td>
+                            <td>line.fill</td>
+                            <td>Boolen</td>
+                            <td>false</td>
+                            <td>Fill area under the line.</td>
+                        </tr>
+                        <tr>
+                            <td>Line / Show X-axis</td>
+                            <td>data-show-xaxis</td>
+                            <td>line.xaxis.display</td>
+                            <td>Boolen</td>
+                            <td>true</td>
+                            <td>Show x-axis.</td>
+                        </tr>
+                        <tr>
                             <td>Line / X-axis field</td>
                             <td>data-line-xaxis-field</td>
-                            <td>line.xaxis_field</td>
+                            <td>line.xaxis.field</td>
                             <td>String</td>
                             <td>undefined</td>
                             <td>Data field to be used on x-axis.</td>
@@ -418,10 +432,66 @@ To see plugin in action, check <a href="http://www.cs.tut.fi/sgn/arg/dcase2016/t
                         <tr>
                             <td>Line / Sorted X-axis</td>
                             <td>data-line-xaxis-sorted</td>
-                            <td>line.xaxis_sorted</td>
+                            <td>line.xaxis.sorted</td>
                             <td>Boolean</td>
                             <td>false</td>
                             <td>Should the data be sorted based on x-axis field.</td>
+                        </tr>
+                        <tr>
+                            <td>Line / X-axis time unit</td>
+                            <td>data-line-xaxis-timeunit</td>
+                            <td>line.xaxis.timeunit</td>
+                            <td>String</td>
+                            <td>undefined</td>
+                            <td>Time unit used. Possible values e.g. minute,hour,day,month,year</td>
+                        </tr>
+                        <tr>
+                            <td>Line / X-axis time step size</td>
+                            <td>data-line-xaxis-timestepsize</td>
+                            <td>line.xaxis.timestepsize</td>
+                            <td>Number</td>
+                            <td>undefined</td>
+                            <td>Step size.</td>
+                        </tr>
+                        <tr>
+                            <td>Line / X-axis gridlines</td>
+                            <td>data-line-xaxis-gridlines</td>
+                            <td>line.xaxis.gridlines</td>
+                            <td>Boolean</td>
+                            <td>true</td>
+                            <td>Show x-axis gridlines.</td>
+                        </tr>
+                        <tr>
+                            <td>Line / Y-axis beginatzero</td>
+                            <td>data-line-yaxis-beginatzero</td>
+                            <td>line.yaxis.beginatzero</td>
+                            <td>Boolean</td>
+                            <td>false</td>
+                            <td>Start y-axis from zero.</td>
+                        </tr>
+                        <tr>
+                            <td>Line / Y-axis label</td>
+                            <td>data-line-yaxis-label</td>
+                            <td>line.yaxis.label</td>
+                            <td>String</td>
+                            <td>undefined</td>
+                            <td>Label for y-axis.</td>
+                        </tr>
+                        <tr>
+                            <td>Line / Y-axis scale</td>
+                            <td>data-line-yaxis-scale</td>
+                            <td>line.yaxis.scale</td>
+                            <td>String</td>
+                            <td>undefined</td>
+                            <td>Scale for y-axis. Possible values 'log', 'log_unit', 'log_exp', 'log10', 'log10_unit', and 'log10_exp'.</td>
+                        </tr>
+                        <tr>
+                            <td>Line / Y-axis gridlines</td>
+                            <td>data-line-yaxis-gridlines</td>
+                            <td>line.yaxis.gridlines</td>
+                            <td>Boolean</td>
+                            <td>true</td>
+                            <td>Show y-axis gridlines.</td>
                         </tr>
                         <tr>
                             <td>Line / Height</td>
@@ -522,6 +592,135 @@ To see plugin in action, check <a href="http://www.cs.tut.fi/sgn/arg/dcase2016/t
                             <td>rgba(160,160,160,0.5)</td>
                             <td>Horizontal indicator fill color.</td>
                         </tr>
+                        <tr>
+                            <td>Line / Show horizontal highlights</td>
+                            <td>data-line-show-horizontal-highlights</td>
+                            <td>line.horizontal_highlights.enabled</td>
+                            <td>Boolean</td>
+                            <td>true</td>
+                            <td>Show horizontal highlights.</td>
+                        </tr>
+                        <tr>
+                            <td>Line / Horizontal highlights</td>
+                            <td>data-line-horizontal-highlights</td>
+                            <td>line.horizontal_highlights.data</td>
+                            <td>String</td>
+                            <td>undefined</td>
+                            <td>Data structure to contain data for highlights in format: value1;title;color,value2;title2;color</td>
+                        </tr>
+                        <tr>
+                            <td>Line / Horizontal highlight line opacity</td>
+                            <td>data-line-horizontal-highlight-opacity</td>
+                            <td>line.horizontal_highlights.opacity</td>
+                            <td>Number</td>
+                            <td>0.1</td>
+                            <td>Line opacity.</td>
+                        </tr>
+                        <tr>
+                            <td>Line / Horizontal highlight line width</td>
+                            <td>data-line-horizontal-highlight-linewidth</td>
+                            <td>line.horizontal_highlights.linewidth</td>
+                            <td>Number</td>
+                            <td>1</td>
+                            <td>Line width.</td>
+                        </tr>
+                        <tr>
+                            <td>Line / Horizontal highlight line color</td>
+                            <td>data-line-horizontal-highlight-stroke</td>
+                            <td>line.horizontal_highlights.stroke</td>
+                            <td>String</td>
+                            <td>rgba(112, 187, 225 ,1.0)</td>
+                            <td>Line color.</td>
+                        </tr>
+                        <tr>
+                            <td>Line / Horizontal highlight label position</td>
+                            <td>data-line-horizontal-highlight-label-position</td>
+                            <td>line.horizontal_highlights.label.position</td>
+                            <td>String</td>
+                            <td>'bottom-right'</td>
+                            <td>Line title position, possible values: top-left, top-right, bottom-left, bottom-right</td>
+                        </tr>
+                        <tr>
+                            <td>Line / Horizontal highlight label color</td>
+                            <td>data-line-horizontal-highlight-label-fill</td>
+                            <td>line.horizontal_highlights.label.fillStyle</td>
+                            <td>String</td>
+                            <td>#000</td>
+                            <td>Line title color.</td>
+                        </tr>
+                        <tr>
+                            <td>Line / Horizontal highlight label size</td>
+                            <td>data-line-horizontal-highlight-label-size</td>
+                            <td>line.horizontal_highlights.label.fontSize</td>
+                            <td>String</td>
+                            <td>'12px'</td>
+                            <td>Line title size.</td>
+                        </tr>
+                        <tr>
+                            <td>Line / Horizontal highlight label opacity</td>
+                            <td>data-line-horizontal-highlight-label-opacity</td>
+                            <td>line.horizontal_highlights.label.opacity</td>
+                            <td>Number</td>
+                            <td>0.2</td>
+                            <td>Line title opacity.</td>
+                        </tr>
+
+                        <tr>
+                            <td>Line / Show vertical segments</td>
+                            <td>data-line-show-vertical-segments</td>
+                            <td>line.vertical_segments.enabled</td>
+                            <td>Boolean</td>
+                            <td>true</td>
+                            <td>Show vertical segments.</td>
+                        </tr>
+                        <tr>
+                            <td>Line / Vertical segments</td>
+                            <td>data-line-vertical-segments</td>
+                            <td>line.vertical_segments.data</td>
+                            <td>String</td>
+                            <td>undefined</td>
+                            <td>Data structure to contain data for segments in format: start_value1;stop_value1;title;color,start_value2;stop_value2;title2;color</td>
+                        </tr>
+                        <tr>
+                            <td>Line / Vertical segments opacity</td>
+                            <td>data-line-vertical-segment-opacity</td>
+                            <td>line.vertical_segments.opacity</td>
+                            <td>Number</td>
+                            <td>0.1</td>
+                            <td>Segment opacity.</td>
+                        </tr>
+                        <tr>
+                            <td>Line / Vertical segment label position</td>
+                            <td>data-line-vertical-segment-label-position</td>
+                            <td>line.vertical_segments.label.position</td>
+                            <td>String</td>
+                            <td>'bottom-right'</td>
+                            <td>Segment title position, possible values: top, bottom, middle</td>
+                        </tr>
+                        <tr>
+                            <td>Line / Vertical segment label color</td>
+                            <td>data-line-vertical-segment-label-fill</td>
+                            <td>line.vertical_segments.label.fillStyle</td>
+                            <td>String</td>
+                            <td>#000</td>
+                            <td>Segment title color.</td>
+                        </tr>
+                        <tr>
+                            <td>Line / Vertical segment label size</td>
+                            <td>data-line-vertical-segment-label-size</td>
+                            <td>line.vertical_segments.label.fontSize</td>
+                            <td>String</td>
+                            <td>'12px'</td>
+                            <td>Segment title size.</td>
+                        </tr>
+                        <tr>
+                            <td>Line / Vertical segment label opacity</td>
+                            <td>data-line-vertical-segment-label-opacity</td>
+                            <td>line.vertical_segments.label.opacity</td>
+                            <td>Number</td>
+                            <td>0.2</td>
+                            <td>Segment title opacity.</td>
+                        </tr>
 
                         <tr>
                             <td>Line / Show error bars</td>
@@ -589,7 +788,22 @@ To see plugin in action, check <a href="http://www.cs.tut.fi/sgn/arg/dcase2016/t
                             <td>'top'</td>
                             <td>Tooltip position, possible values: <ul><li>average</li><li>top</li><li>bottom</li></ul></td>
                         </tr>
-
+                        <tr>
+                            <td>Line / Show legend</td>
+                            <td>data-line-show-legend</td>
+                            <td>line.legend.enabled</td>
+                            <td>Boolean</td>
+                            <td>true</td>
+                            <td>Show legend. </td>
+                        </tr>
+                        <tr>
+                            <td>Line / Legend position</td>
+                            <td>data-line-legend-position</td>
+                            <td>line.legend.position</td>
+                            <td>String</td>
+                            <td>'right'</td>
+                            <td>Legend position, possible values: <ul><li>top</li><li>bottom</li><li>left</li><li>right</li></ul></td>
+                        </tr>
 
 
                         <tr>
@@ -923,6 +1137,13 @@ To see plugin in action, check <a href="http://www.cs.tut.fi/sgn/arg/dcase2016/t
                             <td>String</td>
                             <td>undefined</td>
                             <td>String to be used as label for axis in charts (bar and scatter), overrides the default label (the column header).</td>
+                        </tr>
+                        <tr>
+                            <td>Axis scale type</td>
+                            <td>data-axis-scale</td>
+                            <td>String</td>
+                            <td>'linear'</td>
+                            <td>Axis scale type, possible values: <code>log</code>, <code>log_unit</code>, <code>log_exp</code>, <code>log10</code>, <code>log10_unit</code>, and <code>log10_exp</code>. <code>log10*</code> will show only exponents of 10, <code>*_unit</code> will shorten large numbers with units (k, M, T), <code>exp</code> will use exponent notation.</td>
                         </tr>
                     </tbody>
                 </table>
@@ -1432,6 +1653,11 @@ data:
                     <li><code>float2</code>, numeric, float with two decimal</li>
                     <li><code>float3</code>, numeric, float with three decimal</li>
                     <li><code>float4</code>, numeric, float with four decimal</li>
+                    <li><code>float1-exp</code>, numeric, scientific number format with one decimal</li>
+                    <li><code>float2-exp</code>, numeric, scientific number format with two decimal</li>
+                    <li><code>float3-exp</code>, numeric, scientific number format with three decimal</li>
+                    <li><code>float4-exp</code>, numeric, scientific number format with four decimal</li>
+                    <li><code>numeric-unit</code>, numeric, transform number to use nearest unit [k, M, B, T]</li>
                 </ul>
                 <table class="table datatable"
                        data-json="data4.json"
@@ -4150,16 +4376,17 @@ $( document ).ready(function() {
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/components/prism-markup.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/components/prism-json.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/components/prism-yaml.min.js"></script>
+
+    <script type="text/javascript" src="https://cdn.rawgit.com/toni-heittola/js-datatable/v1.1.0/js.min/bootstrap-table.min.js"></script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/toni-heittola/js-datatable/v1.1.0/js.min/bootstrap-table-filter-control.min.js"></script>
+
+    <script type="text/javascript" src="https://cdn.rawgit.com/toni-heittola/js-datatable/v1.1.0/js.min/Chart.bundle.min.js"></script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/toni-heittola/js-datatable/v1.1.0/js.min/js-yaml.min.js"></script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/toni-heittola/js-datatable/v1.1.0/js.min/moment.min.js"></script>
+
+    <script type="text/javascript" src="https://cdn.rawgit.com/toni-heittola/js-datatable/v1.1.0/js.min/datatable.min.js"></script>
+
     <!--
-    <script type="text/javascript" src="https://cdn.rawgit.com/toni-heittola/js-datatable/v1.0.4/js.min/bootstrap-table.min.js"></script>
-    <script type="text/javascript" src="https://cdn.rawgit.com/toni-heittola/js-datatable/v1.0.4/js.min/bootstrap-table-filter-control.min.js"></script>
-
-    <script type="text/javascript" src="https://cdn.rawgit.com/toni-heittola/js-datatable/v1.0.4/js.min/Chart.bundle.min.js"></script>
-    <script type="text/javascript" src="https://cdn.rawgit.com/toni-heittola/js-datatable/v1.0.4/js.min/js-yaml.min.js"></script>
-
-
-    <script type="text/javascript" src="https://cdn.rawgit.com/toni-heittola/js-datatable/v1.0.4/js.min/datatable.min.js"></script>
-    -->
     <script type="text/javascript" src="../js/bootstrap-table.js"></script>
     <script type="text/javascript" src="../js/bootstrap-table-filter-control.js"></script>
 
@@ -4168,7 +4395,7 @@ $( document ).ready(function() {
     <script type="text/javascript" src="../js.min/js-yaml.min.js"></script>
 
     <script type="text/javascript" src="../js/datatable.js"></script>
-    <script type="text/javascript" src="../js/datatable.js"></script>
+    -->
     <script type="text/javascript">
         $( document ).ready(function() {
             $('#js-customization-example').datatable({
