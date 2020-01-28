@@ -581,7 +581,16 @@
             for (var key in fp) {
                 var thisColumn = that.columns[$.fn.bootstrapTable.utils.getFieldIndex(that.columns, key)];
                 var fval = fp[key].toLowerCase();
+
                 var value = item[key].replace(/<(?:.|\n)*?>/gm, '');
+
+                // js-datatable fix to use tagged data
+                var fieldValue = $('<output>').append($.parseHTML(item[key].trim()));
+                var fieldValueList = [];
+                fieldValue.find('.label-tag').each(function (){
+                   fieldValueList.push($(this).text().trim().toLowerCase());
+                });
+                // -----------------
 
                 // Fix #142: search use formated data
                 if (thisColumn && thisColumn.searchFormatter) {
@@ -590,10 +599,19 @@
                     [value, item, i], value);
                 }
                 if (thisColumn.filterStrictSearch) {
-                    if (!($.inArray(key, that.header.fields) !== -1 &&
-                        (typeof value === 'string' || typeof value === 'number') &&
-                        value.toString().toLowerCase() === fval.toString().toLowerCase())) {
-                        return false;
+                    // js-datatable fix to use tagged data
+                    if (fieldValueList){
+                        if (!($.inArray(key, that.header.fields) !== -1 &&
+                            $.inArray(fval.toString().toLowerCase(), fieldValueList) !== -1 )) {
+                            return false;
+                        }
+                    }else{
+                        // -----------------
+                        if (!($.inArray(key, that.header.fields) !== -1 &&
+                            (typeof value === 'string' || typeof value === 'number') &&
+                            value.toString().toLowerCase() === fval.toString().toLowerCase())) {
+                            return false;
+                        }
                     }
                 } else if (thisColumn.filterStartsWithSearch) {
                   if (!($.inArray(key, that.header.fields) !== -1 &&

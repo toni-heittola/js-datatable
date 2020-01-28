@@ -31,8 +31,8 @@ def main(argv):
         '''))
     parser.add_argument('-v', '--version', action='version', version='%(prog)s ' + __version__)
     args = parser.parse_args()
-    print "JS and CSS minification"
-    print "-----------------------"
+    print("JS and CSS minification")
+    print("-----------------------")
 
     minify_css_directory2(source='css', target='css.min')
     minify_js_directory(source='js', target='js.min')
