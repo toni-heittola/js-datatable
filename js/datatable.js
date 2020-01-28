@@ -1404,7 +1404,7 @@ jQuery( document ).ready(function() {
                             type: 'scatterWithLine',
                             data: {
                                 datasets: [
-                                    $.extend(true, {}, self.options.inline_chart.line.data, {data: char_data})
+                                    jQuery.extend(true, {}, self.options.inline_chart.line.data, {data: char_data})
                                 ],
                                 hline: hline
                             },
@@ -7857,7 +7857,7 @@ jQuery( document ).ready(function() {
 
                 if (undefined == object) {
                     // Stores the new `Plugin` object in the calling element's jQuery `data` method
-                    var plugin = new Plugin(element, $.extend(true, {}, defaults, options), name);
+                    var plugin = new Plugin(element, jQuery.extend(true, {}, defaults, options), name);
                     $t.data(name, plugin);
                     //plugin.refreshTable();
                 }
@@ -8044,7 +8044,7 @@ function valueFormatter_plusminus(value, row, index, precision, muted){
             return item.value + ' ±' + item.value_plusminus;
         }
 
-    }else if($.isNumeric(value)){
+    }else if(jQuery.isNumeric(value)){
         return parseFloat(value).toFixed(precision);
 
     }else{
@@ -8095,7 +8095,7 @@ function valueFormatter_percentage_with_interval(value, row, index, precision, m
             return item.value + ' % (' + item.value_min + ' - ' + item.value_max + ')';
         }
 
-    }else if($.isNumeric(value)){
+    }else if(jQuery.isNumeric(value)){
         return parseFloat(value).toFixed(precision) + ' %';
 
     }else{
