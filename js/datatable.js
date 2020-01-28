@@ -763,7 +763,7 @@ jQuery( document ).ready(function() {
                     }
                 },
                 bar_vertical_tristate: {
-                    item_width: 6,
+                    item_width: 8,
                     colors:{
                         positive: 'rgba(0, 128, 0, 0.5)',
                         negative: 'rgba(255, 0, 0, 0.5)',
@@ -772,7 +772,7 @@ jQuery( document ).ready(function() {
                     data:{
                         borderWidth: 0,
                         binarizeValues: true,
-                        binarizationThreshold: 0.0,
+                        binarizationThreshold: 0.0
                     },
                     options:{
                         responsive: false,
