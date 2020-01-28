@@ -2,7 +2,7 @@
 // datatable jQuery plug-in
 // ========================================
 //
-// Copyright 2015-2018 Toni Heittola (toni.heittola@gmail.com)
+// Copyright 2015-2020 Toni Heittola (toni.heittola@gmail.com)
 // Released under the MIT license
 //
 // ========================================
