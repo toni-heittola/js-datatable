@@ -1143,7 +1143,7 @@ jQuery( document ).ready(function() {
                             min_y_value = data[i]['y_value'];
                         }
                     }
-                    var hline = $.extend(true, {}, self.options.inline_chart.bar_vertical.hline, {
+                    var hline = jQuery.extend(true, {}, self.options.inline_chart.bar_vertical.hline, {
                         enabled: false,
                         values: []
                     });
@@ -1177,7 +1177,7 @@ jQuery( document ).ready(function() {
                         data: {
                             labels: labels,
                             datasets: [
-                                $.extend(true, {}, self.options.inline_chart.bar_vertical.data, {
+                                jQuery.extend(true, {}, self.options.inline_chart.bar_vertical.data, {
                                     data: values,
                                     backgroundColor: bg_colors
                                 })
@@ -1279,11 +1279,11 @@ jQuery( document ).ready(function() {
                     var datasets = [];
                     if(values_.length){
                         datasets = [
-                            $.extend(true, {}, self.options.inline_chart.bar_vertical_tristate.data, {
+                            jQuery.extend(true, {}, self.options.inline_chart.bar_vertical_tristate.data, {
                                 data: values,
                                 backgroundColor: bg_colors
                             }),
-                            $.extend(true, {}, self.options.inline_chart.bar_vertical_tristate.data, {
+                            jQuery.extend(true, {}, self.options.inline_chart.bar_vertical_tristate.data, {
                                 data: values_,
                                 backgroundColor: bg_colors
                             })
@@ -1293,7 +1293,7 @@ jQuery( document ).ready(function() {
 
                     }else{
                         datasets = [
-                            $.extend(true, {}, self.options.inline_chart.bar_vertical_tristate.data, {
+                            jQuery.extend(true, {}, self.options.inline_chart.bar_vertical_tristate.data, {
                                 data: values,
                                 backgroundColor: bg_colors
                             })
@@ -1342,7 +1342,7 @@ jQuery( document ).ready(function() {
                         }
                     }
 
-                    var hline = $.extend(true, {}, self.options.inline_chart.line.hline, {
+                    var hline = jQuery.extend(true, {}, self.options.inline_chart.line.hline, {
                         enabled: false,
                         values: []
                     });
@@ -1431,7 +1431,7 @@ jQuery( document ).ready(function() {
                             data: {
                                 labels: labels,
                                 datasets: [
-                                    $.extend(true, {}, self.options.inline_chart.line.data, {
+                                    jQuery.extend(true, {}, self.options.inline_chart.line.data, {
                                         data: char_data
                                     })
                                 ],
@@ -1475,7 +1475,7 @@ jQuery( document ).ready(function() {
                         }
                     }
 
-                    var hline = $.extend(true, {}, self.options.inline_chart.line_steps.hline, {
+                    var hline = jQuery.extend(true, {}, self.options.inline_chart.line_steps.hline, {
                         enabled: false,
                         values: []
                     });
@@ -1547,7 +1547,7 @@ jQuery( document ).ready(function() {
                             type: 'scatterWithLine',
                             data: {
                                 datasets: [
-                                    $.extend(true, {}, self.options.inline_chart.line_steps.data, {data: char_data})
+                                    jQuery.extend(true, {}, self.options.inline_chart.line_steps.data, {data: char_data})
                                 ],
                                 hline: hline
                             },
@@ -1582,7 +1582,7 @@ jQuery( document ).ready(function() {
                             data: {
                                 labels: labels,
                                 datasets: [
-                                    $.extend(true, {}, self.options.inline_chart.line_steps.data, {
+                                    jQuery.extend(true, {}, self.options.inline_chart.line_steps.data, {
                                         data: char_data
                                     })
                                 ],
@@ -2081,7 +2081,7 @@ jQuery( document ).ready(function() {
             }
 
             // Combine parameters from defaults and given plugin options.
-            this.options = $.extend(true, {}, attributes, options);   // Plugin options object
+            this.options = jQuery.extend(true, {}, attributes, options);   // Plugin options object
 
             // Add bootstrap-table.js defaults if not set
             if(typeof this.$element.data('page-list') === 'undefined'){
@@ -2164,7 +2164,7 @@ jQuery( document ).ready(function() {
 
                     case 'numeric-unit':
                         window['valueFormatter_numeric_unit'+self.uniqueId] = function (value, row, index){
-                            if($.isNumeric(value)){
+                            if(jQuery.isNumeric(value)){
                                 value = parseFloat(value);
                                 return self.addNumberPrefix(value);
 
@@ -2786,7 +2786,7 @@ jQuery( document ).ready(function() {
                         var horizontal_line_value = this.getDataset().horizontal_line_value;
                         var horizontal_line_color = this.getDataset().horizontal_line_color;
 
-                        $.each( horizontal_line_value, function( index, value ) {
+                        jQuery.each( horizontal_line_value, function( index, value ) {
                             var y = yaxis.getPixelForValue(value);
                             ctx.save();
                             ctx.beginPath();
@@ -2830,7 +2830,7 @@ jQuery( document ).ready(function() {
                             colors = [colors];
                         }
 
-                        $.each( values, function( index, value ) {
+                        jQuery.each( values, function( index, value ) {
                             var y = yaxis.getPixelForValue(value);
                             ctx.save();
                             ctx.beginPath();
@@ -2887,7 +2887,7 @@ jQuery( document ).ready(function() {
                             horizontal_line_value = [horizontal_line_value];
                         }
 
-                        $.each( horizontal_line_value, function( index, value ) {
+                        jQuery.each( horizontal_line_value, function( index, value ) {
                             var y = yaxis.getPixelForValue(value);
                             ctx.save();
                             ctx.beginPath();
@@ -3230,7 +3230,7 @@ jQuery( document ).ready(function() {
                             var x_tipWidth_pixel = 1.0;
                             var y_tipWidth_pixel = 1.0;
 
-                            $.each( chart.getDatasetMeta(0).data, function( index, item ) {
+                            jQuery.each( chart.getDatasetMeta(0).data, function( index, item ) {
                                 var y = item._model.y;
                                 var x = item._model.x;
 
@@ -3355,7 +3355,7 @@ jQuery( document ).ready(function() {
                             horizontal_line_value = [horizontal_line_value];
                         }
 
-                        $.each( horizontal_line_value, function( index, value ) {
+                        jQuery.each( horizontal_line_value, function( index, value ) {
                             var y = yaxis.getPixelForValue(value);
                             ctx.save();
                             ctx.beginPath();
@@ -3703,7 +3703,7 @@ jQuery( document ).ready(function() {
                             var x_tipWidth_pixel = 1.0;
                             var y_tipWidth_pixel = 1.0;
 
-                            $.each( chart.getDatasetMeta(0).data, function( index, item ) {
+                            jQuery.each( chart.getDatasetMeta(0).data, function( index, item ) {
                                 var y = item._model.y;
                                 var x = item._model.x;
 
@@ -4090,7 +4090,7 @@ jQuery( document ).ready(function() {
 
                     if(chart.config.options.hasOwnProperty('error_bar') && chart.config.options.error_bar.enabled) {
                         if (data_min && data_max) {
-                            $.each( data, function( index, item ) {
+                            jQuery.each( data, function( index, item ) {
                                 if(item.hasOwnProperty('_model')){
                                     var y = item._model.y;
                                     var x = item._model.x;
@@ -4542,7 +4542,7 @@ jQuery( document ).ready(function() {
                         var $thead = self.$element.find('thead');
                         var $tbody = $('<tbody></tbody>');
 
-                        $.each( data, function( key, val ) {
+                        jQuery.each( data, function( key, val ) {
                             var $row = $('<tr></tr>');
                             if(val.hline){
                                 $row.attr('data-hline',true);
@@ -4567,7 +4567,7 @@ jQuery( document ).ready(function() {
                                 }
                             }
 
-                            $.each(self.field_meta, function(header_key, header_val){
+                            jQuery.each(self.field_meta, function(header_key, header_val){
                                 $($row).append($('<td></td>').text(val[header_val.field]));
                             });
                             $($tbody).append($row);
@@ -4596,7 +4596,7 @@ jQuery( document ).ready(function() {
                             var data = jsyaml.safeLoad(text);
                             var $thead = self.$element.find('thead');
                             var $tbody = $('<tbody></tbody>');
-                            $.each( data.data, function( key, val ) {
+                            jQuery.each( data.data, function( key, val ) {
                                 var $row = $('<tr></tr>');
                                 if(val.hline){
                                     $row.attr('data-hline',true);
@@ -4619,7 +4619,7 @@ jQuery( document ).ready(function() {
 
                                     }
                                 }
-                                $.each(self.field_meta, function(header_key, header_val){
+                                jQuery.each(self.field_meta, function(header_key, header_val){
                                     $($row).append($('<td></td>').text(val[header_val.field]));
                                 });
                                 $($tbody).append($row);
@@ -5184,10 +5184,10 @@ jQuery( document ).ready(function() {
             var table_options = this.$element.bootstrapTable('getOptions');
             var header_options = this.getHeaderOptions(table_options.sortName);
 
-            var options = $.extend(true, {}, this.options);
+            var options = jQuery.extend(true, {}, this.options);
 
             // Override global options with header wise options.
-            options.bar = $.extend(true, {}, options.bar, header_options.bar);
+            options.bar = jQuery.extend(true, {}, options.bar, header_options.bar);
 
             if (this.bar_chart){
                 this.bar_chart.destroy();
@@ -5747,9 +5747,9 @@ jQuery( document ).ready(function() {
             var table_options = $(this.element).bootstrapTable('getOptions');
 
             var header_options = this.getHeaderOptions(table_options.sortName);
-            var options = $.extend(true, {}, this.options);
+            var options = jQuery.extend(true, {}, this.options);
             // Override global options with header wise options.
-            options.line = $.extend(true, {}, options.line, header_options.line);
+            options.line = jQuery.extend(true, {}, options.line, header_options.line);
 
             // If no field is set, add current sort column.
             if(!options.line.fields){
@@ -5783,8 +5783,8 @@ jQuery( document ).ready(function() {
             var header_options = this.getHeaderOptions(sort_name);
 
             // Override global options with header wise options.
-            var options = $.extend(true, {}, this.options);
-            options.line = $.extend(true, {}, options.line, header_options.line);
+            var options = jQuery.extend(true, {}, this.options);
+            options.line = jQuery.extend(true, {}, options.line, header_options.line);
 
             // Get chart ctx
             var chart_ctx = document.getElementById(this.options.element.line.canvas.replace('#',''));
@@ -6975,7 +6975,7 @@ jQuery( document ).ready(function() {
                     return false;
                 }
             });
-            var set = $.grep(this.options.comparison.sets, function(e){ return e.title == set_label; });
+            var set = jQuery.grep(this.options.comparison.sets, function(e){ return e.title == set_label; });
             set = set[0];
 
             var set_fields = [];
@@ -6999,7 +6999,7 @@ jQuery( document ).ready(function() {
                 });
             }
 
-            var data_a = $.grep(table_data, function(e){
+            var data_a = jQuery.grep(table_data, function(e){
                 var id = e[self.options.comparison.row_id_field].replace(/(\r\n|\n|\r)/gm,"").trim();
                 return id == a_row;
             });
@@ -7007,7 +7007,7 @@ jQuery( document ).ready(function() {
                 data_a = data_a[0];
             }
 
-            var data_b = $.grep(table_data, function(e){
+            var data_b = jQuery.grep(table_data, function(e){
                 var id = e[self.options.comparison.row_id_field].replace(/(\r\n|\n|\r)/gm,"").trim();
                 return id == b_row;
             });
@@ -7271,7 +7271,7 @@ jQuery( document ).ready(function() {
             if(this.options.tag_mode =='global'){
                 var map = {};
                 var values = {};
-                $.each(this.field_meta, function(index, meta){
+                jQuery.each(this.field_meta, function(index, meta){
                     if(meta.tag){
                         $(self.element).find('tbody tr').each(function(){
                             var value = $(this).find('td').eq(index).text().trim();
@@ -7293,11 +7293,11 @@ jQuery( document ).ready(function() {
                         }
                     )
                 }
-                $.each(sortable, function(i, val){
+                jQuery.each(sortable, function(i, val){
                     map[val[0]] = i;
                 });
 
-                $.each(this.field_meta, function(index, meta){
+                jQuery.each(this.field_meta, function(index, meta){
                     if(meta.tag){
                         $(self.element).find('tbody tr').each(function(){
                             var value = $(this).find('td').eq(index).text().trim();
@@ -7317,7 +7317,7 @@ jQuery( document ).ready(function() {
 
             }else if(this.options.tag_mode =='column'){
                 var map = {};
-                $.each(this.field_meta, function(index, meta){
+                jQuery.each(this.field_meta, function(index, meta){
                     if(meta.tag){
                         var values = {};
                         $(self.element).find('tbody tr').each(function(){
@@ -7338,7 +7338,7 @@ jQuery( document ).ready(function() {
                                 }
                             )
                         }
-                        $.each(sortable, function(i, val){
+                        jQuery.each(sortable, function(i, val){
                             map[val[0]] = i;
                         });
                         $(self.element).find('tbody tr').each(function(){
@@ -7845,7 +7845,7 @@ jQuery( document ).ready(function() {
         $(this).data(pluginName).updateChart();
     }
 
-    $.fn[pluginName] = function (options) {
+    jQuery.fn[pluginName] = function (options) {
         var element = $(this);
         var name = pluginName;
 
@@ -7884,7 +7884,7 @@ function valueFormatter_generic_fixed(value, row, index, precision, muted, prefi
         postfix = ''
     }
 
-    if($.isNumeric(value)){
+    if(jQuery.isNumeric(value)){
         value = parseFloat(value);
         if(typeof precision !== 'undefined') {
             value = value.toFixed(precision);
@@ -7925,7 +7925,7 @@ function valueFormatter_generic_exponential(value, row, index, precision, muted,
         postfix = ''
     }
 
-    if($.isNumeric(value)){
+    if(jQuery.isNumeric(value)){
         value = parseFloat(value);
         if(typeof precision !== 'undefined') {
             value = value.toExponential(precision);
@@ -7995,7 +7995,7 @@ function valueFormatter_numeric_with_interval(value, row, index, precision, mute
             return item.value + ' (' + item.value_min + ' - ' + item.value_max + ')';
         }
 
-    }else if($.isNumeric(value)){
+    }else if(jQuery.isNumeric(value)){
         return parseFloat(value).toFixed(precision);
 
     }else{
@@ -8146,7 +8146,7 @@ function valueFormatter_percentage_plusminus(value, row, index, precision, muted
             return item.value + ' % ±' + item.value_plusminus;
         }
 
-    }else if($.isNumeric(value)){
+    }else if(jQuery.isNumeric(value)){
         return parseFloat(value).toFixed(precision) + ' %';
 
     }else{
