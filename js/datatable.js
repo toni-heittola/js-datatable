@@ -15,7 +15,7 @@ jQuery( document ).ready(function() {
 (function ($, window, document, undefined) {
     "use strict";
     var pluginName = 'datatable';
-    var pluginVersion = '1.1.0';
+    var pluginVersion = '1.1.1';
     window.datatable_unique_id = 0;
 
     // Defaults
