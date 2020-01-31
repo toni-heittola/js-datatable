@@ -171,6 +171,115 @@
                 </thead>
             </table>
 
+            <h2 id="datatable-html">HTML datatable</h2>
+            <table
+                    class="datatable table"
+                    data-show-chart="true"
+                    data-chart-position="bottom"
+                    data-id-field="code"
+                    data-rank-mode="grouped_muted"
+                    data-chart-modes="bar,scatter,line"
+                    data-chart-default-mode="bar"
+                    data-bar-hline="true"
+                    data-bar-show-horizontal-indicator="true"
+                    data-bar-show-vertical-indicator="false"
+                    data-scatter-x="value1"
+                    data-scatter-y="value2"
+
+                    data-sort-name="value1"
+                    data-sort-order="desc"
+                    data-pagination="false"
+                    data-show-pagination-switch="false"
+                    data-column-hover="true"
+
+                    data-bar-show-legend="true"
+                    data-bar-legend-position="bottom"
+            >
+                <thead>
+                    <tr>
+                        <th data-sortable="false" data-rank="true">
+                            <span class="text-muted">Rank</span>
+                        </th>
+                        <th class="sep-left-cell"
+                            data-chartable="false"
+                            data-field="code"
+                            data-sortable="true">
+                            System
+                        </th>
+                        <th class="sep-left-cell"
+                            data-field="value1"
+                            data-align="center"
+                            data-chartable="true"
+                            data-sortable="true"
+                            data-value-type="float1"
+                            data-chart-mode="bar"
+                            data-bar-show-xaxis="false"
+                            data-bar-sort-field="code"
+                            data-bar-horizontal-highlights="20;Value 1;#333,55;Value 2;#000"
+                            data-bar-horizontal-highlight-opacity="0.5"
+                            data-bar-horizontal-highlight-label-position="bottom-right"
+                            data-bar-horizontal-highlight-label-opacity="0.5"
+                            data-line-show-xaxis="false"
+                            data-line-xaxis-field="code"
+                            data-line-xaxis-sorted="true"
+                            data-line-extra-fields="value3"
+                            data-line-show-legend="false"
+                            data-line-horizontal-highlights="20;Value 1;#666,55;Value 2;#EEEEEE"
+                            data-line-horizontal-highlight-opacity="0.5"
+                            data-line-horizontal-highlight-label-position="bottom-right"
+                            data-line-horizontal-highlight-label-opacity="0.5"
+                        >
+                            Value1
+                        </th>
+                        <th class="sep-left-cell"
+                            data-field="value2"
+                            data-align="center"
+                            data-chartable="true"
+                            data-sortable="true"
+                            data-value-type="float1"
+                            data-chart-mode="bar"
+                            data-bar-show-xaxis="false"
+                            data-bar-sort-field="code"
+                            data-bar-horizontal-highlights="20;Value 1;#333,55;Value 2;#000"
+                            data-bar-horizontal-highlight-opacity="0.5"
+                            data-bar-horizontal-highlight-label-position="bottom-right"
+                            data-bar-horizontal-highlight-label-opacity="0.5"
+                            data-line-show-xaxis="false"
+                            data-line-xaxis-field="code"
+                            data-line-xaxis-sorted="true"
+                            data-line-extra-fields="value3"
+                            data-line-show-legend="false"
+                            data-line-horizontal-highlights="20;Value 1;#666,55;Value 2;#EEEEEE"
+                            data-line-horizontal-highlight-opacity="0.5"
+                            data-line-horizontal-highlight-label-position="bottom-right"
+                            data-line-horizontal-highlight-label-opacity="0.5"
+                        >
+                            Value2
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td></td>
+                        <td>A</td>
+                        <td>1.2</td>
+                        <td>2.5</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>B</td>
+                        <td>4.8</td>
+                        <td>7.1</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>C</td>
+                        <td>3.4</td>
+                        <td>6.2</td>
+                    </tr>
+                </tbody>
+            </table>
+
             <h2 id="datatable-hidden">Hide datatable</h2>
             <table
                     class="datatable table"
@@ -256,6 +365,12 @@
 
                     data-bar-show-legend="true"
                     data-bar-legend-position="bottom"
+                    data-inline-chart-max-width2="80"
+                    data-inline-bar-vertical-item-width2="1"
+                    data-inline-bar-vertical-line-width2="0.1"
+                    data-inline-bar-vertical-spacing2="1.0"
+                    data-inline-indicator-size="6"
+                    data-inline-indicator-type="circle"
             >
                 <thead>
                 <tr>
@@ -268,6 +383,29 @@
                         data-sortable="true"
                         data-visible="true">
                         System
+                    </th>
+
+                    <th class="sep-left-cell"
+                        data-align="center"
+                        data-beginatzero="false"
+                        data-chartable="true"
+                        data-field="line"
+                        data-sortable="true"
+                        data-visible="true"
+                        data-value-type="inline-indicator-binary-html">
+                        Indicator
+                    </th>
+                    <th class="sep-left-cell"
+                        data-align="center"
+                        data-beginatzero="false"
+                        data-chartable="true"
+                        data-field="line"
+                        data-sortable="true"
+                        data-visible="true"
+                        data-dataset-labels="Set A,Set B,Set C,Set D,Set E,Set F"
+                        data-dataset-colors="#5cb85c,#5bc0de,#f0ad4e,#d9534f"
+                        data-value-type="inline-bar-vertical">
+                        Inline <br>vertical <br>bar
                     </th>
                     <th class="sep-left-cell"
                         data-align="center"
@@ -336,9 +474,10 @@
                         data-line-height="350"
                         data-line-show-legend="true"
                         data-dataset-labels="Set A,Set B,Set C,Set D,Set E,Set F"
-                        data-dataset-colors2="#5cb85c,#5bc0de,#f0ad4e,#d9534f">
+                        data-dataset-colors="#5cb85c,#5bc0de,#f0ad4e,#d9534f">
                         Inline bar, percentage
                     </th>
+
                     <th class="sep-left-cell"
                         data-align="center"
                         data-beginatzero="false"
