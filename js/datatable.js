@@ -7825,6 +7825,10 @@ jQuery( document ).ready(function() {
         valueSorter: function (a, b, direction){
             direction = typeof direction !== 'undefined' ? direction : 'asc';
 
+            // Clean values
+            a = this.cleanFieldValue(a);
+            b = this.cleanFieldValue(b);
+
             // Value sorter which makes sure empty cells are last always.
             a = this.convertValue(a, -Infinity);
             b = this.convertValue(b, -Infinity);
@@ -8191,7 +8195,6 @@ function valueFormatter_float4_plusminus_muted(value, row, index){
     return valueFormatter_plusminus(value, row, index, 4, true);
 }
 
-
 // Value with interval and unit percentage
 function valueFormatter_percentage_with_interval(value, row, index, precision, muted){
     // Cell formatter for percentage values
@@ -8211,7 +8214,6 @@ function valueFormatter_percentage_with_interval(value, row, index, precision, m
         return value;
     }
 }
-
 
 function valueFormatter_int_percentage_with_interval(value, row, index){
     return valueFormatter_percentage_with_interval(value, row, index, 0, false);
@@ -8292,7 +8294,6 @@ function valueFormatter_float4_percentage_plusminus(value, row, index){
 function valueFormatter_float4_percentage_plusminus_muted(value, row, index){
     return valueFormatter_percentage_plusminus(value, row, index, 4, true);
 }
-
 
 function valueFormatter_list(value, row, index){
     var items = value.split(',');
