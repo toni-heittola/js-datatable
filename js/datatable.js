@@ -4421,7 +4421,7 @@ jQuery( document ).ready(function() {
                         active = ' class="active" ';
                         selected = '1';
                     }
-                    scatter_div += '<li'+active+'><a data-field="'+field+'" data-postfix="'+postfix+'" data-reversed="'+reversed+'" data-axis-label="'+axis_label+'" data-selected="'+selected+'" href="#" onclick="return false;">'+$.trim($(this).text())+'</a></li>'
+                    scatter_div += '<li'+active+'><a data-field="'+field+'" data-postfix="'+postfix+'" data-reversed="'+reversed+'" data-axis-label="'+axis_label+'" data-selected="'+selected+'" href="#" onclick="return false;">'+jQuery.trim($(this).text())+'</a></li>'
                 });
                 scatter_div += '</ul>';
                 scatter_div += '</div>';
@@ -4455,7 +4455,7 @@ jQuery( document ).ready(function() {
                         active = ' class="active" ';
                         selected = '1';
                     }
-                    scatter_div += '<li'+active+'><a data-field="'+field+'" data-postfix="'+postfix+'" data-reversed="'+reversed+'" data-axis-label="'+axis_label+'" data-selected="'+selected+'" href="#" onclick="return false;">'+$.trim($(this).text())+'</a></li>'
+                    scatter_div += '<li'+active+'><a data-field="'+field+'" data-postfix="'+postfix+'" data-reversed="'+reversed+'" data-axis-label="'+axis_label+'" data-selected="'+selected+'" href="#" onclick="return false;">'+jQuery.trim($(this).text())+'</a></li>'
                 });
                 scatter_div += '</ul>';
                 scatter_div += '</div>';
