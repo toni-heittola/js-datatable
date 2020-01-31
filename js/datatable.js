@@ -8303,14 +8303,6 @@ function valueFormatter_list(value, row, index){
     }
 }
 
-function valueFormatter_inline_bar_vertical(value, row, index){
-    var items = value.split(',');
-    var html = '';
-    if(items.length > 0) {
-        html += '<canvas class="datatable-inline-bar-vertical" data-value="'+value+'"></canvas>';
-    }
-    return html;
-}
 function valueFormatter_inline_bar_vertical_tristate(value, row, index){
     var items = value.split(',');
     var html = '';
