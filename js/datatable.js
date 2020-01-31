@@ -1118,8 +1118,28 @@ jQuery( document ).ready(function() {
 
                 // Make inline charts
                 $(element).find('.datatable-inline-bar-vertical').each(function(){
+                    var dataset_labels = [];
+                    if(typeof $(this).data('dataset-labels') !== 'undefined'){
+                        dataset_labels = $(this).data('dataset-labels').split(',')
+                    }
+                    var dataset_colors = [];
+                    if(typeof $(this).data('dataset-colors') !== 'undefined'){
+                        dataset_colors = $(this).data('dataset-colors').split(',')
+                    }
+
                     var data = self.parseDataList($(this).data('value'));
-                    $(this).attr("width", data.length * (self.options.inline_chart.bar_vertical.item_width + 3) );
+                    var width = self.options.inline_chart.max_width;
+                    if(self.options.inline_chart.bar_vertical.item_width){
+                        width = data.length * (self.options.inline_chart.bar_vertical.item_width + 3);
+                        self.options.inline_chart.bar_vertical.options.scales.xAxes[0].barThickness = self.options.inline_chart.bar_vertical.item_width
+                    }
+
+                    if(width > self.options.inline_chart.max_width){
+                        width = self.options.inline_chart.max_width;
+                        self.options.inline_chart.bar_vertical.options.scales.xAxes[0].barThickness = (self.options.inline_chart.max_width-3) / data.length
+                    }
+
+                    $(this).attr("width", width );
                     $(this).attr("height", self.options.inline_chart.height);
                     var values = [];
                     var labels = [];
@@ -1128,12 +1148,26 @@ jQuery( document ).ready(function() {
                     var max_y_value = -Infinity;
                     for (var i = 0; i < data.length; i++) {
                         values.push(parseFloat(data[i]['y_value']));
-                        labels.push(i);
+
+                        var current_color = null;
                         if(data[i]['color']){
-                            bg_colors.push(data[i]['color']);
+                            current_color = data[i]['color'];
+                        }else if(i < dataset_colors.length && dataset_colors[i]){
+                            current_color = dataset_colors[i];
                         }else{
-                            bg_colors.push(self.options.inline_chart.bar_vertical.colors.default);
+                            current_color = self.options.inline_chart.bar_vertical.colors.default;
                         }
+                        bg_colors.push(current_color);
+
+                        var current_label = null;
+                        if(data[i]['label']){
+                            current_label = data[i]['label'];
+                        }else if(i < dataset_labels.length && dataset_labels[i]){
+                            current_label = dataset_labels[i];
+                        }else{
+                            current_label = i;
+                        }
+                        labels.push(current_label);
 
                         if(data[i]['y_value'] > max_y_value){
                             max_y_value = data[i]['y_value'];
@@ -1189,7 +1223,18 @@ jQuery( document ).ready(function() {
                 });
                 $(element).find('.datatable-inline-bar-vertical-tristate').each(function(){
                     var data = self.parseDataList($(this).data('value'));
-                    $(this).attr("width", data.length * (self.options.inline_chart.bar_vertical.item_width + 3) );
+                    var width = self.options.inline_chart.max_width;
+                    if(self.options.inline_chart.bar_vertical_tristate.item_width){
+                        width = data.length * (self.options.inline_chart.bar_vertical_tristate.item_width + 3);
+                        self.options.inline_chart.bar_vertical_tristate.options.scales.xAxes[0].barThickness = self.options.inline_chart.bar_vertical_tristate.item_width
+                    }
+
+                    if(width > self.options.inline_chart.max_width){
+                        width = self.options.inline_chart.max_width;
+                        self.options.inline_chart.bar_vertical_tristate.options.scales.xAxes[0].barThickness = (self.options.inline_chart.max_width-3) / data.length
+                    }
+
+                    $(this).attr("width", width);
                     $(this).attr("height", self.options.inline_chart.height);
 
                     var values = [];
@@ -1746,6 +1791,43 @@ jQuery( document ).ready(function() {
                 attributes.chart.position = this.$element.data('chart-position');
             }
 
+            // Inline visualization
+            if(typeof this.$element.data('inline-chart-height') !== 'undefined'){
+                attributes.inline_chart.height = this.$element.data('inline-chart-height');
+            }
+            if(typeof this.$element.data('inline-chart-max-width') !== 'undefined'){
+                attributes.inline_chart.max_width = this.$element.data('inline-chart-max-width');
+            }
+
+            // Inline visualization / bar vertical
+            if(typeof this.$element.data('inline-bar-vertical-line-width') !== 'undefined'){
+                attributes.inline_chart.bar_vertical.data.borderWidth = this.$element.data('inline-bar-vertical-line-width');
+            }
+            if(typeof this.$element.data('inline-bar-vertical-spacing') !== 'undefined'){
+                attributes.inline_chart.bar_vertical.options.scales.xAxes[0].barPercentage = this.$element.data('inline-bar-vertical-spacing');
+                attributes.inline_chart.bar_vertical.options.scales.xAxes[0].categoryPercentage = this.$element.data('inline-bar-vertical-spacing');
+            }
+            if(typeof this.$element.data('inline-bar-vertical-item-width') !== 'undefined'){
+                attributes.inline_chart.bar_vertical.item_width = this.$element.data('inline-bar-vertical-item-width');
+            }
+            // Inline visualization / bar vertical tristate
+            if(typeof this.$element.data('inline-bar-vertical-tristate-line-width') !== 'undefined'){
+                attributes.inline_chart.bar_vertical.data.borderWidth = this.$element.data('inline-bar-vertical-tristate-line-width');
+            }
+            if(typeof this.$element.data('inline-bar-vertical-tristate-spacing') !== 'undefined'){
+                attributes.inline_chart.bar_vertical.options.scales.xAxes[0].barPercentage = this.$element.data('inline-bar-vertical-tristate-spacing');
+                attributes.inline_chart.bar_vertical.options.scales.xAxes[0].categoryPercentage = this.$element.data('inline-bar-vertical-tristate-spacing');
+            }
+            if(typeof this.$element.data('inline-bar-vertical-tristate-item-width') !== 'undefined'){
+                attributes.inline_chart.bar_vertical_tristate.item_width = this.$element.data('inline-bar-vertical-tristate-item-width');
+            }
+            // Inline visualization / value indicator
+            if(typeof this.$element.data('inline-indicator-size') !== 'undefined'){
+                attributes.inline_chart.value_indicator.svg.size = this.$element.data('inline-indicator-size');
+            }
+            if(typeof this.$element.data('inline-indicator-type') !== 'undefined'){
+                attributes.inline_chart.value_indicator.svg.type = this.$element.data('inline-indicator-type');
+            }
             // Bar
             if(typeof this.$element.data('bar-height') !== 'undefined'){
                 attributes.bar.height = this.$element.data('bar-height');
@@ -2124,6 +2206,7 @@ jQuery( document ).ready(function() {
             var self = this;
 
             $(this.element).find('thead tr th[data-value-type]').each(function(){
+                var that = this;
                 var value_type = $(this).data('value-type');
 
                 if(value_type.includes('percentage')){
@@ -2405,7 +2488,7 @@ jQuery( document ).ready(function() {
                     case 'inline-bar-horizontal-percentage':
                         window['valueFormatter_inline_bar_horizontal_percentage'+self.uniqueId] = function (value, row, index){
                             var value_formatter = 'valueFormatter_float1_percentage';
-                            var header = $(self.element).find('thead tr th[data-field=\"'+this.field+'\"]');
+                            var header = $(that);
 
                             var dataset_labels = [];
                             if(typeof header.data('dataset-labels') !== 'undefined'){
@@ -2470,7 +2553,7 @@ jQuery( document ).ready(function() {
                     case 'inline-bar-horizontal-thin-percentage':
                         window['valueFormatter_inline_bar_horizontal_thin_percentage'+self.uniqueId] = function (value, row, index){
                             var value_formatter = 'valueFormatter_float1_percentage';
-                            var header = $(self.element).find('thead tr th[data-field=\"'+this.field+'\"]');
+                            var header = $(that);
 
                             var dataset_labels = [];
                             if(typeof header.data('dataset-labels') !== 'undefined'){
@@ -2512,11 +2595,19 @@ jQuery( document ).ready(function() {
 
                                     html += '<div class="progress-bar" role="progressbar" data-percentage="100" aria-valuenow="'+percentage+'" aria-valuemin="0" aria-valuemax="100" style="width: '+percentage+'%;background-color:'+current_color+'" ';
 
+                                    var current_label = null;
                                     if(data[i]['label']){
-                                        html += 'data-toggle="tooltip" data-placement="bottom" title="'+data[i]['label']+ ': <strong>'+value_string+'</strong>" ';
-                                    }else{
-                                        html += 'data-toggle="tooltip" data-placement="bottom" title="<strong>'+value_string+'</strong>" ';
+                                        current_label = data[i]['label'];
+                                    }else if(i < dataset_labels.length && dataset_labels[i]){
+                                        current_label = dataset_labels[i];
                                     }
+
+                                    if(current_label){
+                                        html += 'data-toggle="tooltip" data-placement="bottom" title="' + current_label + ': <strong>'+value_string+'</strong>" ';
+                                    }else{
+                                        html += 'data-toggle="tooltip" data-placement="bottom" title="<strong>' + value_string + '</strong>" ';
+                                    }
+
                                     html += '>';
                                     html += '</div>';
                                 }
@@ -2528,28 +2619,46 @@ jQuery( document ).ready(function() {
                         break;
 
                     case 'inline-bar-vertical':
-                        $(this).attr('data-formatter', 'valueFormatter_inline_bar_vertical');
-                        $(this).addClass('canvas-cell');
+
+                        window['valueFormatter_inline_bar_vertical'+self.uniqueId] = function (value, row, index){
+                            var header = $(that);
+
+                            var items = value.split(',');
+                            var html = '';
+                            if(items.length > 0) {
+                                html += '<canvas class="datatable-inline-bar-vertical" data-value="'+value+'"';
+                                if(typeof header.data('dataset-labels') !== 'undefined'){
+                                    html += ' data-dataset-labels="' + header.data('dataset-labels') + '" '
+                                }
+                                if(typeof header.data('dataset-colors') !== 'undefined'){
+                                    html += ' data-dataset-colors="' + header.data('dataset-colors') + '" '
+                                }
+                                html += '></canvas>';
+                            }
+                            return html;
+                        };
+                        $(this).attr('data-formatter', 'valueFormatter_inline_bar_vertical'+self.uniqueId);
+                        //$(this).addClass('canvas-cell');
                         break;
 
                     case 'inline-bar-vertical-tristate':
                         $(this).attr('data-formatter', 'valueFormatter_inline_bar_vertical_tristate');
-                        $(this).addClass('canvas-cell');
+                        //$(this).addClass('canvas-cell');
                         break;
 
                     case 'inline-line':
                         $(this).attr('data-formatter', 'valueFormatter_inline_line');
-                        $(this).addClass('canvas-cell');
+                        //$(this).addClass('canvas-cell');
                         break;
 
                     case 'inline-line-steps':
                         $(this).attr('data-formatter', 'valueFormatter_inline_line_steps');
-                        $(this).addClass('canvas-cell');
+                        //$(this).addClass('canvas-cell');
                         break;
 
                     case 'inline-pie':
                         $(this).attr('data-formatter', 'valueFormatter_inline_pie');
-                        $(this).addClass('canvas-cell');
+                        //$(this).addClass('canvas-cell');
                         break;
 
                     case 'inline-indicator-value':
@@ -2577,7 +2686,7 @@ jQuery( document ).ready(function() {
                         };
 
                         $(this).attr('data-formatter', 'valueFormatter_inline_indicator_value_svg'+self.uniqueId);
-                        $(this).addClass('canvas-cell');
+                        //$(this).addClass('canvas-cell');
                         break;
 
                     case 'inline-indicator-value-html':
@@ -2611,7 +2720,7 @@ jQuery( document ).ready(function() {
                         };
 
                         $(this).attr('data-formatter', 'valueFormatter_inline_indicator_value_html'+self.uniqueId);
-                        $(this).addClass('canvas-cell');
+                        //$(this).addClass('canvas-cell');
                         break;
 
                     case 'inline-indicator-binary':
@@ -2640,7 +2749,7 @@ jQuery( document ).ready(function() {
                         };
 
                         $(this).attr('data-formatter', 'valueFormatter_inline_indicator_binary_svg'+self.uniqueId);
-                        $(this).addClass('canvas-cell');
+                        //$(this).addClass('canvas-cell');
                         break;
 
                     case 'inline-indicator-binary-html':
@@ -2674,7 +2783,7 @@ jQuery( document ).ready(function() {
                         };
 
                         $(this).attr('data-formatter', 'valueFormatter_inline_binary_html'+self.uniqueId);
-                        $(this).addClass('canvas-cell');
+                        //$(this).addClass('canvas-cell');
                         break;
 
                     case 'inline-indicator-tristate':
@@ -2710,7 +2819,7 @@ jQuery( document ).ready(function() {
                         };
 
                         $(this).attr('data-formatter', 'valueFormatter_inline_indicator_tristate_svg'+self.uniqueId);
-                        $(this).addClass('canvas-cell');
+                        //$(this).addClass('canvas-cell');
                         break;
 
                     case 'inline-indicator-tristate-html':
@@ -2750,7 +2859,7 @@ jQuery( document ).ready(function() {
                         };
 
                         $(this).attr('data-formatter', 'valueFormatter_inline_tristate_html'+self.uniqueId);
-                        $(this).addClass('canvas-cell');
+                        //$(this).addClass('canvas-cell');
                         break;
 
                     default:
@@ -3829,7 +3938,7 @@ jQuery( document ).ready(function() {
                             colors = [colors];
                         }
 
-                        $.each( values, function( index, value ) {
+                        jQuery.each( values, function( index, value ) {
                             var y = yaxis.getPixelForValue(value);
                             ctx.save();
                             ctx.beginPath();
@@ -3889,7 +3998,7 @@ jQuery( document ).ready(function() {
                             colors = [colors];
                         }
 
-                        $.each( values, function( index, value ) {
+                        jQuery.each( values, function( index, value ) {
                             var y = yaxis.getPixelForValue(value);
                             ctx.save();
                             ctx.beginPath();
@@ -4581,7 +4690,7 @@ jQuery( document ).ready(function() {
                     }
                 });
 
-            }else if(typeof $(element).data('yaml') !== 'undefined'){
+            }else if(typeof this.$element.data('yaml') !== 'undefined'){
                 // Populate table from yaml data file
                 var yaml_datafile = this.$element.data('yaml');
 
@@ -7489,7 +7598,8 @@ jQuery( document ).ready(function() {
                 html += 'onmouseover="evt.target.setAttribute(\'r\', \'' + (size/2 + hover_increase) + '\');" onmouseout="evt.target.setAttribute(\'r\', \'' + (size/2) + '\');" ';
 
             }else if(type=='rect'){
-                html += 'rect rx="'+(size/6)+'" ry="'+(size/6)+'" ';
+                var rounding = size/6;
+                html += 'rect rx="'+rounding+'" ry="'+rounding+'" ';
                 html += 'x="' + ( hover_increase) + '" ';
                 if(use_vertical_offset) {
                     html += 'y="' + (hover_increase+vertical_offset) + '" ';
@@ -7730,7 +7840,7 @@ jQuery( document ).ready(function() {
             }
         },
         convertValue: function(value, default_value){
-            if (moment(value, this.options.time.valid_formats, true).isValid() && !$.isNumeric(value)){
+            if (moment(value, this.options.time.valid_formats, true).isValid() && !jQuery.isNumeric(value)){
                 // We have date
                 value = moment(value).unix();
 
