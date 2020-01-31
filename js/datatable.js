@@ -698,7 +698,7 @@ jQuery( document ).ready(function() {
                     ]
                 },
                 bar_vertical: {
-                    item_width: 6,
+                    item_width: null,
                     hline: {
                         enabled: false,
                         values: null,
@@ -756,7 +756,7 @@ jQuery( document ).ready(function() {
                             xAxes: [
                                 {
                                     display: false,
-                                    barThickness : 8
+                                    barPercentage: 1.00
                                 }
                             ]
                         }
@@ -816,8 +816,7 @@ jQuery( document ).ready(function() {
                             xAxes: [
                                 {
                                     display: false,
-                                    barThickness : 8,
-                                    ticks: {}
+                                    barPercentage: 1.00
                                 }
                             ]
                         }
