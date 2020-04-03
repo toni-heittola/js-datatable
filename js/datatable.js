@@ -546,6 +546,7 @@ jQuery( document ).ready(function() {
             element: {
                 chart_mode_selector: 'chart_mode_selector',
                 table_mode_selector: 'table_mode_selector',
+                loader: '#loader',
                 bar: {
                     div: '#bar_div',
                     canvas: '#bar_canvas'
@@ -1742,6 +1743,11 @@ jQuery( document ).ready(function() {
             // Read field meta information, used for tags
             this.initFieldMeta();
 
+            this.options.element.loader = '#loader'+this.uniqueId;
+            var $div = $('<div>', {id: 'loader'+this.uniqueId, 'class': 'text-center text-muted'});
+            $div.append('<h1><span class="glyphicon glyphicon-cog glyphicon-spin"></span></h1>');
+            $div.insertAfter(this.$element);
+
             // Load data into table
             this.loadTableData();
         },
@@ -2874,6 +2880,7 @@ jQuery( document ).ready(function() {
             // Load bootstrap-table
             $(this.element).bootstrapTable();
             $(this.element).trigger('post-body.bs.table');
+            $(this.options.element.loader).hide();
         },
         extendChartjsLibrary: function(){
             var self = this;
