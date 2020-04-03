@@ -2236,6 +2236,24 @@ jQuery( document ).ready(function() {
                         $(this).attr('data-formatter','valueFormatter_float4');
                         break;
 
+                    case 'int-plus':
+                        $(this).attr('data-formatter','valueFormatter_int_plus');
+                        break;
+
+                    case 'float1-plus':
+                        $(this).attr('data-formatter','valueFormatter_float1_plus');
+                        break;
+                    case 'float2-plus':
+                        $(this).attr('data-formatter','valueFormatter_float2_plus');
+                        break;
+                    case 'float3-plus':
+                        $(this).attr('data-formatter','valueFormatter_float3_plus');
+                        break;
+                    case 'float4-plus':
+                        $(this).attr('data-formatter','valueFormatter_float4_plus');
+                        break;
+
+
                     // large integers
                     case 'float1-exp':
                         $(this).attr('data-formatter','valueFormatter_float1_exp');
@@ -2332,17 +2350,61 @@ jQuery( document ).ready(function() {
                     case 'int-percentage':
                         $(this).attr('data-formatter','valueFormatter_int_percentage');
                         break;
+                    case 'int-percentage-muted':
+                        $(this).attr('data-formatter','valueFormatter_int_percentage_muted');
+                        break;
                     case 'float1-percentage':
                         $(this).attr('data-formatter','valueFormatter_float1_percentage');
                         break;
                     case 'float2-percentage':
                         $(this).attr('data-formatter','valueFormatter_float2_percentage');
                         break;
+                    case 'float2-percentage-muted':
+                        $(this).attr('data-formatter','valueFormatter_float2_percentage_muted');
+                        break;
                     case 'float3-percentage':
                         $(this).attr('data-formatter','valueFormatter_float3_percentage');
                         break;
+                    case 'float3-percentage-muted':
+                        $(this).attr('data-formatter','valueFormatter_float3_percentage_muted');
+                        break;
                     case 'float4-percentage':
                         $(this).attr('data-formatter','valueFormatter_float4_percentage');
+                        break;
+                    case 'float4-percentage-muted':
+                        $(this).attr('data-formatter','valueFormatter_float4_percentage_muted');
+                        break;
+
+                    // decibels
+                    case 'int-db':
+                        $(this).attr('data-formatter','valueFormatter_int_db');
+                        break;
+                    case 'int-db-muted':
+                        $(this).attr('data-formatter','valueFormatter_int_db_muted');
+                        break;
+                    case 'float1-db':
+                        $(this).attr('data-formatter','valueFormatter_float1_db');
+                        break;
+                    case 'float1-db-muted':
+                        $(this).attr('data-formatter','valueFormatter_float1_db_muted');
+                        break;
+                    case 'float2-db':
+                        $(this).attr('data-formatter','valueFormatter_float2_db');
+                        break;
+                    case 'float2-db-muted':
+                        $(this).attr('data-formatter','valueFormatter_float2_db_muted');
+                        break;
+                    case 'float3-db':
+                        $(this).attr('data-formatter','valueFormatter_float3_db');
+                        break;
+                    case 'float3-db-muted':
+                        $(this).attr('data-formatter','valueFormatter_float3_db_muted');
+                        break;
+                    case 'float4-db':
+                        $(this).attr('data-formatter','valueFormatter_float4_db');
+                        break;
+                    case 'float4-db-muted':
+                        $(this).attr('data-formatter','valueFormatter_float4_db_muted');
                         break;
 
                     // percentage with interval
@@ -7996,18 +8058,25 @@ jQuery( document ).ready(function() {
 // ========================================
 // Helper functions for bootstrap-table.js
 // ========================================
-function valueFormatter_generic_fixed(value, row, index, precision, muted, prefix, postfix){
+function valueFormatter_generic_fixed(value, row, index, precision, muted, prefix, postfix, plus){
     if(typeof prefix === 'undefined') {
         prefix = ''
     }
     if(typeof postfix === 'undefined') {
         postfix = ''
     }
-
+    if(muted){
+        if(postfix){
+            postfix = '<span class="text-muted">'+postfix+'</span>';
+        }
+    }
     if(jQuery.isNumeric(value)){
         value = parseFloat(value);
         if(typeof precision !== 'undefined') {
             value = value.toFixed(precision);
+        }
+        if(plus && value >= 0){
+            value = '+' + value;
         }
         return prefix + value + postfix;
 
@@ -8035,6 +8104,23 @@ function valueFormatter_float3(value, row, index){
 }
 function valueFormatter_float4(value, row, index){
     return valueFormatter_generic_fixed(value, row, index, 4);
+}
+
+function valueFormatter_int_plus(value, row, index){
+    return valueFormatter_generic_fixed(value, row, index, 0, false, undefined, undefined, true);
+}
+
+function valueFormatter_float1_plus(value, row, index){
+    return valueFormatter_generic_fixed(value, row, index, 1, false, undefined, undefined, true);
+}
+function valueFormatter_float2_plus(value, row, index){
+    return valueFormatter_generic_fixed(value, row, index, 2, false, undefined, undefined, true);
+}
+function valueFormatter_float3_plus(value, row, index){
+    return valueFormatter_generic_fixed(value, row, index, 3, false, undefined, undefined, true);
+}
+function valueFormatter_float4_plus(value, row, index){
+    return valueFormatter_generic_fixed(value, row, index, 4, false, undefined, undefined, true);
 }
 
 function valueFormatter_generic_exponential(value, row, index, precision, muted, prefix, postfix){
@@ -8074,8 +8160,14 @@ function valueFormatter_float4_exp(value, row, index) {
 function valueFormatter_int_percentage(value, row, index){
     return valueFormatter_generic_fixed(value, row, index, 0, false, undefined, ' %');
 }
+function valueFormatter_int_percentage_muted(value, row, index){
+    return valueFormatter_generic_fixed(value, row, index, 0, true, undefined, ' %');
+}
 function valueFormatter_float1_percentage(value, row, index){
     return valueFormatter_generic_fixed(value, row, index, 1, false, undefined, ' %');
+}
+function valueFormatter_float1_percentage_muted(value, row, index){
+    return valueFormatter_generic_fixed(value, row, index, 1, true, undefined, ' %');
 }
 function valueFormatter_float2_percentage(value, row, index){
     return valueFormatter_generic_fixed(value, row, index, 2, false, undefined, ' %');
@@ -8083,8 +8175,46 @@ function valueFormatter_float2_percentage(value, row, index){
 function valueFormatter_float3_percentage(value, row, index){
     return valueFormatter_generic_fixed(value, row, index, 3, false, undefined, ' %');
 }
+function valueFormatter_float3_percentage_muted(value, row, index){
+    return valueFormatter_generic_fixed(value, row, index, 3, true, undefined, ' %');
+}
 function valueFormatter_float4_percentage(value, row, index){
     return valueFormatter_generic_fixed(value, row, index, 4, false, undefined, ' %');
+}
+function valueFormatter_float4_percentage_muted(value, row, index){
+    return valueFormatter_generic_fixed(value, row, index, 4, true, undefined, ' %');
+}
+
+// decibels
+function valueFormatter_int_db(value, row, index){
+    return valueFormatter_generic_fixed(value, row, index, 0, false, undefined, ' dB');
+}
+function valueFormatter_int_db_muted(value, row, index){
+    return valueFormatter_generic_fixed(value, row, index, 0, true, undefined, ' dB');
+}
+function valueFormatter_float1_db(value, row, index){
+    return valueFormatter_generic_fixed(value, row, index, 1, false, undefined, ' dB');
+}
+function valueFormatter_float1_db_muted(value, row, index){
+    return valueFormatter_generic_fixed(value, row, index, 1, true, undefined, ' dB');
+}
+function valueFormatter_float2_db(value, row, index){
+    return valueFormatter_generic_fixed(value, row, index, 2, false, undefined, ' dB');
+}
+function valueFormatter_float2_db_muted(value, row, index){
+    return valueFormatter_generic_fixed(value, row, index, 2, true, undefined, ' dB');
+}
+function valueFormatter_float3_db(value, row, index){
+    return valueFormatter_generic_fixed(value, row, index, 3, false, undefined, ' dB');
+}
+function valueFormatter_float3_db_muted(value, row, index){
+    return valueFormatter_generic_fixed(value, row, index, 3, true, undefined, ' dB');
+}
+function valueFormatter_float4_db(value, row, index){
+    return valueFormatter_generic_fixed(value, row, index, 4, false, undefined, ' dB');
+}
+function valueFormatter_float4_db_muted(value, row, index){
+    return valueFormatter_generic_fixed(value, row, index, 4, true, undefined, ' dB');
 }
 
 // error values
