@@ -49,8 +49,8 @@ jQuery( document ).ready(function() {
             },
             animation: {
                 duration: 100,
-                show_speed: 200,
-                hide_speed: 200
+                show_speed: 100,
+                hide_speed: 100
             },
             time: {
                 valid_formats: [
@@ -96,10 +96,141 @@ jQuery( document ).ready(function() {
             chart: {
                 position: 'top'
             },
+            colors: {
+                valid: ['active', 'success', 'info', 'warning', 'danger'],
+                default: {
+                    border: {
+                        normal: 'rgba(233, 144, 2, 0.5)',
+                        hover: 'rgba(233, 144, 2, 1)'
+                    },
+                    bg: {
+                        normal: 'rgba(233, 144, 2, 0.2)',
+                        hover: 'rgba(233, 144, 2, 0.4)'
+                    }
+                },
+                active: {
+                    border: {
+                        normal: 'rgba(160, 160, 160, 0.5)',
+                        hover: 'rgba(160, 160, 160, 1)'
+                    },
+                    bg: {
+                        normal: 'rgba(160, 160, 160, 0.4)',
+                        hover: 'rgba(160, 160, 160, 0.6)'
+                    }
+                },
+                success: {
+                    border: {
+                        normal: 'rgba(92, 184, 92, 0.5)',
+                        hover: 'rgba(92, 184, 92, 1)'
+                    },
+                    bg: {
+                        normal: 'rgba(92, 184, 92, 0.4)',
+                        hover: 'rgba(92, 184, 92, 0.6)'
+                    }
+                },
+                info: {
+                    border: {
+                        normal: 'rgba(112, 187, 225, 0.5)',
+                        hover: 'rgba(112, 187, 225, 1)'
+                    },
+                    bg: {
+                        normal: 'rgba(112, 187, 225, 0.4)',
+                        hover: 'rgba(112, 187, 225, 0.6)'
+                    }
+                },
+                warning: {
+                    border: {
+                        normal: 'rgba(240, 173, 78, 0.5)',
+                        hover: 'rgba(240, 173, 78, 1)'
+                    },
+                    bg: {
+                        normal: 'rgba(240, 173, 78, 0.4)',
+                        hover: 'rgba(240, 173, 78, 0.6)'
+                    }
+                },
+                danger: {
+                    border: {
+                        normal: 'rgba(217, 83, 79, 0.5)',
+                        hover: 'rgba(217, 83, 79, 1)'
+                    },
+                    bg: {
+                        normal: 'rgba(217, 83, 79, 0.4)',
+                        hover: 'rgba(217, 83, 79, 0.6)'
+                    }
+                },
+                background: 'rgba(251, 85, 85, 0.8)',
+                schemes: {
+                    default: ['#1f77b4','#17becf','#ff7f0e','#ffbb78','#2ca02c','#98df8a','#d62728','#ff9896','#9467bd','#c5b0d5','#8c564b','#c49c94','#e377c2','#f7b6d2','#7f7f7f','#c7c7c7','#bcbd22','#dbdb8d','#9edae5','#aec7e8'],
+
+                    // Qualitative schemes
+                    // carto-colors
+                    Antique: ['#855C75','#D9AF6B','#AF6458','#736F4C','#526A83','#625377','#68855C','#9C9C5E','#A06177','#8C785D','#467378','#7C7C7C'],
+                    Bold: ['#7F3C8D','#11A579','#3969AC','#F2B701','#E73F74','#80BA5A','#E68310','#008695','#CF1C90','#f97b72','#4b4b8f','#A5AA99'],
+                    Pastel: ['#66C5CC','#F6CF71','#F89C74','#DCB0F2','#87C55F','#9EB9F3','#FE88B1','#C9DB74','#8BE0A4','#B497E7','#D3B484','#B3B3B3'],
+                    Prism: ['#5F4690','#1D6996','#38A6A5','#0F8554','#73AF48','#EDAD08','#E17C05','#CC503E','#94346E','#6F4070','#994E95','#666666'],
+                    Safe: ['#88CCEE','#CC6677','#DDCC77','#117733','#332288','#AA4499','#44AA99','#999933','#882255','#661100','#6699CC','#888888'],
+                    Vivid: ['#E58606','#5D69B1','#52BCA3','#99C945','#CC61B0','#24796C','#DAA51B','#2F8AC4','#764E9F','#ED645A','#CC3A8E','#A5AA99'],
+
+                    // Diverging schemes
+                    // carto-colors
+                    ArmyRose: ['#798234','#a3ad62','#d0d3a2','#fdfbe4','#f0c6c3','#df91a3','#d46780'],
+                    Fall: ['#3d5941','#778868','#b5b991','#f6edbd','#edbb8a','#de8a5a','#ca562c'],
+                    Geyser: ['#008080','#70a494','#b4c8a8','#f6edbd','#edbb8a','#de8a5a','#ca562c'],
+                    Temps: ['#009392','#39b185','#9ccb86','#e9e29c','#eeb479','#e88471','#cf597e'],
+                    TealRose: ['#009392','#72aaa1','#b1c7b3','#f1eac8','#e5b9ad','#d98994','#d0587e'],
+                    Tropic: ['#009B9E','#42B7B9','#A7D3D4','#F1F1F1','#E4C1D9','#D691C1','#C75DAB'],
+                    Earth: ['#A16928','#bd925a','#d6bd8d','#edeac2','#b5c8b8','#79a7ac','#2887a1'],
+
+                    // Sequential schemes
+                    // carto-colors
+                    Burg: ['#ffc6c4','#f4a3a8','#e38191','#cc607d','#ad466c','#8b3058','#672044'],
+                    BurgYI: ['#fbe6c5','#f5ba98','#ee8a82','#dc7176','#c8586c','#9c3f5d','#70284a'],
+                    RedOR: ['#f6d2a9','#f5b78e','#f19c7c','#ea8171','#dd686c','#ca5268','#b13f64'],
+                    OrYel: ['#ecda9a','#efc47e','#f3ad6a','#f7945d','#f97b57','#f66356','#ee4d5a'],
+                    Peach: ['#fde0c5','#facba6','#f8b58b','#f59e72','#f2855d','#ef6a4c','#eb4a40'],
+                    PinkYI: ['#fef6b5','#ffdd9a','#ffc285','#ffa679','#fa8a76','#f16d7a','#e15383'],
+                    Mint: ['#e4f1e1','#b4d9cc','#89c0b6','#63a6a0','#448c8a','#287274','#0d585f'],
+                    BluGrn: ['#c4e6c3','#96d2a4','#6dbc90','#4da284','#36877a','#266b6e','#1d4f60'],
+                    DarkMint: ['#d2fbd4','#a5dbc2','#7bbcb0','#559c9e','#3a7c89','#235d72','#123f5a'],
+                    Emrld: ['#d3f2a3','#97e196','#6cc08b','#4c9b82','#217a79','#105965','#074050'],
+                    BluYI: ['#f7feae','#b7e6a5','#7ccba2','#46aea0','#089099','#00718b','#045275'],
+                    Teal: ['#d1eeea','#a8dbd9','#85c4c9','#68abb8','#4f90a6','#3b738f','#2a5674'],
+                    TealGrn: ['#b0f2bc','#89e8ac','#67dba5','#4cc8a3','#38b2a3','#2c98a0','#257d98'],
+                    Purp: ['#f3e0f7','#e4c7f1','#d1afe8','#b998dd','#9f82ce','#826dba','#63589f'],
+                    PurpOr: ['#f9ddda','#f2b9c4','#e597b9','#ce78b3','#ad5fad','#834ba0','#573b88'],
+                    Sunset: ['#f3e79b','#fac484','#f8a07e','#eb7f86','#ce6693','#a059a0','#5c53a5'],
+                    Magenta: ['#f3cbd3','#eaa9bd','#dd88ac','#ca699d','#b14d8e','#91357d','#6c2167'],
+                    SunsetDark: ['#fcde9c','#faa476','#f0746e','#e34f6f','#dc3977','#b9257a','#7c1d6f'],
+                    BrwnYI: ['#ede5cf','#e0c2a2','#d39c83','#c1766f','#a65461','#813753','#541f3f'],
+                },
+                datasets: [
+                    // carto/qualitative/pastel
+                    '#66C5CC',
+                    '#F6CF71',
+                    '#F89C74',
+                    '#DCB0F2',
+                    '#87C55F',
+                    '#9EB9F3',
+                    '#FE88B1',
+                    '#C9DB74',
+                    '#8BE0A4',
+                    '#B497E7',
+                    '#D3B484',
+                    '#B3B3B3'
+                ]
+            },
             bar: {
                 height: 240,
+                item_width: null,
+                fields: null,
                 xaxis: {
-                    display: true
+                    display: true,
+                    field: null,
+                    sorted: false,
+                    timeunit: null,
+                    timestepsize: null,
+                    gridlines: true,
+                    showlabels: false
                 },
                 yaxis: {
                     display: true,
@@ -208,26 +339,19 @@ jQuery( document ).ready(function() {
                     },
                     background: 'rgba(251, 85, 85, 0.8)',
                     datasets: [
-                        '#1f77b4',
-                        '#aec7e8',
-                        '#ff7f0e',
-                        '#ffbb78',
-                        '#2ca02c',
-                        '#98df8a',
-                        '#d62728',
-                        '#ff9896',
-                        '#9467bd',
-                        '#c5b0d5',
-                        '#8c564b',
-                        '#c49c94',
-                        '#e377c2',
-                        '#f7b6d2',
-                        '#7f7f7f',
-                        '#c7c7c7',
-                        '#bcbd22',
-                        '#dbdb8d',
-                        '#17becf',
-                        '#9edae5'
+                        // carto/qualitative/pastel
+                        '#66C5CC',
+                        '#F6CF71',
+                        '#F89C74',
+                        '#DCB0F2',
+                        '#87C55F',
+                        '#9EB9F3',
+                        '#FE88B1',
+                        '#C9DB74',
+                        '#8BE0A4',
+                        '#B497E7',
+                        '#D3B484',
+                        '#B3B3B3'
                     ]
                 },
                 tooltips: {
@@ -573,7 +697,8 @@ jQuery( document ).ready(function() {
 
                     selector_b_button: '#comparison_selector_b_button',
                     selector_b_menu: '#comparison_selector_b_menu'
-                }
+                },
+
             },
             icon: {
                 table: '<span class="glyphicon glyphicon-list-alt"></span>',
@@ -599,7 +724,9 @@ jQuery( document ).ready(function() {
                 select_y_axis: 'Select data field for Y-axis',
                 select_set: 'Select set',
                 select_a_row: 'Select row A',
-                select_b_row: 'Select row B'
+                select_b_row: 'Select row B',
+                toggle_table: 'Toggle table',
+                hide_visualization: 'Hide visualization'
             },
             button_css:{
                 table: 'btn btn-default',
@@ -607,7 +734,8 @@ jQuery( document ).ready(function() {
                 line: 'btn btn-info selector-button',
                 scatter: 'btn btn-info selector-button',
                 comparison: 'btn btn-info selector-button',
-                off: 'btn btn-default selector-button'
+                off: 'btn btn-default selector-button',
+                custom: 'btn btn-default selector-button',
             },
             tags: {
                 css: [
@@ -659,6 +787,7 @@ jQuery( document ).ready(function() {
                         'label label-tag label-tag-default'
                     ]
             },
+            custom_chart: {},
             inline_chart: {
                 height: 35,
                 max_width: 200,
@@ -968,7 +1097,8 @@ jQuery( document ).ready(function() {
                         }
                     }
                 }
-            }
+            },
+            custom_chart_json: null
         },
         init: function (element, options, name) {
             var self = this;
@@ -982,6 +1112,9 @@ jQuery( document ).ready(function() {
             // Take unique id
             this.uniqueId = window.datatable_unique_id;
             window.datatable_unique_id += 1; // increase id counter
+
+            // Set datasets colors palette
+            this.defaults.colors.datasets = this.defaults.colors.schemes['default'];
 
             // Get current options
             this.initOptions(options);
@@ -1770,6 +1903,15 @@ jQuery( document ).ready(function() {
                 attributes.table_default_mode = this.$element.data('table-default-mode');
             }
 
+            if(typeof this.$element.data('color-scheme') !== 'undefined'){
+                var scheme = this.$element.data('color-scheme');
+                if(this.defaults.colors.schemes.hasOwnProperty(scheme)){
+                    attributes.colors.datasets = this.defaults.colors.schemes[scheme];
+                }else if(this.defaults.colors.schemes.hasOwnProperty(scheme+':reversed')){
+                    attributes.colors.datasets = this.defaults.colors.schemes[scheme].reverse();
+                }
+            }
+
             if(typeof this.$element.data('row-highlighting') !== 'undefined'){
                 attributes.table.row_highlighting = this.$element.data('row-highlighting');
             }
@@ -1786,6 +1928,10 @@ jQuery( document ).ready(function() {
             if(typeof this.$element.data('chart-default-mode') !== 'undefined'){
                 attributes.chart_default_mode = this.$element.data('chart-default-mode');
             }
+            if(typeof this.$element.data('chart-custom-json') !== 'undefined'){
+                attributes.custom_chart_json = this.$element.data('chart-custom-json');
+            }
+
             if(typeof this.$element.data('rank-mode') !== 'undefined'){
                 attributes.rank_mode = this.$element.data('rank-mode');
             }
@@ -1833,339 +1979,18 @@ jQuery( document ).ready(function() {
             if(typeof this.$element.data('inline-indicator-type') !== 'undefined'){
                 attributes.inline_chart.value_indicator.svg.type = this.$element.data('inline-indicator-type');
             }
+
             // Bar
-            if(typeof this.$element.data('bar-height') !== 'undefined'){
-                attributes.bar.height = this.$element.data('bar-height');
-            }
-            if(typeof this.$element.data('bar-hline') !== 'undefined'){
-                attributes.bar.horizontal_line.enabled = this.$element.data('bar-hline');
-            }
-            if(typeof this.$element.data('bar-show-xaxis') !== 'undefined'){
-                attributes.bar.xaxis.display = this.$element.data('bar-show-xaxis');
-            }
-            if(typeof this.$element.data('bar-show-yaxis') !== 'undefined'){
-                attributes.bar.yaxis.display = this.$element.data('bar-show-yaxis');
-            }
-            if(typeof this.$element.data('bar-yaxis-gridlines') !== 'undefined'){
-                attributes.bar.yaxis.gridlines = this.$element.data('bar-yaxis-gridlines');
-            }
-            if(typeof this.$element.data('bar-horizontal-highlights') !== 'undefined'){
-                attributes.bar.horizontal_highlights.data = this.parseDataList(this.$element.data('bar-horizontal-highlights'));
-                if(attributes.bar.horizontal_highlights.data.length==0 && attributes.bar.horizontal_highlights.enabled){
-                    attributes.bar.horizontal_highlights.enabled = false;
-                }
-            }
-            if(typeof this.$element.data('bar-horizontal-highlight-opacity') !== 'undefined'){
-                attributes.bar.horizontal_highlights.opacity = this.$element.data('bar-horizontal-highlight-opacity');
-            }
-            if(typeof this.$element.data('bar-horizontal-highlight-linewidth') !== 'undefined'){
-                attributes.bar.horizontal_highlights.lineWidth = this.$element.data('bar-horizontal-highlight-width');
-            }
-            if(typeof this.$element.data('bar-horizontal-highlight-stroke') !== 'undefined'){
-                attributes.bar.horizontal_highlights.strokeStyle = this.$element.data('bar-horizontal-highlight-stroke');
-            }
-            if(typeof this.$element.data('bar-horizontal-highlight-label-position') !== 'undefined'){
-                attributes.bar.horizontal_highlights.label.position = this.$element.data('bar-horizontal-highlight-label-position');
-            }
-            if(typeof this.$element.data('bar-horizontal-highlight-label-fill') !== 'undefined'){
-                attributes.bar.horizontal_highlights.label.fillStyle = this.$element.data('bar-horizontal-highlight-label-fill');
-            }
-            if(typeof this.$element.data('bar-horizontal-highlight-label-size') !== 'undefined'){
-                attributes.bar.horizontal_highlights.label.fontSize = this.$element.data('bar-horizontal-highlight-label-size');
-            }
-            if(typeof this.$element.data('bar-horizontal-highlight-label-opacity') !== 'undefined'){
-                attributes.bar.horizontal_highlights.label.opacity = this.$element.data('bar-horizontal-highlight-label-opacity');
-            }
-            if(typeof this.$element.data('bar-show-vertical-indicator') !== 'undefined'){
-                attributes.bar.vertical_indicator_line.enabled = this.$element.data('bar-show-vertical-indicator');
-            }
-            if(typeof this.$element.data('bar-vertical-indicator-linewidth') !== 'undefined'){
-                attributes.bar.vertical_indicator_line.lineWidth = this.$element.data('bar-vertical-indicator-width');
-            }
-            if(typeof this.$element.data('bar-vertical-indicator-stroke') !== 'undefined'){
-                attributes.bar.vertical_indicator_line.strokeStyle = this.$element.data('bar-vertical-indicator-stroke');
-            }
-            if(typeof this.$element.data('bar-show-horizontal-indicator') !== 'undefined'){
-                attributes.bar.horizontal_indicator_line.enabled = this.$element.data('bar-show-horizontal-indicator');
-            }
-            if(typeof this.$element.data('bar-horizontal-indicator-linewidth') !== 'undefined'){
-                attributes.bar.horizontal_indicator_line.lineWidth = this.$element.data('bar-horizontal-indicator-width');
-            }
-            if(typeof this.$element.data('bar-horizontal-indicator-stroke') !== 'undefined'){
-                attributes.bar.horizontal_indicator_line.strokeStyle = this.$element.data('bar-horizontal-indicator-stroke');
-            }
-            if(typeof this.$element.data('bar-horizontal-indicator-fill') !== 'undefined'){
-                attributes.bar.horizontal_indicator_line.fillStyle = this.$element.data('bar-horizontal-indicator-fill');
-            }
-            if(typeof this.$element.data('bar-show-error-bar') !== 'undefined'){
-                attributes.bar.error_bar.enabled = this.$element.data('bar-show-error-bar');
-            }
-            if(typeof this.$element.data('bar-error-bar-linewidth') !== 'undefined'){
-                attributes.bar.error_bar.lineWidth = this.$element.data('bar-error-bar-linewidth');
-            }
-            if(typeof this.$element.data('bar-error-bar-tipwidth') !== 'undefined'){
-                attributes.bar.error_bar.tipWidth = this.$element.data('bar-error-bar-tipwidth');
-            }
-            if(typeof this.$element.data('bar-error-bar-stroke') !== 'undefined'){
-                attributes.bar.error_bar.strokeStyle = this.$element.data('bar-error-bar-stroke');
-            }
-            if(typeof this.$element.data('bar-tooltip-position') !== 'undefined'){
-                attributes.bar.tooltips.position = this.$element.data('bar-tooltip-position');
-            }
-            if(typeof this.$element.data('bar-show-legend') !== 'undefined'){
-                attributes.bar.legend.enabled = this.$element.data('bar-show-legend');
-            }
-            if(typeof this.$element.data('bar-legend-position') !== 'undefined'){
-                attributes.bar.legend.position = this.$element.data('bar-legend-position');
-            }
+            attributes.bar = jQuery.extend(true, {}, attributes.bar, this.getBarChartParameters(this.$element));   // Plugin options object
 
             // Line
-            if(typeof this.$element.data('line-fields') !== 'undefined'){
-                attributes.line.fields = this.$element.data('line-fields').split(',').map(function(item) {
-                    return item.trim();
-                });
-            }
-            if(typeof this.$element.data('line-fill') !== 'undefined'){
-                attributes.line.fill = this.$element.data('line-fill');
-            }
-            if(typeof this.$element.data('line-show-xaxis') !== 'undefined'){
-                attributes.line.xaxis.display = this.$element.data('line-show-xaxis');
-            }
-            if(typeof this.$element.data('line-xaxis-field') !== 'undefined'){
-                attributes.line.xaxis.field = this.$element.data('line-xaxis-field');
-            }
-            if(typeof this.$element.data('line-xaxis-sorted') !== 'undefined'){
-                attributes.line.xaxis.sorted = this.$element.data('line-xaxis-sorted');
-            }
-            if(typeof this.$element.data('line-xaxis-timeunit') !== 'undefined'){
-                attributes.line.xaxis.timeunit = this.$element.data('line-xaxis-timeunit');
-            }
-            if(typeof this.$element.data('line-xaxis-timestepsize') !== 'undefined'){
-                attributes.line.xaxis.timestepsize = this.$element.data('line-xaxis-timestepsize');
-            }
-            if(typeof this.$element.data('line-xaxis-gridlines') !== 'undefined'){
-                attributes.line.xaxis.gridlines = this.$element.data('line-xaxis-gridlines');
-            }
-            if(typeof this.$element.data('line-yaxis-beginatzero') !== 'undefined'){
-                attributes.line.yaxis.beginatzero = this.$element.data('line-yaxis-beginatzero');
-            }
-            if(typeof this.$element.data('line-yaxis-label') !== 'undefined'){
-                attributes.line.yaxis.label = this.$element.data('line-yaxis-label');
-            }
-            if(typeof this.$element.data('line-yaxis-scale') !== 'undefined'){
-                attributes.line.yaxis.scale = this.$element.data('line-yaxis-scale');
-            }
-            if(typeof this.$element.data('line-yaxis-gridlines') !== 'undefined'){
-                attributes.line.yaxis.gridlines = this.$element.data('line-yaxis-gridlines');
-            }
-            if(typeof this.$element.data('line-height') !== 'undefined'){
-                attributes.line.height = this.$element.data('line-height');
-            }
-            if(typeof this.$element.data('line-show-point') !== 'undefined'){
-                attributes.line.point.enabled = this.$element.data('line-show-point');
-            }
-            if(typeof this.$element.data('line-point-radius') !== 'undefined'){
-                attributes.line.point.radius.normal = this.$element.data('line-point-radius');
-            }
-            if(typeof this.$element.data('line-point-radius-hover') !== 'undefined'){
-                attributes.line.point.radius.hover = this.$element.data('line-point-radius-hover');
-            }
-            if(typeof this.$element.data('line-show-line') !== 'undefined'){
-                attributes.line.line.enabled = this.$element.data('line-show-line');
-            }
-            if(typeof this.$element.data('line-show-vertical-indicator') !== 'undefined'){
-                attributes.line.vertical_indicator_line.enabled = this.$element.data('line-show-vertical-indicator');
-            }
-            if(typeof this.$element.data('line-vertical-indicator-linewidth') !== 'undefined'){
-                attributes.line.vertical_indicator_line.lineWidth = this.$element.data('line-vertical-indicator-width');
-            }
-            if(typeof this.$element.data('line-vertical-indicator-stroke') !== 'undefined'){
-                attributes.line.vertical_indicator_line.strokeStyle = this.$element.data('line-vertical-indicator-stroke');
-            }
-            if(typeof this.$element.data('line-show-horizontal-indicator') !== 'undefined'){
-                attributes.line.horizontal_indicator_line.enabled = this.$element.data('line-show-horizontal-indicator');
-            }
-            if(typeof this.$element.data('line-horizontal-indicator-linewidth') !== 'undefined'){
-                attributes.line.horizontal_indicator_line.lineWidth = this.$element.data('line-horizontal-indicator-width');
-            }
-            if(typeof this.$element.data('line-horizontal-indicator-stroke') !== 'undefined'){
-                attributes.line.horizontal_indicator_line.strokeStyle = this.$element.data('line-horizontal-indicator-stroke');
-            }
-            if(typeof this.$element.data('line-horizontal-indicator-fill') !== 'undefined'){
-                attributes.line.horizontal_indicator_line.fillStyle = this.$element.data('line-horizontal-indicator-fill');
-            }
-            if(typeof this.$element.data('line-show-horizontal-highlights') !== 'undefined'){
-                attributes.line.horizontal_highlights.enabled = this.$element.data('line-show-horizontal-highlights');
-            }
-            if(typeof this.$element.data('line-horizontal-highlights') !== 'undefined'){
-                attributes.line.horizontal_highlights.data = this.parseDataList(this.$element.data('line-horizontal-highlights'));
-                if(attributes.line.horizontal_highlights.data.length==0 && attributes.line.horizontal_highlights.enabled){
-                    attributes.line.horizontal_highlights.enabled = false;
-                }
-            }
-            if(typeof this.$element.data('line-horizontal-highlight-opacity') !== 'undefined'){
-                attributes.line.horizontal_highlights.opacity = this.$element.data('line-horizontal-highlight-opacity');
-            }
-            if(typeof this.$element.data('line-horizontal-highlight-linewidth') !== 'undefined'){
-                attributes.line.horizontal_highlights.lineWidth = this.$element.data('line-horizontal-highlight-width');
-            }
-            if(typeof this.$element.data('line-horizontal-highlight-stroke') !== 'undefined'){
-                attributes.line.horizontal_highlights.strokeStyle = this.$element.data('line-horizontal-highlight-stroke');
-            }
-            if(typeof this.$element.data('line-horizontal-highlight-label-position') !== 'undefined'){
-                attributes.line.horizontal_highlights.label.position = this.$element.data('line-horizontal-highlight-label-position');
-            }
-            if(typeof this.$element.data('line-horizontal-highlight-label-fill') !== 'undefined'){
-                attributes.line.horizontal_highlights.label.fillStyle = this.$element.data('line-horizontal-highlight-label-fill');
-            }
-            if(typeof this.$element.data('line-horizontal-highlight-label-size') !== 'undefined'){
-                attributes.line.horizontal_highlights.label.fontSize = this.$element.data('line-horizontal-highlight-label-size');
-            }
-            if(typeof this.$element.data('line-horizontal-highlight-label-opacity') !== 'undefined'){
-                attributes.line.horizontal_highlights.label.opacity = this.$element.data('line-horizontal-highlight-label-opacity');
-            }
-            if(typeof this.$element.data('line-show-vertical-segments') !== 'undefined'){
-                attributes.line.vertical_segments.enabled = this.$element.data('line-show-vertical-segments');
-            }
-            if(typeof this.$element.data('line-vertical-segments') !== 'undefined'){
-                attributes.line.vertical_segments.data = this.parseSegmentList(this.$element.data('line-vertical-segments'));
-                if(attributes.line.vertical_segments.data.length==0 && attributes.line.vertical_segments.enabled){
-                    attributes.line.vertical_segments.enabled = false;
-                }
-            }
-            if(typeof this.$element.data('line-vertical-segment-opacity') !== 'undefined'){
-                attributes.line.vertical_segments.opacity = this.$element.data('line-vertical-segment-opacity');
-            }
-            if(typeof this.$element.data('line-vertical-segment-label-position') !== 'undefined'){
-                attributes.line.vertical_segments.label.position = this.$element.data('line-vertical-segment-label-position');
-            }
-            if(typeof this.$element.data('line-vertical-segment-label-fill') !== 'undefined'){
-                attributes.line.vertical_segments.label.fillStyle = this.$element.data('line-vertical-segment-label-fill');
-            }
-            if(typeof this.$element.data('line-vertical-segment-label-size') !== 'undefined'){
-                attributes.line.vertical_segments.label.fontSize = this.$element.data('line-vertical-segment-label-size');
-            }
-            if(typeof this.$element.data('line-vertical-segment-label-opacity') !== 'undefined'){
-                attributes.line.vertical_segments.label.opacity = this.$element.data('line-vertical-segment-label-opacity');
-            }
-            if(typeof this.$element.data('line-show-error-bar') !== 'undefined'){
-                attributes.line.error_bar.enabled = this.$element.data('line-show-error-bar');
-            }
-            if(typeof this.$element.data('line-error-bar-linewidth') !== 'undefined'){
-                attributes.line.error_bar.lineWidth = this.$element.data('line-error-bar-linewidth');
-            }
-            if(typeof this.$element.data('line-error-bar-tipwidth') !== 'undefined'){
-                attributes.line.error_bar.tipWidth = this.$element.data('line-error-bar-tipwidth');
-            }
-            if(typeof this.$element.data('line-error-bar-stroke') !== 'undefined'){
-                attributes.line.error_bar.strokeStyle = this.$element.data('line-error-bar-stroke');
-            }
-            if(typeof this.$element.data('line-show-interval') !== 'undefined'){
-                attributes.line.interval.enabled = this.$element.data('line-show-interval');
-            }
-            if(typeof this.$element.data('line-interval-linewidth') !== 'undefined'){
-                attributes.line.interval.lineWidth = this.$element.data('line-interval-linewidth');
-            }
-            if(typeof this.$element.data('line-hline') !== 'undefined'){
-                attributes.line.horizontal_line.enabled = this.$element.data('line-hline');
-            }
-            if(typeof this.$element.data('line-tooltip-position') !== 'undefined'){
-                attributes.line.tooltips.position = this.$element.data('line-tooltip-position');
-            }
-            if(typeof this.$element.data('line-show-legend') !== 'undefined'){
-                attributes.line.legend.enabled = this.$element.data('line-show-legend');
-            }
-            if(typeof this.$element.data('line-legend-position') !== 'undefined'){
-                attributes.line.legend.position = this.$element.data('line-legend-position');
-            }
+            attributes.line = jQuery.extend(true, {}, attributes.line, this.getLineChartParameters(this.$element));   // Plugin options object
 
             // Scatter
-            if(typeof this.$element.data('scatter-height') !== 'undefined'){
-                attributes.scatter.height = this.$element.data('scatter-height');
-            }
-            if(typeof this.$element.data('scatter-x') !== 'undefined'){
-                attributes.scatter.x = this.$element.data('scatter-x');
-            }
-            if(typeof this.$element.data('scatter-y') !== 'undefined'){
-                attributes.scatter.y = this.$element.data('scatter-y');
-            }
-            if(typeof this.$element.data('scatter-point-radius') !== 'undefined'){
-                attributes.scatter.point.normal = this.$element.data('scatter-point-radius');
-            }
-            if(typeof this.$element.data('scatter-point-radius-hover') !== 'undefined'){
-                attributes.scatter.point.hover = this.$element.data('scatter-point-radius-hover');
-            }
-            if(typeof this.$element.data('scatter-show-vertical-indicator') !== 'undefined'){
-                attributes.scatter.vertical_indicator_line.enabled = this.$element.data('scatter-show-vertical-indicator');
-            }
-            if(typeof this.$element.data('scatter-vertical-indicator-linewidth') !== 'undefined'){
-                attributes.scatter.vertical_indicator_line.lineWidth = this.$element.data('scatter-vertical-indicator-width');
-            }
-            if(typeof this.$element.data('scatter-vertical-indicator-stroke') !== 'undefined'){
-                attributes.scatter.vertical_indicator_line.strokeStyle = this.$element.data('scatter-vertical-indicator-stroke');
-            }
-            if(typeof this.$element.data('scatter-show-horizontal-indicator') !== 'undefined'){
-                attributes.scatter.horizontal_indicator_line.enabled = this.$element.data('scatter-show-horizontal-indicator');
-            }
-            if(typeof this.$element.data('scatter-horizontal-indicator-linewidth') !== 'undefined'){
-                attributes.scatter.horizontal_indicator_line.lineWidth = this.$element.data('scatter-horizontal-indicator-width');
-            }
-            if(typeof this.$element.data('scatter-horizontal-indicator-stroke') !== 'undefined'){
-                attributes.scatter.horizontal_indicator_line.strokeStyle = this.$element.data('scatter-horizontal-indicator-stroke');
-            }
-            if(typeof this.$element.data('scatter-horizontal-indicator-fill') !== 'undefined'){
-                attributes.scatter.horizontal_indicator_line.fillStyle = this.$element.data('scatter-horizontal-indicator-fill');
-            }
-            if(typeof this.$element.data('scatter-show-error-bar') !== 'undefined'){
-                attributes.scatter.error_bar.enabled = this.$element.data('line-show-error-bar');
-            }
-            if(typeof this.$element.data('scatter-error-bar-linewidth') !== 'undefined'){
-                attributes.scatter.error_bar.lineWidth = this.$element.data('scatter-error-bar-linewidth');
-            }
-            if(typeof this.$element.data('scatter-error-bar-tipwidth') !== 'undefined'){
-                attributes.scatter.error_bar.tipWidth = this.$element.data('scatter-error-bar-tipwidth');
-            }
-            if(typeof this.$element.data('scatter-error-bar-stroke') !== 'undefined'){
-                attributes.scatter.error_bar.strokeStyle = this.$element.data('scatter-error-bar-stroke');
-            }
-            if(typeof this.$element.data('scatter-show-error-box') !== 'undefined'){
-                attributes.scatter.error_bar.bounding_box = this.$element.data('line-show-error-box');
-            }
-            if(typeof this.$element.data('scatter-error-box-fill') !== 'undefined'){
-                attributes.scatter.error_bar.fillStyle = this.$element.data('scatter-error-box-fill');
-            }
+            attributes.scatter = jQuery.extend(true, {}, attributes.scatter, this.getScatterChartParameters(this.$element));   // Plugin options object
 
             // Comparison
-            if(typeof this.$element.data('comparison-height') !== 'undefined'){
-                attributes.comparison.height = this.$element.data('comparison-height');
-            }
-            if(typeof this.$element.data('comparison-row-id-field') !== 'undefined'){
-                attributes.comparison.row_id_field = this.$element.data('comparison-row-id-field');
-            }
-            if(typeof this.$element.data('comparison-sets-json') !== 'undefined'){
-                attributes.comparison.sets = this.$element.data('comparison-sets-json');
-            }
-            if(typeof this.$element.data('comparison-active-set') !== 'undefined'){
-                attributes.comparison.active_set = this.$element.data('comparison-active-set');
-            }
-            if(typeof this.$element.data('comparison-a-row') !== 'undefined'){
-                attributes.comparison.a_row = this.$element.data('comparison-a-row');
-            }
-            if(typeof this.$element.data('comparison-b-row') !== 'undefined'){
-                attributes.comparison.b_row = this.$element.data('comparison-b-row');
-            }
-            if(typeof this.$element.data('comparison-show-error-bar') !== 'undefined'){
-                attributes.comparison.error_bar.enabled = this.$element.data('comparison-show-error-bar');
-            }
-            if(typeof this.$element.data('comparison-error-bar-linewidth') !== 'undefined'){
-                attributes.comparison.error_bar.lineWidth = this.$element.data('comparison-error-bar-linewidth');
-            }
-            if(typeof this.$element.data('comparison-error-bar-tipwidth') !== 'undefined'){
-                attributes.comparison.error_bar.tipWidth = this.$element.data('comparison-error-bar-tipwidth');
-            }
-            if(typeof this.$element.data('comparison-error-bar-stroke') !== 'undefined'){
-                attributes.comparison.error_bar.strokeStyle = this.$element.data('comparison-error-bar-stroke');
-            }
+            attributes.comparison = jQuery.extend(true, {}, attributes.comparison, this.getComparisonChartParameters(this.$element));   // Plugin options object
 
             // Combine parameters from defaults and given plugin options.
             this.options = jQuery.extend(true, {}, attributes, options);   // Plugin options object
@@ -2356,6 +2181,9 @@ jQuery( document ).ready(function() {
                     case 'float1-percentage':
                         $(this).attr('data-formatter','valueFormatter_float1_percentage');
                         break;
+                    case 'float1-percentage-muted':
+                        $(this).attr('data-formatter','valueFormatter_float1_percentage_muted');
+                        break;
                     case 'float2-percentage':
                         $(this).attr('data-formatter','valueFormatter_float2_percentage');
                         break;
@@ -2488,6 +2316,14 @@ jQuery( document ).ready(function() {
                         $(this).attr('data-formatter','valueFormatter_float4_error');
                         break;
 
+                    case 'html':
+                        $(this).attr('data-formatter','valueFormatter_html');
+                        break;
+
+                    case 'date':
+                        $(this).attr('data-formatter','valueFormatter_date');
+                        break;
+
                     case 'list':
                         $(this).attr('data-formatter','valueFormatter_list');
                         break;
@@ -2616,7 +2452,6 @@ jQuery( document ).ready(function() {
                         };
                         $(this).attr('data-formatter', 'valueFormatter_inline_bar_horizontal_percentage'+self.uniqueId);
                         break;
-
                     case 'inline-bar-horizontal-thin-percentage':
                         window['valueFormatter_inline_bar_horizontal_thin_percentage'+self.uniqueId] = function (value, row, index){
                             var value_formatter = 'valueFormatter_float1_percentage';
@@ -2707,7 +2542,6 @@ jQuery( document ).ready(function() {
                         $(this).attr('data-formatter', 'valueFormatter_inline_bar_vertical'+self.uniqueId);
                         //$(this).addClass('canvas-cell');
                         break;
-
                     case 'inline-bar-vertical-tristate':
                         $(this).attr('data-formatter', 'valueFormatter_inline_bar_vertical_tristate');
                         //$(this).addClass('canvas-cell');
@@ -2717,7 +2551,6 @@ jQuery( document ).ready(function() {
                         $(this).attr('data-formatter', 'valueFormatter_inline_line');
                         //$(this).addClass('canvas-cell');
                         break;
-
                     case 'inline-line-steps':
                         $(this).attr('data-formatter', 'valueFormatter_inline_line_steps');
                         //$(this).addClass('canvas-cell');
@@ -2755,7 +2588,6 @@ jQuery( document ).ready(function() {
                         $(this).attr('data-formatter', 'valueFormatter_inline_indicator_value_svg'+self.uniqueId);
                         //$(this).addClass('canvas-cell');
                         break;
-
                     case 'inline-indicator-value-html':
                         window['valueFormatter_inline_indicator_value_html'+self.uniqueId] = function (value, row, index){
                             var data = self.parseDataList(value);
@@ -2818,7 +2650,6 @@ jQuery( document ).ready(function() {
                         $(this).attr('data-formatter', 'valueFormatter_inline_indicator_binary_svg'+self.uniqueId);
                         //$(this).addClass('canvas-cell');
                         break;
-
                     case 'inline-indicator-binary-html':
                         window['valueFormatter_inline_binary_html'+self.uniqueId] = function (value, row, index){
                             var data = self.parseDataList(value);
@@ -2888,7 +2719,6 @@ jQuery( document ).ready(function() {
                         $(this).attr('data-formatter', 'valueFormatter_inline_indicator_tristate_svg'+self.uniqueId);
                         //$(this).addClass('canvas-cell');
                         break;
-
                     case 'inline-indicator-tristate-html':
                         window['valueFormatter_inline_tristate_html'+self.uniqueId] = function (value, row, index){
                             var data = self.parseDataList(value);
@@ -4112,7 +3942,10 @@ jQuery( document ).ready(function() {
                     }
 
                     var yaxis = chart.scales['y-axis-0'];
-                    var barWidth = chart.getDatasetMeta(0).data[0]._model.width;
+                    var barWidth = null;
+                    if(chart.getDatasetMeta(0).data.length){
+                        barWidth = chart.getDatasetMeta(0).data[0]._model.width;
+                    }
 
                     this.rendered = true;
 
@@ -4362,7 +4195,6 @@ jQuery( document ).ready(function() {
             }
             toolbar_html += '>';
 
-
             var active = ' ';
             var pressed = 'false';
             if (this.options.table_default_mode === 'show') {
@@ -4370,7 +4202,7 @@ jQuery( document ).ready(function() {
                 pressed = 'true';
             }
 
-            toolbar_html += '<button type="button" class="' + this.options.button_css.table + active + '" id="' + this.options.element.table_mode_selector + '" data-toggle="button" aria-pressed="' + pressed + '" autocomplete="off" ';
+            toolbar_html += '<button type="button" title="'+this.options.label.toggle_table+'" class="' + this.options.button_css.table + active + '" id="' + this.options.element.table_mode_selector + '" data-toggle="button" aria-pressed="' + pressed + '" autocomplete="off" ';
             if(!this.options.show_table_selector) {
                 toolbar_html += ' style="display: none;" ';
             }
@@ -4378,51 +4210,97 @@ jQuery( document ).ready(function() {
             toolbar_html += this.options.icon.table + ' ' + this.options.label.table;
             toolbar_html += '</button>&nbsp;';
 
-
             toolbar_html += '<div class="btn-group" data-toggle="buttons" id="'+this.options.element.chart_mode_selector+'">';
 
-            // Bar chart selection button
-            if(this.options.chart_modes.indexOf('bar') > -1){
-                var active = '';
-                if(this.options.chart_default_mode == 'bar'){
-                    active = ' active ';
-                }
-                toolbar_html += '<label class="'+this.options.button_css.bar+active+'" data-mode="bar">';
-                toolbar_html += '<input autocomplete="off" data-mode="bar" name="options" type="radio" value="bar">'+this.options.icon.bar+' '+this.options.label.bar+'</input>';
-                toolbar_html += '</label>';
-            }
+            var $div = $('<div>', {id: 'datatable_visualization'+this.uniqueId, 'class': 'datatable'});
 
-            // Line chart selection button
-            if(this.options.chart_modes.indexOf('line') > -1){
-                var active = '';
-                if(this.options.chart_default_mode == 'line'){
-                    active = ' active ';
-                }
-                toolbar_html += '<label class="'+this.options.button_css.line+active+'" data-mode="line">';
-                toolbar_html += '<input autocomplete="off" data-mode="line" name="options" type="radio" value="bar">'+this.options.icon.line+' '+this.options.label.line+'</input>';
-                toolbar_html += '</label>';
-            }
+            for(var mode_id=0; mode_id < this.options.chart_modes.length; mode_id++) {
+                var current_mode_name = this.options.chart_modes[mode_id];
+                var current_mode_config = {};
+                var custom_found = false;
 
-            // Scatter chart selection button
-            if(this.options.chart_modes.indexOf('scatter') > -1){
                 var active = '';
-                if(this.options.chart_default_mode == 'scatter'){
+                if(this.options.chart_default_mode == current_mode_name){
                     active = ' active ';
                 }
-                toolbar_html += '<label class="'+this.options.button_css.scatter+active+'" data-mode="scatter">';
-                toolbar_html += '<input autocomplete="off" data-mode="scatter" name="options" type="radio" value="scatter">'+this.options.icon.scatter+' '+this.options.label.scatter+'</input>';
-                toolbar_html += '</label>';
-            }
 
-            // Comparison chart selection button
-            if(this.options.chart_modes.indexOf('comparison') > -1){
-                var active = '';
-                if(this.options.chart_default_mode == 'comparison'){
-                    active = ' active ';
+                if(current_mode_name == 'bar'){
+                    // Bar chart selection button
+                    toolbar_html += '<label class="'+this.options.button_css.bar+active+'" data-mode="bar">';
+                    toolbar_html += '<input autocomplete="off" data-mode="bar" name="options" type="radio" value="bar">'+this.options.icon.bar+' '+this.options.label.bar+'</input>';
+                    toolbar_html += '</label>';
+
+                    // Create div for the graph
+                    $($div).append(this.createBarHTML());
+
+                }else if(current_mode_name == 'line'){
+                    // Line chart selection button
+                    toolbar_html += '<label class="'+this.options.button_css.line+active+'" data-mode="line">';
+                    toolbar_html += '<input autocomplete="off" data-mode="line" name="options" type="radio" value="bar">'+this.options.icon.line+' '+this.options.label.line+'</input>';
+                    toolbar_html += '</label>';
+
+                    // Create div for the graph
+                    $($div).append(this.createLineHTML());
+
+                }else if(current_mode_name == 'scatter'){
+                    // Scatter chart selection button
+                    toolbar_html += '<label class="'+this.options.button_css.scatter+active+'" data-mode="scatter">';
+                    toolbar_html += '<input autocomplete="off" data-mode="scatter" name="options" type="radio" value="scatter">'+this.options.icon.scatter+' '+this.options.label.scatter+'</input>';
+                    toolbar_html += '</label>';
+
+                    // Create div for the graph
+                    $($div).append(this.createScatterHTML());
+
+                }else if(current_mode_name == 'comparison') {
+                    // Comparison chart selection button
+                    toolbar_html += '<label class="' + this.options.button_css.comparison + active + '" data-mode="comparison">';
+                    toolbar_html += '<input autocomplete="off" data-mode="comparison" name="options" type="radio" value="comparison">' + this.options.icon.comparison + ' ' + this.options.label.comparison + '</input>';
+                    toolbar_html += '</label>';
+
+                    // Create div for the graph
+                    $($div).append(this.createComparisonHTML());
+
+                }else {
+                    for(var custom_mode_id=0; custom_mode_id < this.options.custom_chart_json.length; custom_mode_id++) {
+                        if(this.options.custom_chart_json[custom_mode_id]['id'] == current_mode_name){
+                            current_mode_config = this.options.custom_chart_json[custom_mode_id];
+                            if(current_mode_config.hasOwnProperty('type') && current_mode_config.hasOwnProperty('title') ){
+                                custom_found = true;
+                            }
+                            break;
+                        }
+                    }
+                    if(custom_found){
+                        // Custom graph found
+                        var type = current_mode_config['type'].split(':')[0];
+
+                        var active = '';
+                        if(this.options.chart_default_mode == current_mode_name){
+                            active = ' active ';
+                        }
+                        var icon = '';
+                        if(current_mode_config.hasOwnProperty('icon')){
+                            icon = current_mode_config['icon'];
+                        }else{
+                            icon = this.options.icon[type];
+                        }
+
+                        var button_css = '';
+                        if(current_mode_config.hasOwnProperty('button_css')){
+                            button_css = this.options.button_css.custom + ' ' + current_mode_config['button_css'];
+                        }else{
+                            button_css = this.options.button_css[type];
+                        }
+
+                        toolbar_html += '<label class="'+button_css+active+'" data-mode="'+current_mode_name+'">';
+                        toolbar_html += '<input autocomplete="off" data-mode="'+current_mode_name+'" name="options" type="radio" value="'+current_mode_name+'">';
+                        toolbar_html += icon + ' ' + current_mode_config['title'] + '</input>';
+                        toolbar_html += '</label>';
+
+                        // Create div for the graph
+                        $($div).append(this.createCustomHTML(current_mode_name, current_mode_config));
+                    }
                 }
-                toolbar_html += '<label class="'+this.options.button_css.comparison+active+'" data-mode="comparison">';
-                toolbar_html += '<input autocomplete="off" data-mode="comparison" name="options" type="radio" value="comparison">'+this.options.icon.comparison+' '+this.options.label.comparison+'</input>';
-                toolbar_html += '</label>';
             }
 
             // Off button
@@ -4431,249 +4309,11 @@ jQuery( document ).ready(function() {
                 active = ' active ';
             }
 
-            toolbar_html += '<label class="'+this.options.button_css.off+active+'" data-mode="off">';
+            toolbar_html += '<label class="'+this.options.button_css.off+active+'" data-mode="off" title="'+this.options.label.hide_visualization+'">';
             toolbar_html += '<input autocomplete="off" checked data-mode="off" name="options" type="radio" value="off">'+this.options.icon.off+' '+this.options.label.off+'</input>';
             toolbar_html += '</label>';
             toolbar_html += '</div>';
             toolbar_html += '</div>';
-
-            var $div = $('<div>', {id: 'datatable_visualization'+this.uniqueId, 'class': 'datatable'});
-
-            // Bar
-            if(this.options.chart_modes.indexOf('bar') > -1){
-                var bar_div = '<div id="bar_div'+this.uniqueId+'" style="display:none;"><canvas id="bar_chart'+this.uniqueId+'"></canvas></div>';
-                this.options.element.bar.div = '#bar_div'+this.uniqueId;
-                this.options.element.bar.canvas = '#bar_chart'+this.uniqueId;
-                $($div).append(bar_div);
-            }
-
-            // Line
-            if(this.options.chart_modes.indexOf('line') > -1){
-                var line_div = '<div id="line_div'+this.uniqueId+'" style="display:none;"><canvas id="line_chart'+this.uniqueId+'"></canvas></div>';
-                this.options.element.line.div = '#line_div'+this.uniqueId;
-                this.options.element.line.canvas = '#line_chart'+this.uniqueId;
-                $($div).append(line_div);
-            }
-
-            // Scatter
-            if(this.options.chart_modes.indexOf('scatter') > -1){
-                var scatter_div = '<div id="scatter_div'+this.uniqueId+'" style="display:none;">';
-                scatter_div += '<canvas id="scatter_chart'+this.uniqueId+'"></canvas>';
-                scatter_div += '<div class="btn-group">';
-
-                // X-selector
-                scatter_div += '<div class="btn-group">';
-                scatter_div += '<div class="dropdown">';
-                scatter_div += '<button aria-expanded="false" aria-haspopup="true" class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="scatter_selector_x'+this.uniqueId+'" type="button">X '+this.options.icon.caret+'</button>';
-                scatter_div += '<ul aria-labelledby="scatter_selector_x'+this.uniqueId+'" class="dropdown-menu" id="scatter_selector_x_menu'+this.uniqueId+'" role="menu">';
-                scatter_div += '<li class="dropdown-header">'+this.options.label.select_x_axis+'</li>';
-                $(this.element).find('thead tr th[data-chartable="true"]').each(function(){
-                    var postfix = '';
-                    if(typeof $(this).data('postfix') !== 'undefined'){
-                        postfix = $(this).data('postfix');
-                    }
-                    var reversed = false;
-                    if(typeof $(this).data('reversed') !== 'undefined'){
-                        reversed = $(this).data('reversed');
-                    }
-                    if(typeof $(this).data('field') !== 'undefined'){
-                        var field = $(this).data('field');
-                    }
-                    var axis_label = '';
-                    if(typeof $(this).data('axis-label') !== 'undefined'){
-                        axis_label = $("<div/>").html($(this).data('axis-label')).text();
-                    }
-                    var active = '';
-                    var selected = '0';
-                    if(field == self.options.scatter.x){
-                        active = ' class="active" ';
-                        selected = '1';
-                    }
-                    scatter_div += '<li'+active+'><a data-field="'+field+'" data-postfix="'+postfix+'" data-reversed="'+reversed+'" data-axis-label="'+axis_label+'" data-selected="'+selected+'" href="#" onclick="return false;">'+jQuery.trim($(this).text())+'</a></li>'
-                });
-                scatter_div += '</ul>';
-                scatter_div += '</div>';
-                scatter_div += '</div>';
-
-                // Y-selector
-                scatter_div += '<div class="btn-group">';
-                scatter_div += '<div class="dropdown">';
-                scatter_div += '<button aria-expanded="false" aria-haspopup="true" class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="scatter_selector_y'+this.uniqueId+'" type="button">Y '+this.options.icon.caret+'</button>';
-                scatter_div += '<ul aria-labelledby="scatter_selector_y'+this.uniqueId+'" class="dropdown-menu" id="scatter_selector_y_menu'+this.uniqueId+'" role="menu">';
-                scatter_div += '<li class="dropdown-header">'+this.options.label.select_y_axis+'</li>';
-                $(this.element).find('thead tr th[data-chartable="true"]').each(function(){
-                    var postfix = '';
-                    if(typeof $(this).data('postfix') !== 'undefined'){
-                        postfix = $(this).data('postfix');
-                    }
-                    var reversed = false;
-                    if(typeof $(this).data('reversed') !== 'undefined'){
-                        reversed = $(this).data('reversed');
-                    }
-                    if(typeof $(this).data('field') !== 'undefined'){
-                        var field = $(this).data('field');
-                    }
-                    var axis_label = '';
-                    if(typeof $(this).data('axis-label') !== 'undefined'){
-                        axis_label = $("<div/>").html($(this).data('axis-label')).text();
-                    }
-                    var active = '';
-                    var selected = '0';
-                    if(field == self.options.scatter.y){
-                        active = ' class="active" ';
-                        selected = '1';
-                    }
-                    scatter_div += '<li'+active+'><a data-field="'+field+'" data-postfix="'+postfix+'" data-reversed="'+reversed+'" data-axis-label="'+axis_label+'" data-selected="'+selected+'" href="#" onclick="return false;">'+jQuery.trim($(this).text())+'</a></li>'
-                });
-                scatter_div += '</ul>';
-                scatter_div += '</div>';
-                scatter_div += '</div>';
-
-                scatter_div += '</div>';
-
-                scatter_div += '</div>';
-                this.options.element.scatter.div = '#scatter_div'+this.uniqueId;
-                this.options.element.scatter.canvas = '#scatter_chart'+this.uniqueId;
-                this.options.element.scatter.selector_x_menu = '#scatter_selector_x_menu'+this.uniqueId;
-                this.options.element.scatter.selector_y_menu = '#scatter_selector_y_menu'+this.uniqueId;
-                $($div).append(scatter_div);
-
-                // X
-                $(document).on("click", this.options.element.scatter.selector_x_menu + ' li a', function() {
-                    $(self.options.element.scatter.selector_x_menu + ' li a').each(function(){
-                        $(this).data('selected',0);
-                        $(this).parent().removeClass('active');
-                    });
-                    $(this).data('selected', 1);
-                    $(this).parent().addClass('active');
-                    self.updateScatter();
-                });
-
-                // Y
-                $(document).on("click", this.options.element.scatter.selector_y_menu + ' li a', function() {
-                    $(self.options.element.scatter.selector_y_menu + ' li a').each(function(){
-                        $(this).data('selected',0);
-                        $(this).parent().removeClass('active');
-                    });
-                    $(this).data('selected', 1);
-                    $(this).parent().addClass('active');
-                    self.updateScatter();
-                });
-            }
-
-            // Comparison
-            if(this.options.chart_modes.indexOf('comparison') > -1){
-                var comparison_div = '<div id="comparison_div'+this.uniqueId+'" style="display:none;">';
-                comparison_div += '<canvas id="comparison_chart'+this.uniqueId+'"></canvas>';
-                comparison_div += '<div class="btn-group" style="margin-right:10px;">';
-
-                // Set selector
-                comparison_div += '<div class="dropdown">';
-                if(this.options.comparison.sets){
-                    for (var i = 0; i < this.options.comparison.sets.length; i++) {
-                        var set = this.options.comparison.sets[i];
-                        if(set.title == self.options.comparison.active_set){
-                            comparison_div += '<button aria-expanded="false" aria-haspopup="true" class="btn btn-default dropdown-toggle selector-button-xlarge" data-toggle="dropdown" id="comparison_selector_set'+this.uniqueId+'" type="button">'+set.title+' '+this.options.icon.caret+'</button>';
-                            break;
-                        }
-                    }
-                }else{
-                    comparison_div += '<button aria-expanded="false" aria-haspopup="true" class="btn btn-default dropdown-toggle selector-button-xlarge" data-toggle="dropdown" id="comparison_selector_set'+this.uniqueId+'" type="button">'+this.options.icon.caret+'</button>';
-                }
-
-                comparison_div += '<ul aria-labelledby="comparison_selector_set" class="dropdown-menu" id="comparison_selector_set_menu'+this.uniqueId+'" role="menu">';
-                comparison_div += '<li class="dropdown-header">'+this.options.label.select_set+'</li>';
-                if(this.options.comparison.sets){
-                    for (var i = 0; i < this.options.comparison.sets.length; i++) {
-                        var set = this.options.comparison.sets[i];
-                        var active = '';
-                        var selected = '0';
-                        if(set.title == self.options.comparison.active_set){
-                            active = ' class="active" ';
-                            selected = '1';
-                        }
-                        comparison_div += '<li'+active+'><a data-selected="'+selected+'" data-set="'+set.title+'" href="#" onclick="return false;">'+set.title+'</a></li>';
-                    }
-                }
-                comparison_div += '</ul>';
-                comparison_div += '</div>';
-                comparison_div += '</div>';
-
-                comparison_div += '<div class="btn-group" role="group">';
-                // Row A
-                comparison_div += '<div class="btn-group">';
-                comparison_div += '<div class="dropdown">';
-                comparison_div += '<button class="btn btn-success dropdown-toggle selector-button-large" data-toggle="dropdown" id="comparison_selector_a'+this.uniqueId+'" type="button" aria-expanded="false" aria-haspopup="true">'+this.options.icon.caret+'</button>';
-                comparison_div += '<ul aria-labelledby="comparison_selector_a'+this.uniqueId+'" class="dropdown-menu" id="comparison_selector_a_menu'+this.uniqueId+'" role="menu">';
-                comparison_div += '<li class="dropdown-header">'+this.options.label.select_a_row+'</li>';
-                comparison_div += '</ul>';
-                comparison_div += '</div>';
-                comparison_div += '</div>';
-
-                // Row B
-                comparison_div += '<div class="btn-group">';
-                comparison_div += '<div class="dropdown">';
-                comparison_div += '<button class="btn btn-danger dropdown-toggle selector-button-large" data-toggle="dropdown" id="comparison_selector_b'+this.uniqueId+'" type="button" aria-expanded="false" aria-haspopup="true">'+this.options.icon.caret+'</button>';
-                comparison_div += '<ul aria-labelledby="comparison_selector_b'+this.uniqueId+'" class="dropdown-menu" id="comparison_selector_b_menu'+this.uniqueId+'" role="menu">';
-                comparison_div += '<li class="dropdown-header">'+this.options.label.select_b_row+'</li>';
-                comparison_div += '</ul>';
-                comparison_div += '</div>';
-                comparison_div += '</div>';
-
-                comparison_div += '</div>';
-
-                comparison_div += '</div>';
-
-                this.options.element.comparison.div = '#comparison_div'+this.uniqueId;
-                this.options.element.comparison.canvas = '#comparison_chart'+this.uniqueId;
-
-                this.options.element.comparison.selector_set_button = '#comparison_selector_set'+this.uniqueId;
-                this.options.element.comparison.selector_set_menu = '#comparison_selector_set_menu'+this.uniqueId;
-
-                this.options.element.comparison.selector_a_button = '#comparison_selector_a'+this.uniqueId;
-                this.options.element.comparison.selector_a_menu = '#comparison_selector_a_menu'+this.uniqueId;
-
-                this.options.element.comparison.selector_b_button = '#comparison_selector_b'+this.uniqueId;
-                this.options.element.comparison.selector_b_menu = '#comparison_selector_b_menu'+this.uniqueId;
-
-                $($div).append(comparison_div);
-
-                // Set selector
-                $(document).on("click", this.options.element.comparison.selector_set_menu + ' li a', function() {
-                    $(self.options.element.comparison.selector_set_menu + ' li a').each(function(){
-                        $(this).data('selected',0);
-                        $(this).parent().removeClass('active');
-                    });
-                    $(this).data('selected', 1);
-                    $(this).parent().addClass('active');
-                    $(self.options.element.comparison.selector_set_button).html($(this).text()+' '+self.options.icon.caret);
-                    self.updateComparison();
-                });
-
-                // Row selector, A
-                $(document).on("click", this.options.element.comparison.selector_a_menu + ' li a', function() {
-                    $(self.options.element.comparison.selector_a_menu + ' li a').each(function(){
-                        $(this).data('selected',0);
-                        $(this).parent().removeClass('active');
-                    });
-                    $(this).data('selected', 1);
-                    $(this).parent().addClass('active');
-                    $(self.options.element.comparison.selector_a_button).html($(this).text()+' '+self.options.icon.caret);
-                    self.updateComparison();
-                });
-
-                // Row selector, B
-                $(document).on("click", this.options.element.comparison.selector_b_menu + ' li a', function() {
-                    $(self.options.element.comparison.selector_b_menu + ' li a').each(function(){
-                        $(this).data('selected',0);
-                        $(this).parent().removeClass('active');
-                    });
-                    $(this).data('selected', 1);
-                    $(this).parent().addClass('active');
-                    $(self.options.element.comparison.selector_b_button).html($(this).text()+' '+self.options.icon.caret);
-                    self.updateComparison();
-                });
-            }
 
             if(this.options.chart.position === 'top'){
                 $(toolbar_html).appendTo($div);
@@ -4701,6 +4341,264 @@ jQuery( document ).ready(function() {
                 self.updateVisualizationVisibility(self.chart_mode);
             });
 
+            //console.log(this.options.custom_chart);
+        },
+        createBarHTML: function(){
+            var bar_div = '<div id="bar_div'+this.uniqueId+'" style="display:none;"><canvas id="bar_chart'+this.uniqueId+'"></canvas></div>';
+            this.options.element.bar.div = '#bar_div'+this.uniqueId;
+            this.options.element.bar.canvas = '#bar_chart'+this.uniqueId;
+
+            return bar_div;
+        },
+        createLineHTML: function(){
+            var line_div = '<div id="line_div'+this.uniqueId+'" style="display:none;"><canvas id="line_chart'+this.uniqueId+'"></canvas></div>';
+            this.options.element.line.div = '#line_div'+this.uniqueId;
+            this.options.element.line.canvas = '#line_chart'+this.uniqueId;
+
+            return line_div;
+        },
+        createScatterHTML: function(){
+            var self = this;
+
+            var scatter_div = '<div id="scatter_div'+this.uniqueId+'" style="display:none;">';
+            scatter_div += '<canvas id="scatter_chart'+this.uniqueId+'"></canvas>';
+            scatter_div += '<div class="btn-group">';
+
+            // X-selector
+            scatter_div += '<div class="btn-group">';
+            scatter_div += '<div class="dropdown">';
+            scatter_div += '<button aria-expanded="false" aria-haspopup="true" class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="scatter_selector_x'+this.uniqueId+'" type="button">X '+this.options.icon.caret+'</button>';
+            scatter_div += '<ul aria-labelledby="scatter_selector_x'+this.uniqueId+'" class="dropdown-menu" id="scatter_selector_x_menu'+this.uniqueId+'" role="menu">';
+            scatter_div += '<li class="dropdown-header">'+this.options.label.select_x_axis+'</li>';
+            $(this.element).find('thead tr th[data-chartable="true"]').each(function(){
+                var postfix = '';
+                if(typeof $(this).data('postfix') !== 'undefined'){
+                    postfix = $(this).data('postfix');
+                }
+                var reversed = false;
+                if(typeof $(this).data('reversed') !== 'undefined'){
+                    reversed = $(this).data('reversed');
+                }
+                if(typeof $(this).data('field') !== 'undefined'){
+                    var field = $(this).data('field');
+                }
+                var axis_label = '';
+                if(typeof $(this).data('axis-label') !== 'undefined'){
+                    axis_label = $("<div/>").html($(this).data('axis-label')).text();
+                }
+                var active = '';
+                var selected = '0';
+                if(field == self.options.scatter.x){
+                    active = ' class="active" ';
+                    selected = '1';
+                }
+                scatter_div += '<li'+active+'><a data-field="'+field+'" data-postfix="'+postfix+'" data-reversed="'+reversed+'" data-axis-label="'+axis_label+'" data-selected="'+selected+'" href="#" onclick="return false;">'+jQuery.trim($(this).text())+'</a></li>'
+            });
+            scatter_div += '</ul>';
+            scatter_div += '</div>';
+            scatter_div += '</div>';
+
+            // Y-selector
+            scatter_div += '<div class="btn-group">';
+            scatter_div += '<div class="dropdown">';
+            scatter_div += '<button aria-expanded="false" aria-haspopup="true" class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="scatter_selector_y'+this.uniqueId+'" type="button">Y '+this.options.icon.caret+'</button>';
+            scatter_div += '<ul aria-labelledby="scatter_selector_y'+this.uniqueId+'" class="dropdown-menu" id="scatter_selector_y_menu'+this.uniqueId+'" role="menu">';
+            scatter_div += '<li class="dropdown-header">'+this.options.label.select_y_axis+'</li>';
+            $(this.element).find('thead tr th[data-chartable="true"]').each(function(){
+                var postfix = '';
+                if(typeof $(this).data('postfix') !== 'undefined'){
+                    postfix = $(this).data('postfix');
+                }
+                var reversed = false;
+                if(typeof $(this).data('reversed') !== 'undefined'){
+                    reversed = $(this).data('reversed');
+                }
+                if(typeof $(this).data('field') !== 'undefined'){
+                    var field = $(this).data('field');
+                }
+                var axis_label = '';
+                if(typeof $(this).data('axis-label') !== 'undefined'){
+                    axis_label = $("<div/>").html($(this).data('axis-label')).text();
+                }
+                var active = '';
+                var selected = '0';
+                if(field == self.options.scatter.y){
+                    active = ' class="active" ';
+                    selected = '1';
+                }
+                scatter_div += '<li'+active+'><a data-field="'+field+'" data-postfix="'+postfix+'" data-reversed="'+reversed+'" data-axis-label="'+axis_label+'" data-selected="'+selected+'" href="#" onclick="return false;">'+jQuery.trim($(this).text())+'</a></li>'
+            });
+            scatter_div += '</ul>';
+            scatter_div += '</div>';
+            scatter_div += '</div>';
+
+            scatter_div += '</div>';
+
+            scatter_div += '</div>';
+            this.options.element.scatter.div = '#scatter_div'+this.uniqueId;
+            this.options.element.scatter.canvas = '#scatter_chart'+this.uniqueId;
+            this.options.element.scatter.selector_x_menu = '#scatter_selector_x_menu'+this.uniqueId;
+            this.options.element.scatter.selector_y_menu = '#scatter_selector_y_menu'+this.uniqueId;
+
+            // X
+            $(document).on("click", this.options.element.scatter.selector_x_menu + ' li a', function() {
+                $(self.options.element.scatter.selector_x_menu + ' li a').each(function(){
+                    $(this).data('selected',0);
+                    $(this).parent().removeClass('active');
+                });
+                $(this).data('selected', 1);
+                $(this).parent().addClass('active');
+                self.updateScatter();
+            });
+
+            // Y
+            $(document).on("click", this.options.element.scatter.selector_y_menu + ' li a', function() {
+                $(self.options.element.scatter.selector_y_menu + ' li a').each(function(){
+                    $(this).data('selected',0);
+                    $(this).parent().removeClass('active');
+                });
+                $(this).data('selected', 1);
+                $(this).parent().addClass('active');
+                self.updateScatter();
+            });
+
+            return scatter_div;
+        },
+        createComparisonHTML: function(){
+            var self = this;
+
+            var comparison_div = '<div id="comparison_div'+this.uniqueId+'" style="display:none;">';
+            comparison_div += '<canvas id="comparison_chart'+this.uniqueId+'"></canvas>';
+            comparison_div += '<div class="btn-group" style="margin-right:10px;">';
+
+            // Set selector
+            comparison_div += '<div class="dropdown">';
+            if(this.options.comparison.sets){
+                for (var i = 0; i < this.options.comparison.sets.length; i++) {
+                    var set = this.options.comparison.sets[i];
+                    if(set.title == self.options.comparison.active_set){
+                        comparison_div += '<button aria-expanded="false" aria-haspopup="true" class="btn btn-default dropdown-toggle selector-button-xlarge" data-toggle="dropdown" id="comparison_selector_set'+this.uniqueId+'" type="button">'+set.title+' '+this.options.icon.caret+'</button>';
+                        break;
+                    }
+                }
+            }else{
+                comparison_div += '<button aria-expanded="false" aria-haspopup="true" class="btn btn-default dropdown-toggle selector-button-xlarge" data-toggle="dropdown" id="comparison_selector_set'+this.uniqueId+'" type="button">'+this.options.icon.caret+'</button>';
+            }
+
+            comparison_div += '<ul aria-labelledby="comparison_selector_set" class="dropdown-menu" id="comparison_selector_set_menu'+this.uniqueId+'" role="menu">';
+            comparison_div += '<li class="dropdown-header">'+this.options.label.select_set+'</li>';
+            if(this.options.comparison.sets){
+                for (var i = 0; i < this.options.comparison.sets.length; i++) {
+                    var set = this.options.comparison.sets[i];
+                    var active = '';
+                    var selected = '0';
+                    if(set.title == self.options.comparison.active_set){
+                        active = ' class="active" ';
+                        selected = '1';
+                    }
+                    comparison_div += '<li'+active+'><a data-selected="'+selected+'" data-set="'+set.title+'" href="#" onclick="return false;">'+set.title+'</a></li>';
+                }
+            }
+            comparison_div += '</ul>';
+            comparison_div += '</div>';
+            comparison_div += '</div>';
+
+            comparison_div += '<div class="btn-group" role="group">';
+            // Row A
+            comparison_div += '<div class="btn-group">';
+            comparison_div += '<div class="dropdown">';
+            comparison_div += '<button class="btn btn-success dropdown-toggle selector-button-large" data-toggle="dropdown" id="comparison_selector_a'+this.uniqueId+'" type="button" aria-expanded="false" aria-haspopup="true">'+this.options.icon.caret+'</button>';
+            comparison_div += '<ul aria-labelledby="comparison_selector_a'+this.uniqueId+'" class="dropdown-menu" id="comparison_selector_a_menu'+this.uniqueId+'" role="menu">';
+            comparison_div += '<li class="dropdown-header">'+this.options.label.select_a_row+'</li>';
+            comparison_div += '</ul>';
+            comparison_div += '</div>';
+            comparison_div += '</div>';
+
+            // Row B
+            comparison_div += '<div class="btn-group">';
+            comparison_div += '<div class="dropdown">';
+            comparison_div += '<button class="btn btn-danger dropdown-toggle selector-button-large" data-toggle="dropdown" id="comparison_selector_b'+this.uniqueId+'" type="button" aria-expanded="false" aria-haspopup="true">'+this.options.icon.caret+'</button>';
+            comparison_div += '<ul aria-labelledby="comparison_selector_b'+this.uniqueId+'" class="dropdown-menu" id="comparison_selector_b_menu'+this.uniqueId+'" role="menu">';
+            comparison_div += '<li class="dropdown-header">'+this.options.label.select_b_row+'</li>';
+            comparison_div += '</ul>';
+            comparison_div += '</div>';
+            comparison_div += '</div>';
+
+            comparison_div += '</div>';
+
+            comparison_div += '</div>';
+
+            this.options.element.comparison.div = '#comparison_div'+this.uniqueId;
+            this.options.element.comparison.canvas = '#comparison_chart'+this.uniqueId;
+
+            this.options.element.comparison.selector_set_button = '#comparison_selector_set'+this.uniqueId;
+            this.options.element.comparison.selector_set_menu = '#comparison_selector_set_menu'+this.uniqueId;
+
+            this.options.element.comparison.selector_a_button = '#comparison_selector_a'+this.uniqueId;
+            this.options.element.comparison.selector_a_menu = '#comparison_selector_a_menu'+this.uniqueId;
+
+            this.options.element.comparison.selector_b_button = '#comparison_selector_b'+this.uniqueId;
+            this.options.element.comparison.selector_b_menu = '#comparison_selector_b_menu'+this.uniqueId;
+
+            // Set selector
+            $(document).on("click", this.options.element.comparison.selector_set_menu + ' li a', function() {
+                $(self.options.element.comparison.selector_set_menu + ' li a').each(function(){
+                    $(this).data('selected',0);
+                    $(this).parent().removeClass('active');
+                });
+                $(this).data('selected', 1);
+                $(this).parent().addClass('active');
+                $(self.options.element.comparison.selector_set_button).html($(this).text()+' '+self.options.icon.caret);
+                self.updateComparison();
+            });
+
+            // Row selector, A
+            $(document).on("click", this.options.element.comparison.selector_a_menu + ' li a', function() {
+                $(self.options.element.comparison.selector_a_menu + ' li a').each(function(){
+                    $(this).data('selected',0);
+                    $(this).parent().removeClass('active');
+                });
+                $(this).data('selected', 1);
+                $(this).parent().addClass('active');
+                $(self.options.element.comparison.selector_a_button).html($(this).text()+' '+self.options.icon.caret);
+                self.updateComparison();
+            });
+
+            // Row selector, B
+            $(document).on("click", this.options.element.comparison.selector_b_menu + ' li a', function() {
+                $(self.options.element.comparison.selector_b_menu + ' li a').each(function(){
+                    $(this).data('selected',0);
+                    $(this).parent().removeClass('active');
+                });
+                $(this).data('selected', 1);
+                $(this).parent().addClass('active');
+                $(self.options.element.comparison.selector_b_button).html($(this).text()+' '+self.options.icon.caret);
+                self.updateComparison();
+            });
+
+            return comparison_div;
+        },
+        createCustomHTML: function(mode_name, options){
+            var custom_graph_div = '<div id="'+mode_name+'_div'+this.uniqueId+'" style="display:none;">';
+            custom_graph_div += '<canvas id="'+mode_name+'_chart'+this.uniqueId+'"></canvas>';
+            custom_graph_div += '</div>';
+            //console.log(options);
+            this.options.custom_chart[mode_name] = {
+                'name': mode_name,
+                'type': options.type.split(':')[0],
+                'subtype': null,
+                'div': '#' + mode_name + '_div'+this.uniqueId,
+                'canvas': '#' + mode_name + '_chart'+this.uniqueId,
+                'chart': null,
+                'data': null,
+                'options': options,
+            };
+
+            if(options.type.split(':').length>1){
+                this.options.custom_chart[mode_name]['subtype'] = options.type.split(':')[1].split(',');
+            }
+
+            return custom_graph_div;
         },
         loadTableData: function(){
             var self = this;
@@ -4886,19 +4784,19 @@ jQuery( document ).ready(function() {
             if(header.length){
                 var header_options = {
                     field: field,
-                    rank: null,
+                    rank: undefined,
                     chartable: false,
-                    sortable: null,
-                    visible: null,
-                    beginatzero: null,
-                    align: null,
-                    tag: null,
-                    filter_control: null,
+                    sortable: undefined,
+                    visible: undefined,
+                    beginatzero: undefined,
+                    align: undefined,
+                    tag: undefined,
+                    filter_control: undefined,
                     text: header.text().trim(),
                     title: this.cleanFieldValue(header.html()),
-                    chart_mode: null,
+                    chart_mode: undefined,
                     value: {
-                        formatter: null,
+                        formatter: undefined,
                         postfix: '',
                         label: header.text().trim(),
                         pad: ''
@@ -4910,7 +4808,7 @@ jQuery( document ).ready(function() {
                     axis: {},
                     bar: {
                         sort_order: 'asc',
-
+                        item_width: null,
                         xaxis: {},
                         yaxis: {},
                         horizontal_highlights: {
@@ -4923,9 +4821,8 @@ jQuery( document ).ready(function() {
                         tooltips: {},
                         legend: {}
                     },
-
                     line: {
-                        fields: null,
+                        fields: undefined,
                         xaxis: {},
                         yaxis: {},
                         line: {},
@@ -4934,38 +4831,39 @@ jQuery( document ).ready(function() {
                             label: {}
                         },
                         legend: {}
-                    }
+                    },
+                    scatter: {},
+                    comparison: {}
                 };
 
                 if (typeof $(header).data('rank') !== 'undefined') {
                     header_options.rank = $(header).data('rank');
                 }
-
                 if (typeof header.data('chartable') !== 'undefined') {
                     header_options.chartable = header.data('chartable');
                 }
-
                 if (typeof header.data('sortable') !== 'undefined') {
                     header_options.sortable = header.data('sortable');
                 }
-
                 if (typeof header.data('visible') !== 'undefined') {
                     header_options.visible = header.data('visible');
                 }
-
                 if (typeof header.data('beginatzero') !== 'undefined') {
                     header_options.beginatzero = header.data('beginatzero');
                 }
-
                 if (typeof header.data('align') !== 'undefined') {
                     header_options.align = header.data('align');
                 }
                 if (typeof header.data('tag') !== 'undefined') {
                     header_options.tag = header.data('tag');
                 }
+                if (typeof header.data('group') !== 'undefined') {
+                    header_options.group = header.data('group');
+                }
                 if (typeof header.data('filter-control') !== 'undefined') {
                     header_options.filter_control = header.data('filter-control');
                 }
+
                 // Chart
                 if (typeof header.data('chart-mode') !== 'undefined') {
                     header_options.chart_mode = header.data('chart-mode');
@@ -4983,7 +4881,6 @@ jQuery( document ).ready(function() {
                 if(typeof header.data('dataset-labels') !== 'undefined'){
                     header_options.dataset.labels = header.data('dataset-labels').split(',')
                 }
-
                 if(typeof header.data('dataset-colors') !== 'undefined'){
                     header_options.dataset.colors = header.data('dataset-colors').split(',')
                 }
@@ -4999,8 +4896,13 @@ jQuery( document ).ready(function() {
                     header_options.value.label = $("<div/>").html(header_options.axis.label).text().trim();
                 }
 
+                // Bar chart
+                header_options.bar = jQuery.extend(true, {}, header_options.bar, this.getBarChartParameters(header));
 
-                // Bar plot
+                // Line chart
+                header_options.line = jQuery.extend(true, {}, header_options.line, this.getLineChartParameters(header));
+
+                /*
                 if(typeof header.data('bar-sort-field') !== 'undefined'){
                     header_options.bar.sort_field = header.data('bar-sort-field');
                 }
@@ -5012,6 +4914,12 @@ jQuery( document ).ready(function() {
                 }
                 if(typeof header.data('bar-show-yaxis') !== 'undefined'){
                     header_options.bar.yaxis.display = header.data('bar-show-yaxis');
+                }
+                if(typeof header.data('bar-xaxis-timeunit') !== 'undefined'){
+                    header_options.bar.xaxis.timeunit = header.data('bar-xaxis-timeunit');
+                }
+                if(typeof header.data('bar-xaxis-timestepsize') !== 'undefined'){
+                    header_options.bar.xaxis.timestepsize = header.data('bar-xaxis-timestepsize');
                 }
                 if(typeof header.data('bar-yaxis-gridlines') !== 'undefined'){
                     header_options.bar.yaxis.gridlines = header.data('bar-yaxis-gridlines');
@@ -5085,6 +4993,10 @@ jQuery( document ).ready(function() {
                 if(typeof header.data('bar-legend-position') !== 'undefined'){
                     header_options.bar.legend.position = header.data('bar-legend-position');
                 }
+                if(typeof header.data('bar-item-width') !== 'undefined'){
+                    header_options.bar.item_width = header.data('bar-item-width');
+                }
+
 
                 // Line plot
                 if(typeof header.data('line-extra-fields') !== 'undefined'){
@@ -5243,6 +5155,7 @@ jQuery( document ).ready(function() {
                 if(typeof header.data('line-legend-position') !== 'undefined'){
                     header_options.line.legend.position = header.data('line-legend-position');
                 }
+*/
 
                 // Post processing
                 if(header_options.value.formatter && header_options.value.formatter.startsWith('valueFormatter_inline_bar_')){
@@ -5258,76 +5171,46 @@ jQuery( document ).ready(function() {
         },
         updateTableVisibility : function(mode){
             if(mode=='show'){
-                $(this.$element[0].closest('.fixed-table-container')).show(this.options.animation.show_speed);
+                $(this.$element[0].closest('.fixed-table-container')).slideDown(this.options.animation.show_speed);
             }else if(mode=='hide'){
-                $(this.$element[0].closest('.fixed-table-container')).hide(this.options.animation.show_speed);
+                $(this.$element[0].closest('.fixed-table-container')).slideUp(this.options.animation.show_speed);
             }
         },
         updateVisualizationVisibility: function(mode){
-            if(mode==='off'){
-                if(this.options.chart_modes.indexOf('bar') > -1){
-                    this.hideBarChart();
+            // Hide
+            for(var mode_id=0; mode_id < this.options.chart_modes.length; mode_id++) {
+                if(mode !== this.options.chart_modes[mode_id]){
+                    if(this.options.chart_modes[mode_id]=='bar'){
+                        this.hideBarChart();
+                    }else if(this.options.chart_modes[mode_id]=='line'){
+                        this.hideLineChart();
+                    }else if(this.options.chart_modes[mode_id]=='scatter'){
+                        this.hideScatterChart();
+                    }else if(this.options.chart_modes[mode_id]=='comparison'){
+                        this.hideComparisonChart();
+                    }else{
+                        this.hideCustomChart(this.options.chart_modes[mode_id]);
+                    }
                 }
-                if(this.options.chart_modes.indexOf('line') > -1){
-                    this.hideLineChart();
+            }
+            // Show
+            for(var mode_id=0; mode_id < this.options.chart_modes.length; mode_id++) {
+                if(mode == this.options.chart_modes[mode_id]){
+                    if(this.options.chart_modes[mode_id]=='bar'){
+                        this.showBarChart();
+                    }else if(this.options.chart_modes[mode_id]=='line'){
+                        this.showLineChart();
+                    }else if(this.options.chart_modes[mode_id]=='scatter'){
+                        this.showScatterChart();
+                    }else if(this.options.chart_modes[mode_id]=='comparison'){
+                        this.showComparisonChart();
+                    }else{
+                        this.showCustomChart(this.options.chart_modes[mode_id]);
+                    }
                 }
-                if(this.options.chart_modes.indexOf('scatter') > -1){
-                    this.hideScatterChart();
-                }
-                if(this.options.chart_modes.indexOf('comparison') > -1){
-                    this.hideComparisonChart();
-                }
-
-            }else if(mode==='bar'){
-
-                if(this.options.chart_modes.indexOf('line') > -1){
-                    this.hideLineChart();
-                }
-                if(this.options.chart_modes.indexOf('scatter') > -1){
-                    this.hideScatterChart();
-                }
-                if(this.options.chart_modes.indexOf('comparison') > -1){
-                    this.hideComparisonChart();
-                }
-                this.showBarChart();
-
-            }else if(mode==='line'){
-
-                if(this.options.chart_modes.indexOf('bar') > -1){
-                    this.hideBarChart();
-                }
-                if(this.options.chart_modes.indexOf('scatter') > -1){
-                    this.hideScatterChart();
-                }
-                if(this.options.chart_modes.indexOf('comparison') > -1){
-                    this.hideComparisonChart();
-                }
-                this.showLineChart();
-
-            }else if(mode==='scatter'){
-
-                if(this.options.chart_modes.indexOf('bar') > -1){
-                    this.hideBarChart();
-                }
-                if(this.options.chart_modes.indexOf('line') > -1){
-                    this.hideLineChart();
-                }
-                if(this.options.chart_modes.indexOf('comparison') > -1){
-                    this.hideComparisonChart();
-                }
-                this.showScatterChart();
-
-            }else if(mode==='comparison'){
-                if(this.options.chart_modes.indexOf('bar') > -1){
-                    this.hideBarChart();
-                }
-                if(this.options.chart_modes.indexOf('line') > -1){
-                    this.hideLineChart();
-                }
-                if(this.options.chart_modes.indexOf('scatter') > -1){
-                    this.hideScatterChart();
-                }
-                this.showComparisonChart();
+            }
+            if(mode == 'off'){
+                $('#datatable_visualization'+this.uniqueId).height(0);
             }
         },
         updateChart: function () {
@@ -5345,6 +5228,8 @@ jQuery( document ).ready(function() {
 
                 }else if(this.chart_mode == 'comparison'){
                     this.updateComparison();
+                }else{
+                    this.updateCustomChart(this.chart_mode);
                 }
             }
         },
@@ -5375,6 +5260,7 @@ jQuery( document ).ready(function() {
             chart_ctx.height = options.bar.height;
 
             var table_data = this.$element.bootstrapTable('getData');
+            var value_name = table_options.sortName;
             var sort_name = table_options.sortName;
             var id_field = table_options.idField;
 
@@ -5385,14 +5271,32 @@ jQuery( document ).ready(function() {
                 table_data.sort(function(a, b){
                     return self.valueSorter(a[header_options.bar.sort_field], b[header_options.bar.sort_field], header_options.bar.sort_order);
                 });
-            }
+                sort_name = header_options.bar.sort_field;
 
+            }else if(options.bar.xaxis.field){
+                // Get xaxis_field
+                var xaxis_field = id_field; // Default value
+                if(options.bar.xaxis.field){
+                    xaxis_field = options.bar.xaxis.field
+                }
+
+                if(options.bar.xaxis.sorted){
+                    // Sort data
+                    table_data.sort(function(a, b){
+                        return self.valueSorter(a[xaxis_field], b[xaxis_field], 'asc');
+                    });
+                }
+                sort_name = options.bar.xaxis.field;
+            }
             var datasets = [];
             var labels = [];
 
             for (var row_id = 0; row_id < table_data.length; row_id++) {
                 // Go through the table data and collect values and colors for bar plot.
-                var label = $("<div/>").html(table_data[row_id][options.table.id_field]).text().trim().replace(/<(?:.|\n)*?>/gm, '').replace('_',' ');
+                var label = '';
+                if(sort_name != value_name){
+                    label = $("<div/>").html(table_data[row_id][sort_name]).text().trim().replace(/<(?:.|\n)*?>/gm, '').replace('_',' ');
+                }
 
                 // Make sure labels are unique, if overlapping labels add whitespaces at the end.
                 if(labels.indexOf(label) > -1){
@@ -5406,10 +5310,15 @@ jQuery( document ).ready(function() {
                 labels.push(label);
             }
 
+            var time_mode = false;
+            if((new Date(labels[0])).getTime() > 0){
+                time_mode = true;
+            }
+
             var stacked_chart = false;
             var stacked_items = 1;
             for (var row_id = 0; row_id < table_data.length; row_id++) {
-                var values = self.parseDataList(table_data[row_id][sort_name]);
+                var values = self.parseDataList(table_data[row_id][value_name]);
                 if(values.length > 1){
                     stacked_chart = true;
                     if(values.length > stacked_items){
@@ -5422,7 +5331,7 @@ jQuery( document ).ready(function() {
                 if(header_options.dataset.labels.length == 0){
                     header_options.dataset.labels = new Array(stacked_items);
                     for (var row_id = 0; row_id < table_data.length; row_id++) {
-                        var values = self.parseDataList(table_data[row_id][sort_name]);
+                        var values = self.parseDataList(table_data[row_id][value_name]);
                         for (var value_id = 0; value_id < values.length; value_id++) {
                             if(values[value_id].label){
                                 header_options.dataset.labels[value_id] = values[value_id].label;
@@ -5452,7 +5361,7 @@ jQuery( document ).ready(function() {
                     var all_value_max = -Infinity;
 
                     for (var row_id = 0; row_id < table_data.length; row_id++) {
-                        var values = self.parseDataList(table_data[row_id][sort_name]);
+                        var values = self.parseDataList(table_data[row_id][value_name]);
                         var value_sum = 0;
                         for (var ii = 0; ii < values.length; ii++) {
                             value_sum += values[ii]['y_value'];
@@ -5465,11 +5374,12 @@ jQuery( document ).ready(function() {
                         };
 
                         if(values.length > dataset_id && values[dataset_id]['y_value']){
-
                             var percentage = values[dataset_id]['y_value'];
+
                             if(value_sum > 100.0 && value_sum < 101.0){
                                 percentage = percentage/value_sum * 100.0;
                             }
+
                             item.value = percentage;
                         }
 
@@ -5477,10 +5387,13 @@ jQuery( document ).ready(function() {
 
                         if(header_options.value.formatter){
                             var value_string = this.stripHTML(window[header_options.value.formatter](item.value));
+
                             if(header_options.value.pad){
                                 value_string = (value_string + header_options.value.pad).substring(0, header_options.value.pad.length);
                             }
+
                             dataset.data_string.push(value_string);
+
                         }else{
                             dataset.data_string.push(this.injectValuePostfix(item.value, header_options.value.postfix));
                         }
@@ -5560,7 +5473,8 @@ jQuery( document ).ready(function() {
                     borderColor: [],
                     borderWidth: 2,
                     hoverBackgroundColor: [],
-                    hoverBorderColor: []
+                    hoverBorderColor: [],
+
                 };
 
                 var all_value_min = Infinity;
@@ -5568,13 +5482,18 @@ jQuery( document ).ready(function() {
 
                 for (var row_id = 0; row_id < table_data.length; row_id++) {
                     // Convert value to float
-                    var item = self.parseNumericValue(table_data[row_id][sort_name]);
-                    dataset.data.push(item.value);
+                    var item = self.parseNumericValue(table_data[row_id][value_name]);
+
+                    //dataset.data.push(item.value);
+                    dataset.data.push({
+                        x: $("<div/>").html(table_data[row_id][sort_name]).text().trim().replace(/<(?:.|\n)*?>/gm, '').replace('_',' '),
+                        y: item.value
+                    });
 
                     if(header_options.value.formatter){
-                        dataset.data_string.push(this.stripHTML(window[header_options.value.formatter](table_data[row_id][sort_name])));
+                        dataset.data_string.push(this.stripHTML(window[header_options.value.formatter](table_data[row_id][value_name])));
                     }else{
-                        dataset.data_string.push(this.injectValuePostfix(table_data[row_id][sort_name], header_options.value.postfix));
+                        dataset.data_string.push(this.injectValuePostfix(table_data[row_id][value_name], header_options.value.postfix));
                     }
 
                     dataset.data_uniqueid.push(table_data[row_id][table_options.idField]);
@@ -5593,8 +5512,8 @@ jQuery( document ).ready(function() {
                         if(value_max < value_min) {
                             // Flip max and min
                             var value_tmp = value_min;
-                            var value_min = value_max;
-                            var value_max = value_tmp;
+                            value_min = value_max;
+                            value_max = value_tmp;
                         }
 
                         if(all_value_max < value_max){
@@ -5657,7 +5576,7 @@ jQuery( document ).ready(function() {
 
                 // Axis scaling
                 var axis_scale = 'linear';
-                var axis_scale_type =null;
+                var axis_scale_type = null;
                 if(header_options.axis.scale){
 
                     if(header_options.axis.scale.startsWith('log')) {
@@ -5719,18 +5638,35 @@ jQuery( document ).ready(function() {
                     caretPadding = 0;
                 }
 
+                var barThickness = undefined;
+
+                if(sort_name !== value_name){
+                    if(header_options.bar.item_width) {
+                        barThickness = header_options.bar.item_width;
+                    }else if(this.options.bar.item_width){
+                        barThickness = this.options.bar.item_width;
+                    }else{
+                        barThickness = 30;
+                    }
+                }
+
                 var chart_options = {
                     layout: {
                         padding: padding
                     },
                     scales: {
                         xAxes: [{
+                            offset: true,
                             display: options.bar.xaxis.display,
                             stacked: stacked_chart,
                             ticks: {
                                 autoSkip: false,
                                 maxRotation: 90
-                            }
+                            },
+                            gridLines: {
+                                display: options.bar.xaxis.gridlines
+                            },
+                            barThickness: barThickness
                         }],
                         yAxes: [{
                             display: options.bar.yaxis.display,
@@ -5843,6 +5779,22 @@ jQuery( document ).ready(function() {
                     }
                 };
 
+                // X-axis is time
+                if(time_mode){
+                    chart_options.scales.xAxes[0].type = 'time';
+                    chart_options.scales.xAxes[0].distribution = 'linear';
+                    chart_options.scales.xAxes[0].time = {};
+                    chart_options.scales.xAxes[0].time.displayFormats = options.time.display_formats;
+
+                    if(options.bar.xaxis.timeunit){
+                        chart_options.scales.xAxes[0].time.unit = options.bar.xaxis.timeunit;
+                    }
+                    if(options.bar.xaxis.timestepsize){
+                        chart_options.scales.xAxes[0].time.stepSize = options.bar.xaxis.timestepsize;
+                    }
+                    chart_options.scales.xAxes[0].ticks = {};
+                }
+
                 // Handle tooltip labels
                 if(stacked_chart){
                     chart_options.tooltips.callbacks.label = function(tooltipItems, data){
@@ -5907,16 +5859,76 @@ jQuery( document ).ready(function() {
             var self = this;
             if(this.validBar()){
                 if($(this.options.element.bar.div).is(":hidden")){
-                    $(this.options.element.bar.div).show(this.options.animation.show_speed, function(){
+                    $(this.options.element.bar.div).slideDown(this.options.animation.show_speed, function(){
                         self.updateBar();
+                        $('#datatable_visualization'+self.uniqueId).height($(self.options.element.bar.div).height());
                     });
                 }
             }
         },
         hideBarChart: function (){
             if($(this.options.element.bar.div).is(":visible")){
-                $(this.options.element.bar.div).hide(this.options.animation.hide_speed, function(){});
+                $('#datatable_visualization'+this.uniqueId).height($(this.options.element.bar.div).height());
+                $(this.options.element.bar.div).slideUp(this.options.animation.hide_speed, function(){});
             }
+        },
+        getBarChartParameters: function(data) {
+            var parameters = jQuery.extend(true, {}, this.defaults.bar);
+
+            parameters.height = this.getParameterItem(data, 'bar-height');
+
+            parameters.sort_field = this.getParameterItem(data, 'bar-sort-field');
+            parameters.sort_order = this.getParameterItem(data, 'bar-sort-order');
+
+            parameters.horizontal_line.enabled = this.getParameterItem(data, 'bar-hline');
+
+            parameters.xaxis.display = this.getParameterItem(data, 'bar-show-xaxis');
+            parameters.xaxis.field = this.getParameterItem(data, 'bar-xaxis-field');
+            parameters.xaxis.sorted = this.getParameterItem(data, 'bar-xaxis-sorted');
+            parameters.xaxis.timeunit = this.getParameterItem(data, 'bar-xaxis-timeunit');
+            parameters.xaxis.timestepsize = this.getParameterItem(data, 'bar-xaxis-timestepsize');
+            parameters.xaxis.gridlines = this.getParameterItem(data, 'bar-xaxis-gridlines');
+
+            parameters.yaxis.display = this.getParameterItem(data, 'bar-show-yaxis');
+            parameters.yaxis.gridlines = this.getParameterItem(data, 'bar-yaxis-gridlines');
+
+            parameters.horizontal_highlights.data = this.getParameterItem(data, 'bar-horizontal-highlights');
+            if(parameters.horizontal_highlights.data){
+                parameters.horizontal_highlights.data = this.parseDataList(parameters.horizontal_highlights.data);
+                if(parameters.horizontal_highlights.data.length==0 && parameters.horizontal_highlights.enabled){
+                    parameters.horizontal_highlights.enabled = false;
+                }
+            }
+
+            parameters.horizontal_highlights.opacity = this.getParameterItem(data, 'bar-horizontal-highlight-opacity');
+            parameters.horizontal_highlights.lineWidth = this.getParameterItem(data, 'bar-horizontal-highlight-width');
+            parameters.horizontal_highlights.strokeStyle = this.getParameterItem(data, 'bar-horizontal-highlight-stroke');
+            parameters.horizontal_highlights.label.position = this.getParameterItem(data, 'bar-horizontal-highlight-label-position');
+            parameters.horizontal_highlights.label.fillStyle = this.getParameterItem(data, 'bar-horizontal-highlight-label-fill');
+            parameters.horizontal_highlights.label.fontSize = this.getParameterItem(data, 'bar-horizontal-highlight-label-size');
+            parameters.horizontal_highlights.label.opacity = this.getParameterItem(data, 'bar-horizontal-highlight-label-opacity');
+
+            parameters.vertical_indicator_line.enabled = this.getParameterItem(data, 'bar-show-vertical-indicator');
+            parameters.vertical_indicator_line.lineWidth = this.getParameterItem(data, 'bar-vertical-indicator-width');
+            parameters.vertical_indicator_line.strokeStyle = this.getParameterItem(data, 'bar-vertical-indicator-stroke');
+
+            parameters.horizontal_indicator_line.enabled = this.getParameterItem(data, 'bar-show-horizontal-indicator');
+            parameters.horizontal_indicator_line.lineWidth = this.getParameterItem(data, 'bar-horizontal-indicator-width');
+            parameters.horizontal_indicator_line.strokeStyle = this.getParameterItem(data, 'bar-horizontal-indicator-stroke');
+            parameters.horizontal_indicator_line.fillStyle = this.getParameterItem(data, 'bar-horizontal-indicator-fill');
+
+            parameters.error_bar.enabled = this.getParameterItem(data, 'bar-show-error-bar');
+            parameters.error_bar.lineWidth = this.getParameterItem(data, 'bar-error-bar-linewidth');
+            parameters.error_bar.tipWidth = this.getParameterItem(data, 'bar-error-bar-tipwidth');
+            parameters.error_bar.strokeStyle = this.getParameterItem(data, 'bar-error-bar-stroke');
+
+            parameters.tooltips.position = this.getParameterItem(data, 'bar-tooltip-position');
+
+            parameters.legend.enabled = this.getParameterItem(data, 'bar-show-legend');
+            parameters.legend.position = this.getParameterItem(data, 'bar-legend-position');
+
+            parameters.item_width = this.getParameterItem(data, 'bar-item-width');
+            return parameters;
         },
 
         // Line
@@ -5932,6 +5944,7 @@ jQuery( document ).ready(function() {
             if(!options.line.fields){
                 options.line.fields = [header_options.field];
             }
+
             if($(this.element).bootstrapTable('getData').length > 0){
                 for(var field_id = 0; field_id < options.line.fields.length; field_id++) {
                     var current_header_options = this.getHeaderOptions(options.line.fields[field_id]);
@@ -5945,7 +5958,6 @@ jQuery( document ).ready(function() {
         },
         updateLine: function (){
             var self = this;
-
             // Destroy existing chart
             if (this.line_chart){
                 this.line_chart.destroy();
@@ -5961,6 +5973,7 @@ jQuery( document ).ready(function() {
 
             // Override global options with header wise options.
             var options = jQuery.extend(true, {}, this.options);
+            //options.line = jQuery.extend(true, {}, options.line, header_options.line);
             options.line = jQuery.extend(true, {}, options.line, header_options.line);
 
             // Get chart ctx
@@ -6166,6 +6179,7 @@ jQuery( document ).ready(function() {
             }else{
                 var dataset_id = 0;
                 for(var field_id = 0; field_id < options.line.fields.length; field_id++){
+
                     var current_header_options = this.getHeaderOptions(options.line.fields[field_id]);
                     if(current_header_options.chartable){
                         if(!beginAtZero){
@@ -6397,6 +6411,7 @@ jQuery( document ).ready(function() {
                         top: 40 + datasets.length *12,
                         bottom: 0
                     };
+
                 }else if(options.line.tooltips.position === 'bottom'){
                     tooltip_position = 'line_centered_bottom';
                     padding = {
@@ -6405,6 +6420,7 @@ jQuery( document ).ready(function() {
                         top: 0,
                         bottom: 40 + datasets.length *12
                     };
+
                 }
 
                 var chart_options = {
@@ -6586,7 +6602,6 @@ jQuery( document ).ready(function() {
                     options: chart_options
                 });
 
-
                 this.line_chart_data = chart_data;
 
             }else{
@@ -6599,16 +6614,106 @@ jQuery( document ).ready(function() {
             var self = this;
             if(this.validLine()) {
                 if ($(this.options.element.line.div).is(":hidden")) {
-                    $(this.options.element.line.div).show(this.options.animation.show_speed, function () {
+                    $(this.options.element.line.div).slideDown(this.options.animation.show_speed, function () {
                         self.updateLine();
+                        $('#datatable_visualization' + self.uniqueId).height($(self.options.element.line.div).height());
                     });
                 }
             }
         },
         hideLineChart: function (){
             if($(this.options.element.line.div).is(":visible")){
-                $(this.options.element.line.div).hide(this.options.animation.hide_speed, function(){});
+                $('#datatable_visualization'+this.uniqueId).height($(this.options.element.line.div).height());
+                $(this.options.element.line.div).slideUp(this.options.animation.hide_speed, function(){});
             }
+        },
+        getLineChartParameters: function(data) {
+            var parameters = jQuery.extend(true, {}, this.defaults.line);
+
+            parameters.fields = this.getParameterItem(data, 'line-fields');
+            if(parameters.fields){
+                parameters.fields = parameters.fields.split(',').map(function(item) {
+                    return item.trim();
+                });
+            }
+            parameters.fields = this.getParameterItem(data, 'line-extra-fields');
+            if(parameters.fields){
+                parameters.fields = parameters.fields.split(',').map(function(item) {
+                    return item.trim();
+                });
+            }
+
+            parameters.fill = this.getParameterItem(data, 'line-fill');
+
+            parameters.xaxis.display = this.getParameterItem(data, 'line-show-xaxis');
+            parameters.xaxis.field = this.getParameterItem(data,'line-xaxis-field');
+            parameters.xaxis.sorted = this.getParameterItem(data,'line-xaxis-sorted');
+            parameters.xaxis.timeunit = this.getParameterItem(data, 'line-xaxis-timeunit');
+            parameters.xaxis.timestepsize = this.getParameterItem(data, 'line-xaxis-timestepsize');
+            parameters.xaxis.gridlines = this.getParameterItem(data, 'line-xaxis-gridlines');
+            parameters.yaxis.beginatzero = this.getParameterItem(data, 'line-yaxis-beginatzero');
+            parameters.yaxis.label = this.getParameterItem(data, 'line-yaxis-label');
+            parameters.yaxis.scale = this.getParameterItem(data, 'line-yaxis-scale');
+            parameters.yaxis.gridlines = this.getParameterItem(data, 'line-yaxis-gridlines');
+            parameters.height = this.getParameterItem(data, 'line-height');
+            parameters.point.enabled = this.getParameterItem(data, 'line-show-point');
+            parameters.point.radius.normal = this.getParameterItem(data, 'line-point-radius');
+            parameters.point.radius.hover = this.getParameterItem(data, 'line-point-radius-hover');
+            parameters.line.enabled = this.getParameterItem(data, 'line-show-line');
+            parameters.vertical_indicator_line.enabled = this.getParameterItem(data, 'line-show-vertical-indicator');
+            parameters.vertical_indicator_line.lineWidth = this.getParameterItem(data, 'line-vertical-indicator-width');
+            parameters.vertical_indicator_line.strokeStyle = this.getParameterItem(data, 'line-vertical-indicator-stroke');
+            parameters.horizontal_indicator_line.enabled = this.getParameterItem(data, 'line-show-horizontal-indicator');
+            parameters.horizontal_indicator_line.lineWidth = this.getParameterItem(data, 'line-horizontal-indicator-width');
+            parameters.horizontal_indicator_line.strokeStyle = this.getParameterItem(data, 'line-horizontal-indicator-stroke');
+            parameters.horizontal_indicator_line.fillStyle = this.getParameterItem(data, 'line-horizontal-indicator-fill');
+            parameters.horizontal_highlights.enabled = this.getParameterItem(data, 'line-show-horizontal-highlights');
+            parameters.horizontal_highlights.data = this.getParameterItem(data, 'line-horizontal-highlights');
+            if(parameters.horizontal_highlights.data){
+                parameters.horizontal_highlights.data = this.parseDataList(parameters.horizontal_highlights.data);
+                if(parameters.horizontal_highlights.data.length==0 && parameters.horizontal_highlights.enabled){
+                    parameters.horizontal_highlights.enabled = false;
+                }
+            }
+            parameters.horizontal_highlights.opacity = this.getParameterItem(data, 'line-horizontal-highlight-opacity');
+            parameters.horizontal_highlights.lineWidth = this.getParameterItem(data, 'line-horizontal-highlight-width');
+            parameters.horizontal_highlights.strokeStyle = this.getParameterItem(data, 'line-horizontal-highlight-stroke');
+            parameters.horizontal_highlights.label.position = this.getParameterItem(data, 'line-horizontal-highlight-label-position');
+            parameters.horizontal_highlights.label.fillStyle = this.getParameterItem(data, 'line-horizontal-highlight-label-fill');
+            parameters.horizontal_highlights.label.fontSize = this.getParameterItem(data, 'line-horizontal-highlight-label-size');
+            parameters.horizontal_highlights.label.opacity = this.getParameterItem(data, 'line-horizontal-highlight-label-opacity');
+            parameters.vertical_segments.enabled = this.getParameterItem(data,'line-show-vertical-segments');
+
+            parameters.vertical_segments.data = this.getParameterItem(data, 'line-vertical-segments');
+            if(parameters.vertical_segments.data){
+                parameters.vertical_segments.data = this.parseSegmentList(parameters.vertical_segments.data);
+                if(parameters.vertical_segments.data.length==0 && parameters.vertical_segments.enabled){
+                    parameters.vertical_segments.enabled = false;
+                }
+            }
+
+            parameters.vertical_segments.opacity = this.getParameterItem(data, 'line-vertical-segment-opacity');
+            parameters.vertical_segments.label.position = this.getParameterItem(data, 'line-vertical-segment-label-position');
+            parameters.vertical_segments.label.fillStyle = this.getParameterItem(data, 'line-vertical-segment-label-fill');
+            parameters.vertical_segments.label.fontSize = this.getParameterItem(data, 'line-vertical-segment-label-size');
+            parameters.vertical_segments.label.opacity = this.getParameterItem(data, 'line-vertical-segment-label-opacity');
+
+            parameters.error_bar.enabled = this.getParameterItem(data, 'line-show-error-bar');
+            parameters.error_bar.lineWidth = this.getParameterItem(data, 'line-error-bar-linewidth');
+            parameters.error_bar.tipWidth = this.getParameterItem(data, 'line-error-bar-tipwidth');
+            parameters.error_bar.strokeStyle = this.getParameterItem(data, 'line-error-bar-stroke');
+
+            parameters.interval.enabled = this.getParameterItem(data, 'line-show-interval');
+            parameters.interval.lineWidth = this.getParameterItem(data, 'line-interval-linewidth');
+
+            parameters.horizontal_line.enabled = this.getParameterItem(data, 'line-hline');
+
+            parameters.tooltips.position = this.getParameterItem(data, 'line-tooltip-position');
+
+            parameters.legend.enabled = this.getParameterItem(data, 'line-show-legend');
+            parameters.legend.position = this.getParameterItem(data, 'line-legend-position');
+
+            return parameters;
         },
 
         // Scatter
@@ -7073,6 +7178,30 @@ jQuery( document ).ready(function() {
                 $(this.options.element.scatter.div).hide(this.options.animation.hide_speed, function(){});
             }
         },
+        getScatterChartParameters: function(data) {
+            var parameters = jQuery.extend(true, {}, this.defaults.scatter);
+
+            parameters.height = this.getParameterItem(data, 'scatter-height');
+            parameters.x = this.getParameterItem(data, 'scatter-x');
+            parameters.y = this.getParameterItem(data, 'scatter-y');
+            parameters.point.normal = this.getParameterItem(data, 'scatter-point-radius');
+            parameters.point.hover = this.getParameterItem(data, 'scatter-point-radius-hover');
+            parameters.vertical_indicator_line.enabled = this.getParameterItem(data, 'scatter-show-vertical-indicator');
+            parameters.vertical_indicator_line.lineWidth = this.getParameterItem(data, 'scatter-vertical-indicator-width');
+            parameters.vertical_indicator_line.strokeStyle = this.getParameterItem(data, 'scatter-vertical-indicator-stroke');
+            parameters.horizontal_indicator_line.enabled = this.getParameterItem(data, 'scatter-show-horizontal-indicator');
+            parameters.horizontal_indicator_line.lineWidth = this.getParameterItem(data, 'scatter-horizontal-indicator-width');
+            parameters.horizontal_indicator_line.strokeStyle = this.getParameterItem(data, 'scatter-horizontal-indicator-stroke');
+            parameters.horizontal_indicator_line.fillStyle = this.getParameterItem(data, 'scatter-horizontal-indicator-fill');
+            parameters.error_bar.enabled = this.$element.data('line-show-error-bar');
+            parameters.error_bar.lineWidth = this.getParameterItem(data, 'scatter-error-bar-linewidth');
+            parameters.error_bar.tipWidth = this.getParameterItem(data, 'scatter-error-bar-tipwidth');
+            parameters.error_bar.strokeStyle = this.getParameterItem(data, 'scatter-error-bar-stroke');
+            parameters.error_bar.bounding_box = this.$element.data('line-show-error-box');
+            parameters.error_bar.fillStyle = this.getParameterItem(data, 'scatter-error-box-fill');
+
+            return parameters;
+        },
 
         // Comparison
         initComparison: function(){
@@ -7440,6 +7569,773 @@ jQuery( document ).ready(function() {
         hideComparisonChart: function (){
             if($(this.options.element.comparison.div).is(":visible")){
                 $(this.options.element.comparison.div).hide(this.options.animation.hide_speed, function(){});
+            }
+        },
+        getComparisonChartParameters: function(data) {
+            var parameters = jQuery.extend(true, {}, this.defaults.comparison);
+
+            parameters.height = this.getParameterItem(data, 'comparison-height');
+            parameters.row_id_field = this.getParameterItem(data, 'comparison-row-id-field');
+            parameters.sets = this.getParameterItem(data, 'comparison-sets-json');
+            parameters.active_set = this.getParameterItem(data, 'comparison-active-set');
+            parameters.a_row = this.getParameterItem(data, 'comparison-a-row');
+            parameters.b_row = this.getParameterItem(data, 'comparison-b-row');
+            parameters.error_bar.enabled = this.getParameterItem(data, 'comparison-show-error-bar');
+            parameters.error_bar.lineWidth = this.getParameterItem(data, 'comparison-error-bar-linewidth');
+            parameters.error_bar.tipWidth = this.getParameterItem(data, 'comparison-error-bar-tipwidth');
+            parameters.error_bar.strokeStyle = this.getParameterItem(data, 'comparison-error-bar-stroke');
+
+            return parameters;
+        },
+
+        // Custom
+        updateCustomChart: function(name){
+            //console.log('------------------');
+            //console.log('updateCustomChart', name, this.options.custom_chart[name].type);
+            var self = this;
+
+            var stacked_chart = false;
+            var type = this.options.custom_chart[name].type;
+            if(!['bar', 'line', 'scatter'].includes(type)){
+                return;
+            }
+            var subtype = this.options.custom_chart[name].subtype;
+            if(subtype == null){
+                subtype = [];
+            }
+            // Get table options and data
+            var table_options = $(this.element).bootstrapTable('getOptions');
+            var table_data = $(this.element).bootstrapTable('getData');
+            var header_options = null;
+
+            var yaxis_field = table_options.sortName;
+            var free_sort_mode = false;
+
+            if(this.options.custom_chart[name].options.y){
+                yaxis_field = this.options.custom_chart[name].options.y;
+            }else{
+                free_sort_mode = true;
+            }
+
+            if(yaxis_field.includes(';')){
+                yaxis_field = yaxis_field.split(';');
+                header_options = this.getHeaderOptions(yaxis_field[0]);
+                header_options[type].fields = yaxis_field;
+
+                if(subtype.includes('stacked')){
+                    stacked_chart = true;
+                }
+            }else{
+                header_options = this.getHeaderOptions(yaxis_field);
+                header_options[type].fields = [yaxis_field];
+            }
+
+            console.log(header_options);
+            var xaxis_field = this.options.custom_chart[name].options.x;
+            if(typeof xaxis_field === 'undefined'){
+                if(typeof header_options[type].xaxis.field !== 'undefined') {
+                    xaxis_field = header_options[type].xaxis.field;
+
+                }else if(type == 'bar' && typeof table_options.barXaxisField !== 'undefined'){
+                    xaxis_field = table_options.barXaxisField;
+
+                }else if(type == 'line' && typeof table_options.lineXaxisField !== 'undefined'){
+                    xaxis_field = table_options.lineXaxisField;
+
+                }else{
+                    xaxis_field = table_options.idField;
+                }
+            }
+
+            //console.log(xaxis_field, yaxis_field);
+            // Destroy existing chart
+            if (this.options.custom_chart[name].chart){
+                this.options.custom_chart[name].chart.destroy();
+            }
+
+            // Override global options with header wise options.
+            var options = jQuery.extend(true, {}, this.options);
+            options[type] = jQuery.extend(true, {}, options[type], header_options[type]);
+            //options[type] = jQuery.extend(true, {}, options[type], this.options.custom_chart[name].options);
+
+            // Get chart ctx
+            var chart_ctx = document.getElementById(this.options.custom_chart[name].canvas.replace('#',''));
+            chart_ctx.width = $(this.options.custom_chart[name].div).innerWidth();
+            chart_ctx.height = options[type].height;
+
+            if(['bar', 'line'].includes(type) && options[type].xaxis.sorted){
+                // Sort data
+                table_data.sort(function(a, b){
+                    return self.valueSorter(a[xaxis_field], b[xaxis_field], 'asc');
+                });
+            }
+
+            // Get axis labels
+            var labels = [];
+            for (var row_id = 0; row_id < table_data.length; row_id++) {
+                var label = $("<div/>").html(table_data[row_id][xaxis_field]).text().trim().replace(/<(?:.|\n)*?>/gm, '').replace('_',' ');
+                // Make sure labels are unique, if overlapping labels add whitespaces at the end.
+                if(labels.indexOf(label) > -1){
+                    var num_of_occurances = 0;
+                    for (var label_id = 0; label_id < labels.length; label_id++){
+                        if(labels[label_id] === label)
+                            num_of_occurances++;
+                    }
+                    label = label + new Array(num_of_occurances + 1).join(' ');
+                }
+                labels.push(label);
+            }
+            //console.log(labels);
+            var time_mode = false;
+            if((new Date(labels[0])).getTime() > 0){
+                time_mode = true;
+            }
+
+            // If no field is set, add current sort column.
+            if(!options[type].fields){
+                options[type].fields = [header_options.field];
+            }
+
+            // Go through data and count datasets
+            var multiple_values_per_column = false;
+            var field_sub_columns = {};
+            for (var field_id = 0; field_id < options[type].fields.length; field_id++){
+                if(!field_sub_columns.hasOwnProperty(options[type].fields[field_id])){
+                    field_sub_columns[options[type].fields[field_id]] = {
+                        count: 0,
+                        labels: [],
+                    };
+                }
+                //var current_header_options = self.getHeaderOptions(options[type].fields[field_id]);
+
+                for (var row_id = 0; row_id < table_data.length; row_id++) {
+                    var values = self.parseDataList(table_data[row_id][options[type].fields[field_id]]);
+
+                    if (values.length > 1) {
+                        if(subtype.includes('stacked') || free_sort_mode){
+                            stacked_chart = true;
+                        }
+
+                        multiple_values_per_column = true;
+                        if (values.length > field_sub_columns[options[type].fields[field_id]].count) {
+                            field_sub_columns[options[type].fields[field_id]].count = values.length;
+
+                            var current_field_labels = [];
+                            $.each(values, function(index, value){
+                                if(value.label === null){
+                                    current_field_labels.push((index+1));
+                                }else{
+                                    current_field_labels.push(value.label);
+                                }
+                            });
+
+                            field_sub_columns[options[type].fields[field_id]].labels = current_field_labels;
+                        }
+                    }else{
+                        field_sub_columns[options[type].fields[field_id]].count = 1;
+                    }
+                }
+            }
+
+            // Create datasets
+            var datasets = [];
+            var dataset_id = 0;
+
+            $.each(field_sub_columns, function(field, value){
+                //console.log(value);
+                var current_header_options = self.getHeaderOptions(field);
+                //console.log(field, current_header_options.beginatzero);
+                for(var id = 0; id < value.count; id++){
+                    var label = '';
+
+                    if(value.labels.length){
+                        label = current_header_options.title + ' (' + value.labels[id] + ')';
+                    }else{
+                        label = current_header_options.title;
+                    }
+                    var current_dataset = {
+                        label: label,
+                        value_postfix: current_header_options.value.postfix,
+
+                        stack: current_header_options.title,
+
+                        // Data
+                        data: [],
+                        data_uniqueid: [],
+                        data_min: [],
+                        data_max: [],
+                        data_string: [],
+
+                        // Horizontal line
+                        horizontal_line_value: [],
+                        horizontal_line_color: [],
+
+                        // Border line
+                        //borderWidth: 2,
+                        borderColor: self.colorCode(options.colors.datasets[dataset_id], 0.70),
+                        lineTension: 0,
+                        spanGaps: true,
+
+                        // Background
+                        fill: options[type].fill,
+                        backgroundColor: self.colorCode(options.colors.datasets[dataset_id], 0.70),
+
+                        // Point
+                        pointRadius: [],
+                        pointHoverRadius: [],
+                        pointBorderColor: [],
+                        pointHoverBorderColor: [],
+                        pointBackgroundColor: [],
+                        pointHoverBackgroundColor: []
+                    };
+                    if(subtype.includes('stacked')){
+                        if(current_header_options.hasOwnProperty('group') && subtype.includes('grouped')){
+                            current_dataset.stack = current_header_options.group;
+                        }else{
+                            current_dataset.stack = 'stack_group';
+                        }
+                    }else if(value.labels.length && !free_sort_mode){
+                        current_dataset.stack = current_header_options.title + ' (' + value.labels[id] + ')';
+                    }
+
+                    datasets.push(current_dataset);
+                    dataset_id++;
+                }
+            });
+            var all_value_max = -Infinity;
+            var all_value_min = Infinity;
+
+            var beginAtZero = false;
+            var dataset_id=0;
+            $.each(field_sub_columns, function(field, value) {
+                var current_header_options = self.getHeaderOptions(field);
+
+                if(current_header_options.chartable) {
+                    if (!beginAtZero) {
+                        beginAtZero = current_header_options.beginatzero;
+                    }
+                    if(current_header_options.axis.scale){
+                        if(current_header_options.axis.scale.startsWith('log')) {
+                            axis_y_scale = 'logarithmic';
+                            axis_y_scale_type = 'log';
+                            if(['log_unit', 'log_exp', 'log10', 'log10_unit', 'log10_exp'].includes(current_header_options.axis.scale)){
+                                axis_y_scale_type = current_header_options.axis.scale;
+                            }
+                        }
+                    }
+
+                    for (var id = 0; id < value.count; id++) {
+                        // Go through rows and insert data to dataset
+                        for (var row_id = 0; row_id < table_data.length; row_id++) {
+                            datasets[dataset_id].data_uniqueid.push(
+                                table_data[row_id][table_options.idField]
+                            );
+
+                            var values = self.parseDataList(table_data[row_id][field]);
+
+                            // Convert value to float
+                            var item = self.parseNumericValue(values[id].y_value);
+
+                            if(time_mode){
+                                datasets[dataset_id].data.push({
+                                    x: $("<div/>").html(table_data[row_id][xaxis_field]).text().trim().replace(/<(?:.|\n)*?>/gm, '').replace('_',' '),
+                                    y: item.value
+                                });
+                            }else{
+                                datasets[dataset_id].data.push(item.value);
+                            }
+
+                            if(current_header_options.value.formatter){
+                                var value_string = self.stripHTML(window[current_header_options.value.formatter](item.value));
+                                if(current_header_options.value.pad){
+                                    value_string = (value_string + current_header_options.value.pad).substring(0, current_header_options.value.pad.length);
+                                }
+                                datasets[dataset_id].data_string.push(value_string);
+
+                            }else{
+                                datasets[dataset_id].data_string.push(
+                                    self.injectValuePostfix(table_data[row_id][field], current_header_options.value.postfix)
+                                );
+                            }
+
+                            // Make sure lower and upper limits are valid
+                            var value_max = item.value_max;
+                            var value_min = item.value_min;
+
+                            if(value_min !== null && value_max !== null){
+                                if(value_max < value_min) {
+                                    // Flip max and min
+                                    var value_tmp = value_min;
+                                    value_min = value_max;
+                                    value_max = value_tmp;
+                                }
+
+                                if(all_value_max < value_max){
+                                    all_value_max = value_max;
+                                }
+
+                                if(all_value_min > value_min){
+                                    all_value_min = value_min;
+                                }
+                            }
+
+                            datasets[dataset_id].data_min.push(value_min);
+                            datasets[dataset_id].data_max.push(value_max);
+
+                            if (table_data[row_id].hasOwnProperty('_data') &&
+                                table_data[row_id]['_data'].hasOwnProperty('hline') &&
+                                typeof table_data[row_id]['_data']['hline'] !== 'undefined' &&
+                                table_data[row_id]['_data']['hline']){
+
+                                datasets[dataset_id].horizontal_line_value.push(item.value);
+
+                                if (table_data[row_id].hasOwnProperty('_class') &&
+                                    typeof table_data[row_id]['_class'] !== 'undefined'){
+                                    datasets[dataset_id].horizontal_line_color.push(options.colors[table_data[row_id]['_class']].bg.normal);
+
+                                }else{
+                                    datasets[dataset_id].horizontal_line_color.push(options.colors.default.bg.normal);
+                                }
+                            }
+
+                            if (table_data[row_id].hasOwnProperty('_class') &&
+                                typeof table_data[row_id]['_class'] !== 'undefined'){
+                                if(self.options.colors.valid.indexOf(table_data[row_id]['_class']) > -1){
+                                    datasets[dataset_id].pointBorderColor.push(self.options.colors[table_data[row_id]['_class']].border.normal);
+                                    datasets[dataset_id].pointHoverBorderColor.push(self.options.colors[table_data[row_id]['_class']].border.hover);
+                                    datasets[dataset_id].pointBackgroundColor.push(self.options.colors[table_data[row_id]['_class']].bg.normal);
+                                    datasets[dataset_id].pointHoverBackgroundColor.push(self.options.colors[table_data[row_id]['_class']].border.hover);
+
+                                }else{
+                                    datasets[dataset_id].pointBorderColor.push(
+                                        self.hexToRGB(options.colors.datasets[dataset_id], 0.5).css
+                                    );
+
+                                    datasets[dataset_id].pointHoverBorderColor.push(
+                                        self.hexToRGB(options.colors.datasets[dataset_id], 0.8).css
+                                    );
+
+                                    datasets[dataset_id].pointBackgroundColor.push(
+                                        self.hexToRGB(options.colors.datasets[dataset_id], 0.6).css
+                                    );
+
+                                    datasets[dataset_id].pointHoverBackgroundColor.push(
+                                        self.hexToRGB(options.colors.datasets[dataset_id], 1.0).css
+                                    );
+                                }
+
+                            }else{
+                                datasets[dataset_id].pointBorderColor.push(
+                                    self.hexToRGB(options.colors.datasets[dataset_id], 0.5).css
+                                );
+                                datasets[dataset_id].pointHoverBorderColor.push(self.hexToRGB(options.colors.datasets[dataset_id], 0.8).css);
+
+                                datasets[dataset_id].pointBackgroundColor.push(
+                                    self.hexToRGB(options.colors.datasets[dataset_id], 0.6).css
+                                );
+                                datasets[dataset_id].pointHoverBackgroundColor.push(
+                                    self.hexToRGB(options.colors.datasets[dataset_id], 1.0).css
+                                );
+                            }
+
+                            if(options[type].point && options[type].point.enabled){
+                                datasets[dataset_id].pointRadius.push(options[type].point.radius.normal);
+                                datasets[dataset_id].pointHoverRadius.push(options[type].point.radius.hover);
+                            }else{
+                                datasets[dataset_id].pointRadius.push(0);
+                                datasets[dataset_id].pointHoverRadius.push(0);
+                            }
+                        }
+                        dataset_id++;
+                    }
+                }
+            });
+
+
+            if(datasets.length > 0){
+                //console.log(labels, datasets);
+                $(this.options.custom_chart[name].div).show(0);
+                var chart_data = {labels: labels, datasets: datasets};
+
+                var show_legend = false;
+                if(datasets.length > 1 && options[type].legend.enabled){
+                    show_legend = true;
+                }
+
+                // Tooltip position
+                var tooltip_position_label = 'average';
+
+                if(stacked_chart){
+                    tooltip_position_label = 'top';
+                }
+
+                var tooltip_position = options[type].tooltips.position;
+                var padding = {left: 0, right: 0, top: 0, bottom: 0 };
+
+                var caretSize = 5;
+                var caretPadding = 2;
+
+                if(tooltip_position_label === 'top'){
+                    tooltip_position_label = 'line_centered_top';
+                    padding = {left: 0, right: 0, top: 40 + datasets.length *12, bottom: 0};
+                    caretSize = 0;
+                    caretPadding = 0;
+
+                }else if(tooltip_position_label === 'bottom'){
+                    tooltip_position_label = 'line_centered_bottom';
+                    padding = {left: 0, right: 0, top: 0, bottom: 40 + datasets.length *12};
+                    caretSize = 0;
+                    caretPadding = 0;
+                }
+
+                /*if(subtype.includes('timeline')){
+                    var barThickness = 15;
+                }*/
+                //console.log(datasets);
+
+                // Chart options
+                var chart_options = {
+                    showLines: true, //options[type].line.enabled,
+                    elements: {
+                        line: {
+                            tension: 1, //options[type].line.tension
+                        }
+                    },
+                    layout: { padding: padding },
+                    maintainAspectRatio: true,
+                    responsive: true,
+                    animation: { duration: options.animation.duration },
+                    hover: { animationDuration: 0 },
+                    responsiveAnimationDuration: 0,
+                    title:{ display: false },
+                    horizontal_highlights: options[type].horizontal_highlights,
+                    horizontal_line: options[type].horizontal_line,
+                    vertical_indicator_line: options[type].vertical_indicator_line,
+                    vertical_segments: options[type].vertical_segments,
+                    horizontal_indicator_line: options[type].horizontal_indicator_line,
+                    interval: options[type].interval,
+                    error_bar: options[type].error_bar,
+                    tooltips: {
+                        enabled: true,
+                        mode: 'label',
+
+                        position: tooltip_position_label,
+                        intersect: false,
+
+                        caretSize: caretSize,
+                        caretPadding: caretPadding,
+
+                        titleFontSize: options[type].tooltips.titleFontSize,
+                        bodyFontSize: options[type].tooltips.bodyFontSize,
+                        bodyFontFamily: options[type].tooltips.bodyFontFamily,
+
+                    },
+                    chartArea: { backgroundColor: options.colors.background },
+                    onHover: function(event, elements){
+                        // Connect table rows and data points
+                        if(event.type == 'mouseout' || event.type == 'touchend'){
+                            // Reset row hover
+                            $(self.element).find('tr td').removeClass('row-hover');
+
+                        }else if(event.type == 'mousemove'){
+                            if(elements.length > 0){
+                                // Reset row hover
+                                $(self.element).find('tr td').removeClass('row-hover');
+
+                                var value_index = elements[0]._index;
+                                var table_options = $(self.element).bootstrapTable('getOptions');
+
+                                $(self.element).find('tbody td:contains('+table_options.data[value_index][table_options.idField]+')').parent('tr').find('td').addClass('row-hover')
+                            }
+                        }
+                    }
+                };
+                // Axis scaling
+                var axis_x_scale = 'linear';
+                var axis_x_scale_type = null;
+
+                var axis_y_scale = 'linear';
+                var axis_y_scale_type = null;
+
+                if(['bar', 'line'].includes(type)){
+                    if(!axis_y_scale_type){
+                        // Update y-axis scele
+                        if(options[type].yaxis.scale){
+                            if(options[type].yaxis.scale.startsWith('log')) {
+                                axis_y_scale = 'logarithmic';
+                                axis_y_scale_type = 'log';
+
+                                if(['log_unit', 'log_exp', 'log10', 'log10_unit', 'log10_exp'].includes(options[type].yaxis.scale)){
+                                    axis_y_scale_type = options[type].yaxis.scale;
+                                }
+                            }
+                        }
+                    }
+
+                    chart_options.scales = {
+                        xAxes: [{
+                            //offset: true,
+                            display: options[type].xaxis.display,
+                            stacked: stacked_chart,
+                            ticks: { maxRotation: 90 },
+                            gridLines: { display: options[type].xaxis.gridlines },
+                        }],
+                            yAxes: [{
+                            //display: options[type].yaxis.display,
+                            stacked: stacked_chart,
+                            type: axis_y_scale,
+                            ticks: {
+                                beginAtZero: beginAtZero,
+                                suggestedMin: all_value_min,
+                                suggestedMax: all_value_max
+                            },
+                            gridLines: { display: options[type].yaxis.gridlines }
+                        }]
+                    };
+
+                    chart_options.tooltips.callbacks = {
+                        afterBody: function(tooltipItems, data){
+                            $(self.element).find('tr td').removeClass('row-hover');
+                            var table_options = $(self.element).bootstrapTable('getOptions');
+                            for (var i = 0; i < tooltipItems.length; i++) {
+                                var value_index = tooltipItems[i].index;
+                                $(self.element).find('tbody td:contains('+table_options.data[value_index][table_options.idField]+')').parent('tr').find('td').addClass('row-hover')
+                            }
+                        },
+                        label: function(tooltipItems, data){
+                            var data_string = data.datasets[tooltipItems.datasetIndex].data_string[tooltipItems.index];
+                            return data_string + ' (' + data.datasets[tooltipItems.datasetIndex].label + ')';
+                        }
+                    };
+
+                    chart_options.legend = {
+                        display: show_legend,
+                            position: options[type].legend.position
+                    };
+
+                    // Bar specific options
+                    if(type == 'bar'){
+                        chart_options.scales.xAxes[0].offset = true;
+
+                        if(datasets.length == 1){
+                            chart_options.scales.yAxes[0].scaleLabel = {
+                                display: true,
+                                labelString: header_options.value.label,
+                                fontColor: 'black'
+                            };
+                        }
+                    }
+
+                }else if(type == 'scatter'){
+                    // Axis scaling
+                    var axis_x_scale = 'linear';
+                    var axis_x_scale_type = null;
+                    if(typeof header_x.data('axis-scale') !== 'undefined'){
+                        if(header_x.data('axis-scale').startsWith('log')) {
+                            axis_x_scale = 'logarithmic';
+                            axis_x_scale_type = 'log';
+                            if(['log_unit', 'log_exp', 'log10', 'log10_unit', 'log10_exp'].includes(header_x.data('axis-scale'))){
+                                axis_x_scale_type = header_x.data('axis-scale');
+                            }
+                        }
+                    }
+
+                    var axis_y_scale = 'linear';
+                    var axis_y_scale_type = null;
+                    if(typeof header_y.data('axis-scale') !== 'undefined'){
+                        if(header_y.data('axis-scale').startsWith('log')) {
+                            axis_y_scale = 'logarithmic';
+                            axis_y_scale_type = 'log';
+                            if(['log_unit', 'log_exp', 'log10', 'log10_unit', 'log10_exp'].includes(header_y.data('axis-scale'))){
+                                axis_y_scale_type = header_y.data('axis-scale');
+                            }ln
+                        }
+                    }
+
+                    chart_options.scales = {
+                        xAxes: [{
+                            position: 'bottom',
+                            type: axis_x_scale,
+                            ticks: {
+                                reverse: x_scale_reverse,
+                                suggestedMin: x_all_value_min,
+                                suggestedMax: x_all_value_max
+                            },
+                            scaleLabel: {
+                                display: true,
+                                labelString: x_label,
+                                fontColor: 'black'
+                            }
+                        }],
+                        yAxes: [{
+                            position: 'left',
+                            type: axis_y_scale,
+                            ticks: {
+                                reverse: y_scale_reverse,
+                                suggestedMin: y_all_value_min,
+                                suggestedMax: y_all_value_max
+                            },
+                            scaleLabel: {
+                                display: true,
+                                labelString: y_label,
+                                fontColor: 'black'
+                            }
+                        }]
+                    };
+                    chart_options.title = {display: false};
+                    chart_options.legend = {display: false};
+                    chart_options.tooltips.callbacks = {
+                        title: function(tooltipItem, data){
+                            return data.labels[tooltipItem[0].index];
+                        },
+                        label: function(tooltipItems, data){
+                            var data_string = data.datasets[tooltipItems.datasetIndex].data_string[tooltipItems.index];
+
+                            var value = data.datasets[0].data[tooltipItems.index];
+
+                            return ['x: ' + data_string['x'] + ' (' + x_label + ')',
+                                'y: ' + data_string['y'] + ' (' + y_label + ')'
+                            ];
+                        }
+                    };
+                }
+
+
+                // X-axis with time scale
+                if(time_mode && subtype.includes('timeline')){
+                    chart_options.scales.xAxes[0].type = 'time';
+                    chart_options.scales.xAxes[0].distribution = 'linear';
+                    chart_options.scales.xAxes[0].time = {};
+                    chart_options.scales.xAxes[0].time.displayFormats = options.time.display_formats;
+
+                    if(options[type].xaxis.timeunit){
+                        chart_options.scales.xAxes[0].time.unit = options[type].xaxis.timeunit;
+                    }
+                    if(options[type].xaxis.timestepsize){
+                        chart_options.scales.xAxes[0].time.stepSize = options[type].xaxis.timestepsize;
+                    }
+                    chart_options.scales.xAxes[0].ticks = {};
+                }
+
+                // Add y-axis label
+                if(free_sort_mode){
+                    chart_options.scales.yAxes[0].scaleLabel = {
+                        display: true,
+                        labelString: header_options.value.label,
+                        fontColor: 'black'
+                    }
+                }else if(options[type].yaxis.label){
+                    chart_options.scales.yAxes[0].scaleLabel = {
+                        display: true,
+                        labelString: options[type].yaxis.label,
+                        fontColor: 'black'
+                    }
+                }
+
+                // Handle tooltip labels
+                if(stacked_chart){
+                    chart_options.tooltips.callbacks.label = function(tooltipItems, data){
+                        var dataset_label = data.datasets[tooltipItems.datasetIndex].label;
+                        var data_string = data.datasets[tooltipItems.datasetIndex].data_string[tooltipItems.index];
+                        return data_string + ' (' + dataset_label + ')';
+                    };
+
+                }else{
+                    chart_options.tooltips.callbacks.label = function(tooltipItems, data){
+                        var data_string = data.datasets[tooltipItems.datasetIndex].data_string[tooltipItems.index];
+                        return header_options.value.label + ': ' + data_string;
+                    };
+                }
+
+                // Handle y-axis scale
+                if(axis_y_scale === 'logarithmic'){
+                    chart_options.scales.yAxes[0].ticks.callback = function (value, index, values) {
+
+                        if(axis_y_scale_type.startsWith('log10')) {
+                            if (!(value === 1e1 || value === 1e2 ||
+                                value === 1e3 || value === 1e4 ||
+                                value === 1e5 || value === 1e6 ||
+                                value === 1e7 || value === 1e8 ||
+                                value === 1e9 || value === 1e10)) {
+                                return '';
+                            }
+
+                        }else if(axis_y_scale_type.startsWith('log')){
+                            if(values.length > 10){
+                                if(index % Math.ceil(values.length / 10.0) !== 0){
+                                    return '';
+                                }
+                            }
+                        }
+
+                        if(axis_y_scale_type.endsWith('_unit')){
+                            return self.addNumberPrefix(value);
+
+                        }else if(axis_y_scale_type.endsWith('_exp')){
+                            return value.toExponential(2);
+
+                        }else{
+                            return value;
+
+                        }
+                    }
+                }
+
+                if(stacked_chart){
+                    chart_options.interval = {enabled: false};
+                    chart_options.horizontal_indicator_line = {enabled: false};
+                }
+
+                var chart_type = type;
+                if(type=='bar'){
+                    if(subtype.includes('horizontal')){
+                        chart_type = 'horizontalBar';
+
+                        var tmp = chart_options.scales.xAxes;
+                        chart_options.scales.xAxes = chart_options.scales.yAxes;
+                        chart_options.scales.yAxes = tmp;
+                    }else{
+                        chart_type = 'barError';
+                    }
+                }
+
+                this.options.custom_chart[name].chart = new Chart(chart_ctx, {
+                    type: chart_type,
+                    data: chart_data,
+                    options: chart_options
+                });
+
+                this.options.custom_chart[name].data = chart_data;
+
+                //console.log(chart_options);
+
+            }else{
+                if($(this.options.custom_chart[name].div).is(":visible")){
+                    $(this.options.custom_chart[name].div).hide(0);
+                }
+            }
+        },
+        showCustomChart: function(name){
+            //console.log('showCustomChart', name);
+            var self = this;
+
+            if($(this.options.custom_chart[name].div).is(":hidden")){
+                $(this.options.custom_chart[name].div).slideDown(this.options.animation.show_speed, function(){
+                    self.updateCustomChart(name);
+                    $('#datatable_visualization'+self.uniqueId).height($(self.options.custom_chart[name].div).height());
+                });
+            }else{
+                self.updateCustomChart(name);
+                $('#datatable_visualization'+this.uniqueId).height($(this.options.custom_chart[name].div).height());
+            }
+        },
+        hideCustomChart: function(name){
+            //console.log('hideCustomChart', name);
+            if($(this.options.custom_chart[name].div).is(":visible")){
+                $('#datatable_visualization'+this.uniqueId).height($(this.options.custom_chart[name].div).height());
+                //console.log($('#datatable_visualization'+this.uniqueId).height());
+                //console.log($(this.options.custom_chart[name].div).height());
+                $(this.options.custom_chart[name].div).slideUp(this.options.animation.hide_speed, function(){});
             }
         },
 
@@ -7912,22 +8808,24 @@ jQuery( document ).ready(function() {
             }
         },
         convertValue: function(value, default_value){
-            if (moment(value, this.options.time.valid_formats, true).isValid() && !jQuery.isNumeric(value)){
-                // We have date
-                value = moment(value).unix();
+            if(!jQuery.isNumeric(value)){
+                if (moment(value, this.options.time.valid_formats, true).isValid() && !jQuery.isNumeric(value)){
+                    // We have date
+                    value = moment(value).unix();
 
-            }else{
-                if(value){
-                    if(value.trim()){
-                        var float_value = parseFloat(value.replace('%',''));
-                        if(!isNaN(float_value)){
-                            value = float_value;
+                }else{
+                    if(value){
+                        if(value.trim()){
+                            var float_value = parseFloat(value.replace('%',''));
+                            if(!isNaN(float_value)){
+                                value = float_value;
+                            }
+                        }else{
+                            value = default_value;
                         }
                     }else{
                         value = default_value;
                     }
-                }else{
-                    value = default_value;
                 }
             }
             return value;
@@ -7961,6 +8859,24 @@ jQuery( document ).ready(function() {
 
             // return formatted original number
             return value.toLocaleString();
+        },
+        getParameterItem: function(element, key){
+            if (element instanceof jQuery && typeof element.data === 'function'){
+                if(typeof element.data(key) !== 'undefined'){
+                    return element.data(key);
+                }
+
+            }else if(element instanceof Object && element.hasOwnProperty(this.camelCase(key))){
+                return element[this.camelCase(key)];
+
+            }else if(element instanceof Object && element.hasOwnProperty(key)){
+                return element[key];
+            }
+        },
+        camelCase: function(label) {
+            return label.replace(/^-ms-/, "ms-").replace(/-([a-z]|[0-9])/ig, function(all, letter) {
+                return (letter + "").toUpperCase();
+            });
         },
 
         // Color utilities
@@ -8171,6 +9087,9 @@ function valueFormatter_float1_percentage_muted(value, row, index){
 }
 function valueFormatter_float2_percentage(value, row, index){
     return valueFormatter_generic_fixed(value, row, index, 2, false, undefined, ' %');
+}
+function valueFormatter_float2_percentage_muted(value, row, index){
+    return valueFormatter_generic_fixed(value, row, index, 2, true, undefined, ' %');
 }
 function valueFormatter_float3_percentage(value, row, index){
     return valueFormatter_generic_fixed(value, row, index, 3, false, undefined, ' %');
@@ -8430,6 +9349,15 @@ function valueFormatter_float4_percentage_plusminus(value, row, index){
 }
 function valueFormatter_float4_percentage_plusminus_muted(value, row, index){
     return valueFormatter_percentage_plusminus(value, row, index, 4, true);
+}
+
+/*function valueFormatter_date(value, row, index){
+    var current_date = value.split("-");
+    return new Date(current_date[1]+","+current_date[0]+","+current_date[2]).getTime();
+}*/
+
+function valueFormatter_html(value, row, index){
+    return value.replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&amp;/g,'&');
 }
 
 function valueFormatter_list(value, row, index){
