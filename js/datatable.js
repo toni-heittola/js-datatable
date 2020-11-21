@@ -1098,6 +1098,43 @@ jQuery( document ).ready(function() {
                     }
                 }
             },
+            value_type:{
+                boolean: {
+                    color: {
+                        on: '#000000',
+                        off: '#e2e2e2',
+                    },
+                    circle: {
+                        svg: {
+                            type: 'circle',
+                            size: 12
+                        },
+                        html: {
+                            on: {
+                                css: 'glyphicon glyphicon-ok-sign'
+                            },
+                            off: {
+                                css: 'glyphicon glyphicon-remove-circle'
+                            },
+                        },
+                    },
+                    rect: {
+                        svg: {
+                            type: 'rect',
+                            size: 12
+                        },
+                        html: {
+                            on: {
+                                css: 'glyphicon glyphicon-check'
+                            },
+                            off: {
+                                css: 'glyphicon glyphicon-unchecked'
+                            },
+                        },
+                    }
+
+                },
+            },
             custom_chart_json: null
         },
         init: function (element, options, name) {
@@ -2362,6 +2399,80 @@ jQuery( document ).ready(function() {
                         $(this).attr('data-formatter','valueFormatter_float4_error');
                         break;
 
+                    // Boolean indicators
+                    case 'boolean-circle-svg':
+                        window['valueFormatter_binary_circle_svg'+self.uniqueId] = function (value, row, index){
+                            var html = '';
+                            var fill_color = 'transparent';
+                            if(value == 1 || value == 'true') {
+                                fill_color = self.options.value_type.boolean.color.on;
+                            } else {
+                                fill_color = self.options.value_type.boolean.color.off;
+                            }
+                            html += self.svgElement(
+                                self.options.value_type.boolean.circle.svg.type,
+                                self.options.value_type.boolean.circle.svg.size,
+                                fill_color,
+                                undefined,
+                                false, 0
+                            );
+                            return html;
+                        };
+                        $(this).attr('data-formatter', 'valueFormatter_binary_circle_svg'+self.uniqueId);
+
+                        break;
+                    case 'boolean-rect-svg':
+                        window['valueFormatter_binary_rect_svg'+self.uniqueId] = function (value, row, index){
+                            var html = '';
+                            var fill_color = 'transparent';
+                            if(value == 1 || value == 'true') {
+                                fill_color = self.options.value_type.boolean.color.on;
+                            } else {
+                                fill_color = self.options.value_type.boolean.color.off;
+                            }
+                            html += self.svgElement(
+                                self.options.value_type.boolean.rect.svg.type,
+                                self.options.value_type.boolean.rect.svg.size,
+                                fill_color,
+                                undefined,
+                                true, 8
+                            );
+                            return html;
+                        };
+                        $(this).attr('data-formatter', 'valueFormatter_binary_rect_svg'+self.uniqueId);
+
+                        break;
+                    case 'boolean-circle-html':
+                        window['valueFormatter_binary_circle_html'+self.uniqueId] = function (value, row, index){
+                            var fill_color;
+                            var css_class;
+                            if(value == 1 || value == 'true') {
+                                fill_color = self.options.value_type.boolean.color.on;
+                                css_class = self.options.value_type.boolean.circle.html.on.css;
+                            } else {
+                                fill_color = self.options.value_type.boolean.color.off;
+                                css_class = self.options.value_type.boolean.circle.html.off.css;
+                            }
+                            return '<span class="'+css_class+'" aria-hidden="true" style="color:'+fill_color+'"></span>';
+                        };
+                        $(this).attr('data-formatter', 'valueFormatter_binary_circle_html'+self.uniqueId);
+                        break;
+                    case 'boolean-rect-html':
+                        window['valueFormatter_binary_rect_html'+self.uniqueId] = function (value, row, index){
+                            var fill_color;
+                            var css_class;
+                            if(value == 1 || value == 'true') {
+                                fill_color = self.options.value_type.boolean.color.on;
+                                css_class = self.options.value_type.boolean.rect.html.on.css;
+                            } else {
+                                fill_color = self.options.value_type.boolean.color.off;
+                                css_class = self.options.value_type.boolean.rect.html.off.css;
+                            }
+                            return '<span class="'+css_class+'" aria-hidden="true" style="color:'+fill_color+'"></span>';
+                        };
+                        $(this).attr('data-formatter', 'valueFormatter_binary_rect_html'+self.uniqueId);
+                        break;
+
                     case 'html':
                         $(this).attr('data-formatter','valueFormatter_html');
                         break;
@@ -2567,7 +2678,6 @@ jQuery( document ).ready(function() {
                         break;
 
                     case 'inline-bar-vertical':
-
                         window['valueFormatter_inline_bar_vertical'+self.uniqueId] = function (value, row, index){
                             var header = $(that);
 
@@ -2590,21 +2700,17 @@ jQuery( document ).ready(function() {
                         break;
                     case 'inline-bar-vertical-tristate':
                         $(this).attr('data-formatter', 'valueFormatter_inline_bar_vertical_tristate');
-                        //$(this).addClass('canvas-cell');
                         break;
 
                     case 'inline-line':
                         $(this).attr('data-formatter', 'valueFormatter_inline_line');
-                        //$(this).addClass('canvas-cell');
                         break;
                     case 'inline-line-steps':
                         $(this).attr('data-formatter', 'valueFormatter_inline_line_steps');
-                        //$(this).addClass('canvas-cell');
                         break;
 
                     case 'inline-pie':
                         $(this).attr('data-formatter', 'valueFormatter_inline_pie');
-                        //$(this).addClass('canvas-cell');
                         break;
 
                     case 'inline-indicator-value':
@@ -9058,6 +9164,10 @@ function valueFormatter_generic_fixed(value, row, index, precision=undefined, mu
     }else{
         return value;
     }
+}
+
+function valueFormatter_binary(value, row, index){
+
 }
 
 function percentageFormatter(value, row, index){
