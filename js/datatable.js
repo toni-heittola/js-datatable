@@ -2061,10 +2061,10 @@ jQuery( document ).ready(function() {
                         $(this).attr('data-formatter','valueFormatter_float4');
                         break;
 
+                    // Numbers with plus sign
                     case 'int-plus':
                         $(this).attr('data-formatter','valueFormatter_int_plus');
                         break;
-
                     case 'float1-plus':
                         $(this).attr('data-formatter','valueFormatter_float1_plus');
                         break;
@@ -2078,8 +2078,54 @@ jQuery( document ).ready(function() {
                         $(this).attr('data-formatter','valueFormatter_float4_plus');
                         break;
 
+                    // Numbers with zero handling
+                    case 'int-nonzero':
+                        $(this).attr('data-formatter','valueFormatter_int_nonzero');
+                        break;
+                    case 'int-nonzero-dash':
+                        $(this).attr('data-formatter','valueFormatter_int_nonzero_dash');
+                        break;
+                    case 'int-nonzero-dash-muted':
+                        $(this).attr('data-formatter','valueFormatter_int_nonzero_dash_muted');
+                        break;
+                    case 'float1-nonzero':
+                        $(this).attr('data-formatter','valueFormatter_float1_nonzero');
+                        break;
+                    case 'float1-nonzero-dash':
+                        $(this).attr('data-formatter','valueFormatter_float1_nonzero_dash');
+                        break;
+                    case 'float1-nonzero-dash-muted':
+                        $(this).attr('data-formatter','valueFormatter_float1_nonzero_dash_muted');
+                        break;
+                    case 'float2-nonzero':
+                        $(this).attr('data-formatter','valueFormatter_float2_nonzero');
+                        break;
+                    case 'float2-nonzero-dash':
+                        $(this).attr('data-formatter','valueFormatter_float2_nonzero_dash');
+                        break;
+                    case 'float2-nonzero-dash-muted':
+                        $(this).attr('data-formatter','valueFormatter_float2_nonzero_dash_muted');
+                        break;
+                    case 'float3-nonzero':
+                        $(this).attr('data-formatter','valueFormatter_float3_nonzero');
+                        break;
+                    case 'float3-nonzero-dash':
+                        $(this).attr('data-formatter','valueFormatter_float3_nonzero_dash');
+                        break;
+                    case 'float4-nonzero':
+                        $(this).attr('data-formatter','valueFormatter_float4_nonzero');
+                        break;
+                    case 'float4-nonzero-dash':
+                        $(this).attr('data-formatter','valueFormatter_float4_nonzero_dash');
+                        break;
+                    case 'float4-nonzero-dash-muted':
+                        $(this).attr('data-formatter','valueFormatter_float4_nonzero_dash_muted');
+                        break;
 
-                    // large integers
+                    // Large integers
+                    case 'int-exp':
+                        $(this).attr('data-formatter','valueFormatter_int_exp');
+                        break;
                     case 'float1-exp':
                         $(this).attr('data-formatter','valueFormatter_float1_exp');
                         break;
@@ -6660,13 +6706,16 @@ jQuery( document ).ready(function() {
             parameters.point.radius.normal = this.getParameterItem(data, 'line-point-radius');
             parameters.point.radius.hover = this.getParameterItem(data, 'line-point-radius-hover');
             parameters.line.enabled = this.getParameterItem(data, 'line-show-line');
+
             parameters.vertical_indicator_line.enabled = this.getParameterItem(data, 'line-show-vertical-indicator');
             parameters.vertical_indicator_line.lineWidth = this.getParameterItem(data, 'line-vertical-indicator-width');
             parameters.vertical_indicator_line.strokeStyle = this.getParameterItem(data, 'line-vertical-indicator-stroke');
+
             parameters.horizontal_indicator_line.enabled = this.getParameterItem(data, 'line-show-horizontal-indicator');
             parameters.horizontal_indicator_line.lineWidth = this.getParameterItem(data, 'line-horizontal-indicator-width');
             parameters.horizontal_indicator_line.strokeStyle = this.getParameterItem(data, 'line-horizontal-indicator-stroke');
             parameters.horizontal_indicator_line.fillStyle = this.getParameterItem(data, 'line-horizontal-indicator-fill');
+
             parameters.horizontal_highlights.enabled = this.getParameterItem(data, 'line-show-horizontal-highlights');
             parameters.horizontal_highlights.data = this.getParameterItem(data, 'line-horizontal-highlights');
             if(parameters.horizontal_highlights.data){
@@ -8974,7 +9023,7 @@ jQuery( document ).ready(function() {
 // ========================================
 // Helper functions for bootstrap-table.js
 // ========================================
-function valueFormatter_generic_fixed(value, row, index, precision, muted, prefix, postfix, plus){
+function valueFormatter_generic_fixed(value, row, index, precision=undefined, muted=undefined, prefix=undefined, postfix, plus=false, zeroReplacement = undefined){
     if(typeof prefix === 'undefined') {
         prefix = ''
     }
@@ -8991,9 +9040,19 @@ function valueFormatter_generic_fixed(value, row, index, precision, muted, prefi
         if(typeof precision !== 'undefined') {
             value = value.toFixed(precision);
         }
-        if(plus && value >= 0){
-            value = '+' + value;
+        if(typeof zeroReplacement !== 'undefined' && value == 0){
+            if(muted){
+                value = '<span class="text-muted">'+zeroReplacement+'</span>';
+            }else{
+                value = zeroReplacement;
+            }
+
+        }else{
+            if(plus && value >= 0){
+                value = '+' + value;
+            }
         }
+
         return prefix + value + postfix;
 
     }else{
@@ -9039,6 +9098,61 @@ function valueFormatter_float4_plus(value, row, index){
     return valueFormatter_generic_fixed(value, row, index, 4, false, undefined, undefined, true);
 }
 
+function valueFormatter_int_nonzero(value, row, index){
+    return valueFormatter_generic_fixed(value, row, index, 0, undefined, undefined, undefined, false, '');
+}
+function valueFormatter_int_nonzero_dash(value, row, index){
+    return valueFormatter_generic_fixed(value, row, index, 0, undefined, undefined, undefined, false, '-');
+}
+function valueFormatter_int_nonzero_dash_muted(value, row, index){
+    return valueFormatter_generic_fixed(value, row, index, 0, true, undefined, undefined, false, '-');
+}
+function valueFormatter_float1_nonzero(value, row, index){
+    return valueFormatter_generic_fixed(value, row, index, 1, undefined, undefined, undefined, false, '');
+}
+function valueFormatter_float1_nonzero_dash(value, row, index){
+    return valueFormatter_generic_fixed(value, row, index, 1, undefined, undefined, undefined, false, '-');
+}
+function valueFormatter_float1_nonzero_dash_muted(value, row, index){
+    return valueFormatter_generic_fixed(value, row, index, 1, true, undefined, undefined, false, '-');
+}
+function valueFormatter_float1_nonzero(value, row, index){
+    return valueFormatter_generic_fixed(value, row, index, 1, undefined, undefined, undefined, false, '');
+}
+function valueFormatter_float1_nonzero_dash(value, row, index){
+    return valueFormatter_generic_fixed(value, row, index, 1, undefined, undefined, undefined, false, '-');
+}
+function valueFormatter_float1_nonzero_dash_muted(value, row, index){
+    return valueFormatter_generic_fixed(value, row, index, 1, true, undefined, undefined, false, '-');
+}
+function valueFormatter_float2_nonzero(value, row, index){
+    return valueFormatter_generic_fixed(value, row, index, 2, undefined, undefined, undefined, false, '');
+}
+function valueFormatter_float2_nonzero_dash(value, row, index){
+    return valueFormatter_generic_fixed(value, row, index, 2, undefined, undefined, undefined, false, '-');
+}
+function valueFormatter_float2_nonzero_dash_muted(value, row, index){
+    return valueFormatter_generic_fixed(value, row, index, 2, true, undefined, undefined, false, '-');
+}
+function valueFormatter_float3_nonzero(value, row, index){
+    return valueFormatter_generic_fixed(value, row, index, 3, undefined, undefined, undefined, false, '');
+}
+function valueFormatter_float3_nonzero_dash(value, row, index){
+    return valueFormatter_generic_fixed(value, row, index, 3, undefined, undefined, undefined, false, '-');
+}
+function valueFormatter_float3_nonzero_dash_muted(value, row, index){
+    return valueFormatter_generic_fixed(value, row, index, 3, true, undefined, undefined, false, '-');
+}
+function valueFormatter_float4_nonzero(value, row, index){
+    return valueFormatter_generic_fixed(value, row, index, 4, undefined, undefined, undefined, false, '');
+}
+function valueFormatter_float4_nonzero_dash(value, row, index){
+    return valueFormatter_generic_fixed(value, row, index, 4, undefined, undefined, undefined, false, '-');
+}
+function valueFormatter_float4_nonzero_dash_muted(value, row, index){
+    return valueFormatter_generic_fixed(value, row, index, 4, true, undefined, undefined, false, '-');
+}
+
 function valueFormatter_generic_exponential(value, row, index, precision, muted, prefix, postfix){
     if(typeof prefix === 'undefined') {
         prefix = ''
@@ -9058,7 +9172,9 @@ function valueFormatter_generic_exponential(value, row, index, precision, muted,
         return value;
     }
 }
-
+function valueFormatter_int_exp(value, row, index) {
+    return valueFormatter_generic_exponential(value, row, index, 0);
+}
 function valueFormatter_float1_exp(value, row, index) {
     return valueFormatter_generic_exponential(value, row, index, 1);
 }
