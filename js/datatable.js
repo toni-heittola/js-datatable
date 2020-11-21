@@ -2435,7 +2435,7 @@ jQuery( document ).ready(function() {
                                 self.options.value_type.boolean.rect.svg.size,
                                 fill_color,
                                 undefined,
-                                true, 8
+                                false, 0
                             );
                             return html;
                         };
