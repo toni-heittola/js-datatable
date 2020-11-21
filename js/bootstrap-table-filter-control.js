@@ -210,6 +210,7 @@
                     // FIX DATATABLE Added for js-datatable
                     var fieldValue = data[i][field].trim();
                     var $fieldValue = $(fieldValue);
+                    $fieldValue.find('.hidden').remove();
 
                     var fieldValueArray = [];
                     if($fieldValue.length){
@@ -222,6 +223,7 @@
                             fieldValueArray.push(item.trim());
                         });
                     }
+
                     fieldValueArray.forEach(function (item) {
                         var formattedValue = $.fn.bootstrapTable.utils.calculateObjectValue(that.header, that.header.formatters[j], [item, data[i], i], item);
                         uniqueValues[formattedValue] = item;
@@ -608,11 +610,12 @@
                 var fieldValue = $('<output>').append($.parseHTML(item[key].trim()));
                 var fieldValueList = [];
                 fieldValue.find('.label-tag').each(function (){
+                    $(this).find('.hidden').remove();
                     fieldValueList.push($(this).text().trim().toLowerCase());
                 });
                 // -----------------
 
-                // Fix #142: search use formated data
+                // Fix #142: search use formatted data
                 if (thisColumn && thisColumn.searchFormatter) {
                     value = $.fn.bootstrapTable.utils.calculateObjectValue(that.header,
                     that.header.formatters[$.inArray(key, that.header.fields)],
