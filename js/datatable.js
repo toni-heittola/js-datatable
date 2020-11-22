@@ -8952,7 +8952,7 @@ jQuery( document ).ready(function() {
             // Value sorter which makes sure empty cells are last always.
             a = this.convertValue(a, -Infinity);
             b = this.convertValue(b, -Infinity);
-            if(direction == 'asc'){
+            if(direction === 'asc'){
                 if(a < b){return -1;}
                 if(a > b){return 1;}
                 return 0;
@@ -8963,7 +8963,7 @@ jQuery( document ).ready(function() {
             }
         },
         convertValue: function(value, default_value){
-            if(!jQuery.isNumeric(value)){
+            if(!jQuery.isNumeric(value) || (jQuery.isNumeric(value) && typeof value === "string")){
                 if (moment(value, this.options.time.valid_formats, true).isValid() && !jQuery.isNumeric(value)){
                     // We have date
                     value = moment(value).unix();
