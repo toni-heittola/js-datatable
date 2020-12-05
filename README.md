@@ -382,6 +382,13 @@ Essential Bootstraptable specific parameters are collected here for completeness
 
 ## Changelog
 
+**v1.2.0 (development)**
+
+- Refactor value formatters
+- Add new value formatters (e.g. inline-boolean-*, int-percentile*)
+- Update boostrap-table.js to version 1.12.2
+- Update Chart.js to version 2.8.0
+
 **v1.1.1 (master)**
 
 - Add logarithmic scales to bar and scatter plots. 
@@ -390,7 +397,7 @@ Essential Bootstraptable specific parameters are collected here for completeness
 - Update line plot to support logarithmic y-axis.
 - Update line plot to support vertical segments and horizontal highlight lines.
 - Update bar plot to support horizontal highlight lines.
-- Add parameter to hide toolbar and table.
+- Add a parameter to hide toolbar and table.
 
 **v1.1.0**
 
