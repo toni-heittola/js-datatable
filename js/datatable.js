@@ -807,7 +807,7 @@ jQuery( document ).ready(function() {
                         type: 'rect',
                         size: 10
                     },
-                    data: {
+                    data: {
                         binarizationThreshold: 0.0
                     },
                     color: {
@@ -826,6 +826,14 @@ jQuery( document ).ready(function() {
                         "#f0ad4e",
                         "#d9534f"
                     ]
+                },
+                bar_horizontal_average:{
+                    colors: {
+                        background: 'transparent',
+                        center: "#000000",
+                        positive: "#5cb85c",
+                        negative: "#d9534f"
+                    }
                 },
                 bar_vertical: {
                     item_width: null,
@@ -1182,6 +1190,9 @@ jQuery( document ).ready(function() {
             this.field_meta = [];
 
             this.log(this.name + '::init');
+
+            // Inject helper functions
+            this.createHelperFunctions();
 
             // Make sure unique row id are assigned
             if(typeof $(this.element).data('id-field') !== 'undefined'){
@@ -2069,854 +2080,1404 @@ jQuery( document ).ready(function() {
                 this.$element.attr('data-show-pagination-switch', false);
             }
         },
+        createHelperFunctions : function() {
+            // Inject generic formatting functions
+
+            // Generic functions
+            if(typeof window['isNumericWithInterval'] !== 'function') {
+                window['isNumericWithInterval'] = function (value) {
+                    // Check if value has format [value] ([interval1] - [interval2])
+                    var regex = /[+-]?\d+(?:\.\d+)\s+\([+-]?\d+(?:\.\d+)\s+-\s+[+-]?\d+(?:\.\d+)\)/g;
+                    var pattern = new RegExp(regex);
+                    return pattern.test(value);
+                }
+            }
+            if(typeof window['isNumericWithError'] !== 'function') {
+                window['isNumericWithError'] = function (value) {
+                    var pattern_plusminus = new RegExp(/([+-]?([0-9]*[.])?[0-9]+)(\s+)?[±](\s+)?(([0-9]*[.])?[0-9]+)/);
+                    return pattern_plusminus.test(value);
+                }
+            }
+            if(typeof window['numericToFloat'] !== 'function') {
+                window['numericToFloat'] = function (value, precision){
+                    if (typeof value === 'string' || value instanceof String){
+                        value = value.replace('%','');
+                    }
+                    var float_value = parseFloat(value);
+                    if(!isNaN(float_value)){
+                        // we have float
+                        if(typeof precision !== 'undefined'){
+                            return float_value.toFixed(precision);
+                        }else {
+                            return float_value;
+                        }
+                    }
+
+                    return value;
+                }
+            }
+
+            // Value parsers
+            if(typeof window['parseNumericErrorInterval'] !== 'function') {
+                window['parseNumericErrorInterval'] = function (value, precision){
+                    var pattern_interval = new RegExp(/([+-]?([0-9]*[.])?[0-9]+)(\s+)[(]([+-]?([0-9]*[.])?[0-9]+)(\s+)[-](\s+)([+-]?([0-9]*[.])?[0-9]+)[)]/);
+
+                    var matches;
+                    if ((matches = pattern_interval.exec(value)) !== null) {
+                        return {
+                            value: numericToFloat(matches[1], precision),
+                            value_min: numericToFloat(matches[4], precision),
+                            value_max: numericToFloat(matches[8], precision)
+                        }
+
+                    }else{
+                        return {
+                            value: numericToFloat(value, precision),
+                            value_min: null,
+                            value_max: null
+                        }
+                    }
+                }
+            }
+            if(typeof window['parseNumericErrorPlusminus'] !== 'function') {
+                window['parseNumericErrorPlusminus'] = function (value, precision){
+                    var pattern_plusminus = new RegExp(/([+-]?([0-9]*[.])?[0-9]+)(\s+)?[±](\s+)?(([0-9]*[.])?[0-9]+)/);
+
+                    var matches;
+                    if ((matches = pattern_plusminus.exec(value)) !== null) {
+                        return {
+                            value: numericToFloat(matches[1], precision),
+                            value_plusminus: numericToFloat(matches[5], precision),
+                            value_min: numericToFloat(numericToFloat(matches[1]) - numericToFloat(matches[5]), precision),
+                            value_max: numericToFloat(numericToFloat(matches[1]) + numericToFloat(matches[5]), precision)
+                        }
+                    }else{
+                        return {
+                            value: numericToFloat(value, precision),
+                            value_plusminus: null,
+                            value_min: null,
+                            value_max: null
+                        }
+                    }
+                }
+            }
+
+            // Value formatters
+            if(typeof window['runningFormatter'] !== 'function') {
+                window['runningFormatter'] = function (value, row, index){
+                    // Cell formatter for normal ranking
+                    return (index+1);
+                }
+            }
+            if(typeof window['valueFormatter_numeric'] !== 'function') {
+                window['valueFormatter_numeric'] = function (value, row, index, precision = undefined, muted = undefined, prefix = undefined, postfix, plus = false, zeroReplacement = undefined) {
+                    if (typeof prefix === 'undefined') {
+                        prefix = ''
+                    }
+                    if (typeof postfix === 'undefined') {
+                        postfix = ''
+                    }
+                    if (muted) {
+                        if (postfix) {
+                            postfix = '<span class="text-muted">' + postfix + '</span>';
+                        }
+                    }
+                    if (jQuery.isNumeric(value)) {
+                        value = parseFloat(value);
+                        if (typeof precision !== 'undefined') {
+                            value = value.toFixed(precision);
+                        }
+                        if (typeof zeroReplacement !== 'undefined' && value == 0) {
+                            if (muted) {
+                                value = '<span class="text-muted">' + zeroReplacement + '</span>';
+                            } else {
+                                value = zeroReplacement;
+                            }
+
+                        } else {
+                            if (plus && value >= 0) {
+                                value = '+' + value;
+                            }
+                        }
+
+                        return prefix + value + postfix;
+
+                    } else {
+                        return value;
+                    }
+                }
+            }
+            if(typeof window['valueFormatter_float1_percentage'] !== 'function'){
+                window['valueFormatter_float1_percentage'] = function (value, row, index) {
+                    return valueFormatter_numeric(value, row, index, 1, false, undefined, ' %');
+                };
+            }
+            if(typeof window['valueFormatter_numeric_exponential'] !== 'function'){
+                window['valueFormatter_numeric_exponential'] = function(value, row, index, precision, muted, prefix, postfix){
+                    if(typeof prefix === 'undefined') {
+                        prefix = ''
+                    }
+                    if(typeof postfix === 'undefined') {
+                        postfix = ''
+                    }
+
+                    if(jQuery.isNumeric(value)){
+                        value = parseFloat(value);
+                        if(typeof precision !== 'undefined') {
+                            value = value.toExponential(precision);
+                        }
+                        return prefix + value + postfix;
+
+                    }else{
+                        return value;
+                    }
+                }
+            }
+            if(typeof window['valueFormatter_numeric_interval'] !== 'function'){
+                window['valueFormatter_numeric_interval'] = function(value, row, index, precision=undefined, muted=undefined, unit=undefined){
+                    // Cell formatter for percentage values
+                    var unit_field = '';
+                    if(typeof unit !== 'undefined') {
+                        unit_field = ' ' + unit;
+                    }
+
+                    if(isNumericWithInterval(value)){
+                        // We have data in format [value] ([interval1] - [interval2])
+                        var item = parseNumericErrorInterval(value, precision);
+                        if(typeof muted !== 'undefined' && muted) {
+                            return item.value + unit_field + ' <small class="text-muted">(' + item.value_min + ' - ' + item.value_max + ')</small>';
+                        }else{
+                            return item.value + unit_field + ' (' + item.value_min + ' - ' + item.value_max + ')';
+                        }
+
+                    }else if(jQuery.isNumeric(value)){
+                        return parseFloat(value).toFixed(precision) + unit_field;
+
+                    }else{
+                        return value;
+                    }
+                }
+            }
+            if(typeof window['valueFormatter_numeric_plusminus'] !== 'function'){
+                window['valueFormatter_numeric_plusminus'] = function(value, row, index, precision=undefined, muted=undefined, unit=undefined){
+                    var unit_field = '';
+                    if(typeof unit !== 'undefined') {
+                        unit_field = ' ' + unit;
+                    }
+
+                    // Cell formatter for percentage values
+                    if(isNumericWithError(value)) {
+                        var item = parseNumericErrorPlusminus(value, precision);
+                        if(typeof muted !== 'undefined' && muted){
+                            return item.value + unit_field + ' <small class="text-muted">±' + item.value_plusminus + '</small>';
+                        }else{
+                            return item.value + unit_field + ' ±' + item.value_plusminus;
+                        }
+
+                    }else if(jQuery.isNumeric(value)){
+                        return parseFloat(value).toFixed(precision) + unit_field;
+
+                    }else{
+                        return value;
+                    }
+                }
+            }
+            if(typeof window['valueFormatter_numeric_percentile'] !== 'function'){
+                window['valueFormatter_numeric_percentile'] = function(value, row, index, muted){
+                    var j = value % 10;
+                    var postfix = '<small>th</small>';
+                    if (j == 1) {
+                        postfix = "<small>st</small>";
+                    }
+                    if (j == 2) {
+                        postfix = "<small>nd</small>";
+                    }
+                    if (j == 3) {
+                        postfix = "<small>rd</small>";
+                    }
+                    return valueFormatter_numeric(value, row, index, 0, muted, undefined, postfix);
+                }
+            }
+            if(typeof window['valueFormatter_html'] !== 'function') {
+                window['valueFormatter_html'] = function (value, row, index){
+                    return value.replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&amp;/g,'&');
+                }
+            }
+            if(typeof window['valueFormatter_list'] !== 'function') {
+                window['valueFormatter_list'] = function (value, row, index){
+                    var items = value.split(',');
+                    if(items.length > 0){
+                        return items.join('<br>');
+                    }else{
+                        return value;
+                    }
+                }
+            }
+        },
+        createNumericValueFormatter : function(value_type, index){
+            var formatter_function_name = 'valueFormatter_' + value_type.replace(/-/g,'_') + '_' + this.uniqueId + '_' + index;
+
+            switch(value_type) {
+                // Basic numbers
+                case 'int':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric(value, row, index, 0);
+                    };
+                    break;
+                case 'float1':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric(value, row, index, 1);
+                    };
+                    break;
+                case 'float2':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric(value, row, index, 2);
+                    };
+                    break;
+                case 'float3':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric(value, row, index, 3);
+                    };
+                    break;
+                case 'float4':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric(value, row, index, 4);
+                    };
+                    break;
+
+                // Numbers with zero handling
+                case 'int-nonzero':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric(value, row, index, 0, undefined, undefined, undefined, false, '');
+                    };
+                    break;
+                case 'int-nonzero-dash':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric(value, row, index, 0, undefined, undefined, undefined, false, '-');
+                    };
+                    break;
+                case 'int-nonzero-dash-muted':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric(value, row, index, 0, true, undefined, undefined, false, '-');
+                    };
+                    break;
+                case 'float1-nonzero':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric(value, row, index, 1, undefined, undefined, undefined, false, '');
+                    };
+                    break;
+                case 'float1-nonzero-dash':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric(value, row, index, 1, true, undefined, undefined, false, '-');
+                    };
+                    break;
+                case 'float1-nonzero-dash-muted':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric(value, row, index, 1, true, undefined, undefined, false, '-');
+                    };
+                    break;
+                case 'float2-nonzero':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric(value, row, index, 2, undefined, undefined, undefined, false, '');
+                    }
+                    break;
+                case 'float2-nonzero-dash':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric(value, row, index, 2, true, undefined, undefined, false, '-');
+                    };
+                    break;
+                case 'float2-nonzero-dash-muted':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric(value, row, index, 2, true, undefined, undefined, false, '-');
+                    };
+                    break;
+                case 'float3-nonzero':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric(value, row, index, 3, undefined, undefined, undefined, false, '');
+                    }
+                    break;
+                case 'float3-nonzero-dash':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric(value, row, index, 3, true, undefined, undefined, false, '-');
+                    };
+                    break;
+                case 'float3-nonzero-dash-muted':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric(value, row, index, 3, undefined, undefined, undefined, false, '-');
+                    };
+                    break;
+                case 'float4-nonzero':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric(value, row, index, 4, undefined, undefined, undefined, false, '');
+                    }
+                    break;
+                case 'float4-nonzero-dash':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric(value, row, index, 4, true, undefined, undefined, false, '-');
+                    };
+                    break;
+                case 'float4-nonzero-dash-muted':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric(value, row, index, 4, true, undefined, undefined, false, '-');
+                    };
+                    break;
+
+                // Large integers
+                case 'int-exp':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric_exponential(value, row, index, 0);
+                    };
+                    break;
+                case 'float1-exp':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric_exponential(value, row, index, 1);
+                    };
+                    break;
+                case 'float2-exp':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric_exponential(value, row, index, 2);
+                    };
+                    break;
+                case 'float3-exp':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric_exponential(value, row, index, 3);
+                    };
+                    break;
+                case 'float4-exp':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric_exponential(value, row, index, 4);
+                    };
+                    break;
+
+                // Numbers with plus sign
+                case 'int-plus':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric(value, row, index, 0, false, undefined, undefined, true);
+                    };
+                    break;
+                case 'float1-plus':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric(value, row, index, 1, false, undefined, undefined, true);
+                    };
+                    break;
+                case 'float2-plus':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric(value, row, index, 2, false, undefined, undefined, true);
+                    };
+                    break;
+                case 'float3-plus':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric(value, row, index, 3, false, undefined, undefined, true);
+                    };
+                    break;
+                case 'float4-plus':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric(value, row, index, 4, false, undefined, undefined, true);
+                    };
+                    break;
+
+                // numeric with interval
+                case 'int-interval':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric_interval(value, row, index, 0, false);
+                    };
+                    break;
+                case 'int-interval-muted':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric_interval(value, row, index, 0, true);
+                    };
+                    break;
+                case 'float1-interval':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric_interval(value, row, index, 1, false);
+                    };
+                    break;
+                case 'float1-interval-muted':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric_interval(value, row, index, 1, true);
+                    };
+                    break;
+                case 'float2-interval':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric_interval(value, row, index, 2, false);
+                    };
+                    break;
+                case 'float2-interval-muted':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric_interval(value, row, index, 2, true);
+                    };
+                    break;
+                case 'float3-interval':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric_interval(value, row, index, 3, false);
+                    };
+                    break;
+                case 'float3-interval-muted':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric_interval(value, row, index, 3, true);
+                    };
+                    break;
+                case 'float4-interval':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric_interval(value, row, index, 4, false);
+                    };
+                    break;
+                case 'float4-interval-muted':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric_interval(value, row, index, 4, true);
+                    };
+                    break;
+
+                // numeric with plusminus
+                case 'int-plusminus':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric_plusminus(value, row, index, 0, false);
+                    };
+                    break;
+                case 'int-plusminus-muted':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric_plusminus(value, row, index, 0, true);
+                    };
+                    break;
+                case 'float1-plusminus':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric_plusminus(value, row, index, 1, false);
+                    };
+                    break;
+                case 'float1-plusminus-muted':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric_plusminus(value, row, index, 1, true);
+                    };
+                    break;
+                case 'float2-plusminus':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric_plusminus(value, row, index, 2, false);
+                    };
+                    break;
+                case 'float2-plusminus-muted':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric_plusminus(value, row, index, 2, true);
+                    };
+                    break;
+                case 'float3-plusminus':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric_plusminus(value, row, index, 3, false);
+                    };
+                    break;
+                case 'float3-plusminus-muted':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric_plusminus(value, row, index, 3, true);
+                    };
+                    break;
+                case 'float4-plusminus':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric_plusminus(value, row, index, 4, false);
+                    };
+                    break;
+                case 'float4-plusminus-muted':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric_plusminus(value, row, index, 4, true);
+                    };
+                    break;
+
+                // error
+                case 'int-error':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric(value, row, index, 0, false, '±');
+                    };
+                    break;
+                case 'float1-error':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric(value, row, index, 1, false, '±');
+                    };
+                    break;
+                case 'float2-error':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric(value, row, index, 2, false, '±');
+                    };
+                    break;
+                case 'float3-error':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric(value, row, index, 3, false, '±');
+                    };
+                    break;
+                case 'float4-error':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric(value, row, index, 4, false, '±');
+                    };
+                    break;
+
+                // percentage
+                case 'int-percentage':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric(value, row, index, 0, false, undefined, ' %');
+                    };
+                    break;
+                case 'int-percentage-muted':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric(value, row, index, 0, true, undefined, ' %');
+                    };
+                    break;
+                case 'float1-percentage':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric(value, row, index, 1, false, undefined, ' %');
+                    };
+                    break;
+                case 'float1-percentage-muted':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric(value, row, index, 1, true, undefined, ' %');
+                    };
+                    break;
+                case 'float2-percentage':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric(value, row, index, 2, false, undefined, ' %');
+                    };
+                    break;
+                case 'float2-percentage-muted':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric(value, row, index, 2, true, undefined, ' %');
+                    };
+                    break;
+                case 'float3-percentage':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric(value, row, index, 3, false, undefined, ' %');
+                    };
+                    break;
+                case 'float3-percentage-muted':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric(value, row, index, 3, true, undefined, ' %');
+                    };
+                    break;
+                case 'float4-percentage':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric(value, row, index, 4, false, undefined, ' %');
+                    };
+                    break;
+                case 'float4-percentage-muted':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric(value, row, index, 4, true, undefined, ' %');
+                    };
+                    break;
+
+                // percentage with interval
+                case 'int-percentage-interval':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric_interval(value, row, index, 0, false, '%');
+                    };
+                    break;
+                case 'int-percentage-interval-muted':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric_interval(value, row, index, 0, true, '%');
+                    };
+                    break;
+                case 'float1-percentage-interval':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric_interval(value, row, index, 1, false, '%');
+                    };
+                    break;
+                case 'float1-percentage-interval-muted':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric_interval(value, row, index, 1, true, '%');
+                    };
+                    break;
+                case 'float2-percentage-interval':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric_interval(value, row, index, 2, false, '%');
+                    };
+                    break;
+                case 'float2-percentage-interval-muted':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric_interval(value, row, index, 2, true, '%');
+                    };
+                    break;
+                case 'float3-percentage-interval':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric_interval(value, row, index, 3, false, '%');
+                    };
+                    break;
+                case 'float3-percentage-interval-muted':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric_interval(value, row, index, 3, true, '%');
+                    };
+                    break;
+                case 'float4-percentage-interval':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric_interval(value, row, index, 4, false, '%');
+                    };
+                    break;
+                case 'float4-percentage-interval-muted':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric_interval(value, row, index, 4, true, '%');
+                    };
+                    break;
+
+                // percentage with plusminus
+                case 'int-percentage-plusminus':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric_plusminus(value, row, index, 0, false, '%');
+                    };
+                    break;
+                case 'int-percentage-plusminus-muted':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric_plusminus(value, row, index, 0, true, '%');
+                    };
+                    break;
+                case 'float1-percentage-plusminus':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric_plusminus(value, row, index, 1, false, '%');
+                    };
+                    break;
+                case 'float1-percentage-plusminus-muted':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric_plusminus(value, row, index, 1, true, '%');
+                    };
+                    break;
+                case 'float2-percentage-plusminus':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric_plusminus(value, row, index, 2, false, '%');
+                    };
+                    break;
+                case 'float2-percentage-plusminus-muted':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric_plusminus(value, row, index, 2, true, '%');
+                    };
+                    break;
+                case 'float3-percentage-plusminus':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric_plusminus(value, row, index, 3, false, '%');
+                    };
+                    break;
+                case 'float3-percentage-plusminus-muted':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric_plusminus(value, row, index, 3, true, '%');
+                    };
+                    break;
+                case 'float4-percentage-plusminus':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric_plusminus(value, row, index, 4, false, '%');
+                    };
+                    break;
+                case 'float4-percentage-plusminus-muted':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric_plusminus(value, row, index, 4, true, '%');
+                    };
+                    break;
+
+                // percentile
+                case 'int-percentile':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric_percentile(value, row, index, false);
+                    };
+                    break;
+                case 'int-percentile-muted':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric_percentile(value, row, index, true);
+                    };
+                    break;
+
+                // decibels
+                case 'int-db':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric(value, row, index, 0, false, undefined, ' dB');
+                    };
+                    break;
+                case 'int-db-muted':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric(value, row, index, 0, true, undefined, ' dB');
+                    };
+                    break;
+                case 'float1-db':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric(value, row, index, 1, false, undefined, ' dB');
+                    };
+                    break;
+                case 'float1-db-muted':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric(value, row, index, 1, true, undefined, ' dB');
+                    };
+                    break;
+                case 'float2-db':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric(value, row, index, 2, false, undefined, ' dB');
+                    };
+                    break;
+                case 'float2-db-muted':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric(value, row, index, 2, true, undefined, ' dB');
+                    };
+                    break;
+                case 'float3-db':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric(value, row, index, 3, false, undefined, ' dB');
+                    };
+                    break;
+                case 'float3-db-muted':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric(value, row, index, 3, true, undefined, ' dB');
+                    };
+                    break;
+                case 'float4-db':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric(value, row, index, 4, false, undefined, ' dB');
+                    };
+                    break;
+                case 'float4-db-muted':
+                    window[formatter_function_name] = function (value, row, index) {
+                        return valueFormatter_numeric(value, row, index, 4, true, undefined, ' dB');
+                    };
+                    break;
+
+                default:
+                    break;
+            }
+            return formatter_function_name;
+        },
+        createInlineValueFormatter : function(value_type, index, header){
+            var self = this;
+            var formatter_function_name = 'valueFormatter_' + value_type.replace(/-/g,'_') + '_' + this.uniqueId + '_' + index;
+
+            switch(value_type) {
+                // Bar
+                case 'inline-bar-vertical':
+                    window[formatter_function_name] = function (value, row, index){
+                        var items = value.split(',');
+                        var html = '';
+                        if(items.length > 0) {
+                            html += '<canvas class="datatable-inline-bar-vertical" data-value="'+value+'"';
+                            if(typeof header.data('dataset-labels') !== 'undefined'){
+                                html += ' data-dataset-labels="' + header.data('dataset-labels') + '" '
+                            }
+                            if(typeof header.data('dataset-colors') !== 'undefined'){
+                                html += ' data-dataset-colors="' + header.data('dataset-colors') + '" '
+                            }
+                            html += '></canvas>';
+                        }
+                        return html;
+                    };
+                    break;
+                case 'inline-bar-vertical-tristate':
+                    window[formatter_function_name] = function (value, row, index){
+                        var items = value.split(',');
+                        var html = '';
+                        if(items.length > 0) {
+                            html += '<canvas class="datatable-inline-bar-vertical-tristate" data-value="'+value+'"></canvas>';
+                        }
+                        return html;
+                    }
+                    break;
+
+                case 'inline-bar-horizontal-average':
+                    var value_formatter = null;
+                    if(typeof header.data('inline-value-type') !== 'undefined'){
+                        value_formatter = this.createNumericValueFormatter(header.data('inline-value-type'), index);
+                    }else{
+                        value_formatter = this.createNumericValueFormatter('int-percentile-muted', index);
+                    }
+
+                    window[formatter_function_name] = function (value, row, index){
+                        //var value_formatter = 'valueFormatter_float1_percentage';
+                        //console.log(value_formatter);
+                        var show_values = false;
+                        if(typeof header.data('inline-show-values') !== 'undefined'){
+                            show_values = header.data('inline-show-values');
+                        }
+                        var small_values = false;
+                        if(typeof header.data('inline-small-values') !== 'undefined'){
+                            small_values = header.data('inline-small-values');
+                        }
+                        var muted_values = false;
+                        if(typeof header.data('inline-muted-values') !== 'undefined'){
+                            muted_values = header.data('inline-muted-values');
+                        }
+
+                        var bar_type_thin = false;
+                        if(typeof header.data('inline-bar-type') !== 'undefined'){
+                            if(header.data('inline-bar-type') == 'thin'){
+                                bar_type_thin = true;
+                            }
+                        }
+                        var dataset_labels = [];
+                        if(typeof header.data('dataset-labels') !== 'undefined'){
+                            dataset_labels = header.data('dataset-labels').split(',')
+                        }
+                        var dataset_colors = [];
+                        if(typeof header.data('dataset-colors') !== 'undefined'){
+                            dataset_colors = header.data('dataset-colors').split(',')
+                        }
+
+                        var data = self.parseDataList(value);
+
+                        var html = '';
+                        if(data.length > 0) {
+                            var current_value = data[0]['y_value'];
+                            var value_string = window[value_formatter](current_value);
+
+                            if(bar_type_thin){
+                                html += '<div class="progress datatable-horizontal-bar-thin">'
+                            }else{
+                                html += '<div class="progress datatable-horizontal-bar">'
+                            }
+
+                            if(current_value <= 50){
+                                html += '<div class="progress-bar" role="progressbar" style="width: '+current_value+'%;background-color:'+self.options.inline_chart.bar_horizontal_average.colors.background+'" ></div>';
+                                html += '<div class="progress-bar" role="progressbar" style="width: '+(50-current_value)+'%;background-color:'+self.options.inline_chart.bar_horizontal_average.colors.negative+';border-right: 1px solid '+self.options.inline_chart.bar_horizontal_average.colors.center+';" ></div>';
+                                html += '<div class="progress-bar" role="progressbar" style="width: 50%;background-color:'+self.options.inline_chart.bar_horizontal_average.colors.background+';border-left: 1px solid '+self.options.inline_chart.bar_horizontal_average.colors.center+';" ></div>';
+
+                            }else if(current_value > 50){
+                                html += '<div class="progress-bar" role="progressbar" style="width: 50%;background-color:'+self.options.inline_chart.bar_horizontal_average.colors.background+';border-right: 1px solid '+self.options.inline_chart.bar_horizontal_average.colors.center+';" ></div>';
+                                html += '<div class="progress-bar" role="progressbar" style="width: '+(current_value-50)+'%;background-color:'+self.options.inline_chart.bar_horizontal_average.colors.positive+';border-left: 1px solid '+self.options.inline_chart.bar_horizontal_average.colors.center+';" ></div>';
+                                html += '<div class="progress-bar" role="progressbar" style="width: '+(100-current_value)+'%;background-color:'+self.options.inline_chart.bar_horizontal_average.colors.background+';" ></div>';
+                            }
+                            html += '</div>';
+                            if(show_values){
+                                if(small_values){
+                                    if(muted_values){
+                                        html+='<small class="text-muted">'+value_string+'</small>';
+                                    }else{
+                                        html+='<small>'+value_string+'</small>';
+                                    }
+
+                                }else{
+                                    if(muted_values){
+                                        html+='<span class="text-muted">'+value_string+'</span>';
+                                    }else{
+                                        html+=value_string;
+                                    }
+                                }
+
+                            }
+                        }
+                        return html;
+                    }
+                    break;
+
+                case 'inline-bar-horizontal-percentage':
+                    window[formatter_function_name] = function (value, row, index){
+                        var value_formatter = 'valueFormatter_float1_percentage';
+
+                        var dataset_labels = [];
+                        if(typeof header.data('dataset-labels') !== 'undefined'){
+                            dataset_labels = header.data('dataset-labels').split(',')
+                        }
+                        var dataset_colors = [];
+                        if(typeof header.data('dataset-colors') !== 'undefined'){
+                            dataset_colors = header.data('dataset-colors').split(',')
+                        }
+
+                        var data = self.parseDataList(value);
+
+                        var html = '';
+                        if(data.length > 0) {
+                            var value_sum = 0;
+                            for (var i = 0; i < data.length; i++) {
+                                value_sum += data[i]['y_value'];
+                            }
+
+                            html += '<div class="progress datatable-horizontal-bar">';
+                            for (var i = 0; i < data.length; i++) {
+                                var percentage = data[i]['y_value'];
+                                if(value_sum > 100.0 && value_sum < 101.0){
+                                    percentage = percentage/value_sum * 100.0;
+                                }
+
+                                var value_string = self.stripHTML(window[value_formatter](percentage));
+
+                                var current_color = null;
+                                if(data[i]['color']){
+                                    current_color = data[i]['color'];
+                                }else if(i < dataset_colors.length && dataset_colors[i]){
+                                    current_color = dataset_colors[i];
+                                }else{
+                                    current_color = self.options.bar.colors.datasets[i % self.options.bar.colors.datasets.length];
+                                }
+
+                                html += '<div class="progress-bar" role="progressbar" data-percentage="100" aria-valuenow="'+percentage+'" aria-valuemin="0" aria-valuemax="100" style="width: '+percentage+'%;background-color:'+current_color+'" ';
+
+                                var current_label = null;
+                                if(data[i]['label']){
+                                    current_label = data[i]['label'];
+                                }else if(i < dataset_labels.length && dataset_labels[i]){
+                                    current_label = dataset_labels[i];
+                                }
+
+                                if(current_label){
+                                    html += 'data-toggle="tooltip" data-placement="bottom" title="' + current_label + ': <strong>'+value_string+'</strong>" ';
+                                }else{
+                                    html += 'data-toggle="tooltip" data-placement="bottom" title="<strong>' + value_string + '</strong>" ';
+                                }
+                                html += '>';
+                                html += '</div>';
+                            }
+                            html += '</div>';
+                        }
+                        return html;
+                    };
+                    break;
+                case 'inline-bar-horizontal-thin-percentage':
+                    window[formatter_function_name] = function (value, row, index){
+                        var value_formatter = 'valueFormatter_float1_percentage';
+
+                        var dataset_labels = [];
+                        if(typeof header.data('dataset-labels') !== 'undefined'){
+                            dataset_labels = header.data('dataset-labels').split(',')
+                        }
+                        var dataset_colors = [];
+                        if(typeof header.data('dataset-colors') !== 'undefined'){
+                            dataset_colors = header.data('dataset-colors').split(',')
+                        }
+
+                        var data = self.parseDataList(value);
+
+                        var html = '';
+                        if(data.length > 0) {
+                            var value_sum = 0;
+                            for (var i = 0; i < data.length; i++) {
+                                value_sum += data[i]['y_value'];
+                            }
+
+                            html += '<div class="progress datatable-horizontal-bar-thin">';
+                            for (var i = 0; i < data.length; i++) {
+                                var percentage = data[i]['y_value'];
+
+                                // Normalize percentage
+                                if(value_sum > 100.0 && value_sum < 101.0){
+                                    percentage = percentage/value_sum * 100.0;
+                                }
+
+                                var value_string = self.stripHTML(window[value_formatter](percentage));
+
+                                var current_color = null;
+                                if(data[i]['color']){
+                                    current_color = data[i]['color'];
+                                }else if(i < dataset_colors.length && dataset_colors[i]){
+                                    current_color = dataset_colors[i];
+                                }else{
+                                    current_color = self.options.bar.colors.datasets[i % self.options.bar.colors.datasets.length];
+                                }
+
+                                html += '<div class="progress-bar" role="progressbar" data-percentage="100" aria-valuenow="'+percentage+'" aria-valuemin="0" aria-valuemax="100" style="width: '+percentage+'%;background-color:'+current_color+'" ';
+
+                                var current_label = null;
+                                if(data[i]['label']){
+                                    current_label = data[i]['label'];
+                                }else if(i < dataset_labels.length && dataset_labels[i]){
+                                    current_label = dataset_labels[i];
+                                }
+
+                                if(current_label){
+                                    html += 'data-toggle="tooltip" data-placement="bottom" title="' + current_label + ': <strong>'+value_string+'</strong>" ';
+                                }else{
+                                    html += 'data-toggle="tooltip" data-placement="bottom" title="<strong>' + value_string + '</strong>" ';
+                                }
+
+                                html += '>';
+                                html += '</div>';
+                            }
+                            html += '</div>';
+                        }
+                        return html;
+                    };
+                    break;
+
+                // Line
+                case 'inline-line':
+                    window[formatter_function_name] = function (value, row, index){
+                        var items = value.split(',');
+                        var html = '';
+                        if(items.length > 0) {
+                            html += '<canvas class="datatable-inline-line" data-value="'+value+'"></canvas>';
+                        }
+                        return html;
+                    }
+                    break;
+                case 'inline-line-steps':
+                    window[formatter_function_name] = function (value, row, index){
+                        var items = value.split(',');
+                        var html = '';
+                        if(items.length > 0) {
+                            html += '<canvas class="datatable-inline-line-steps" data-value="'+value+'"></canvas>';
+                        }
+                        return html;
+                    }
+                    break;
+
+                // Pie
+                case 'inline-pie':
+                    window[formatter_function_name] = function (value, row, index){
+                        var items = value.split(',');
+                        var html = '';
+                        if(items.length > 0) {
+                            html += '<canvas class="datatable-inline-pie" data-value="'+value+'"></canvas>';
+                        }
+                        return html;
+                    }
+                    break;
+
+                // indicators
+                case 'inline-indicator-value':
+                    window[formatter_function_name] = function (value, row, index){
+                        var data = self.parseDataList(value);
+                        var html = '';
+                        if(data.length > 0) {
+                            for (var i = 0; i < data.length; i++) {
+                                var fill_color = 'transparent';
+                                if(!!data[i]['color']){
+                                    fill_color = data[i]['color'];
+                                }else{
+                                    fill_color = self.options.inline_chart.value_indicator.color.default;
+                                }
+                                html += self.svgElement(
+                                    self.options.inline_chart.value_indicator.svg.type,
+                                    self.options.inline_chart.value_indicator.svg.size,
+                                    fill_color,
+                                    data[i]['label'],
+                                    false, 0
+                                );
+                            }
+                        }
+                        return html;
+                    };
+                    break;
+                case 'inline-indicator-value-html':
+                    window[formatter_function_name] = function (value, row, index){
+                        var data = self.parseDataList(value);
+                        var html = '';
+                        if(data.length > 0) {
+                            html = '<div class="">';
+                            for (var i = 0; i < data.length; i++) {
+                                var css_class = self.options.inline_chart.value_indicator.html.css;
+
+                                var fill_color = 'transparent';
+                                if(!!data[i]['color']) {
+                                    fill_color = data[i]['color'];
+                                }else{
+                                    fill_color = self.options.inline_chart.value_indicator.color.default;
+                                }
+
+                                html += '<span class="'+css_class+'" aria-hidden="true" ';
+                                if(data[i]['label']){
+                                    html += 'data-toggle="tooltip" data-placement="bottom" title="'+data[i]['label']+'"';
+                                }
+
+                                html += ' style="color:'+fill_color+'"' ;
+                                html += '>';
+                                html += '</span>';
+                            }
+                            html += '</div>';
+                        }
+                        return html;
+                    };
+                    break;
+                case 'inline-indicator-binary':
+                    window[formatter_function_name] = function (value, row, index){
+                        var data = self.parseDataList(value);
+
+                        var html = '';
+                        if(data.length > 0) {
+                            for (var i = 0; i < data.length; i++) {
+                                var fill_color = null;
+                                if(data[i]['y_value'] > self.options.inline_chart.value_indicator.data.binarizationThreshold){
+                                    fill_color = self.options.inline_chart.value_indicator.color.positive;
+                                }else{
+                                    fill_color = self.options.inline_chart.value_indicator.color.negative;
+                                }
+
+                                html += self.svgElement(
+                                    self.options.inline_chart.value_indicator.svg.type,
+                                    self.options.inline_chart.value_indicator.svg.size,
+                                    fill_color,
+                                    data[i]['label'],
+                                    false, 0
+                                );
+                            }
+                        }
+                        return html;
+                    };
+                    break;
+                case 'inline-indicator-binary-html':
+                    window[formatter_function_name] = function (value, row, index){
+                        var data = self.parseDataList(value);
+                        var html = '';
+                        if(data.length > 0) {
+                            html = '<div class="">';
+                            for (var i = 0; i < data.length; i++) {
+                                var css_class = self.options.inline_chart.value_indicator.html.css;
+
+                                var fill_color = 'transparent';
+
+                                if (data[i]['y_value'] > self.options.inline_chart.value_indicator.data.binarizationThreshold) {
+                                    fill_color = self.options.inline_chart.value_indicator.color.positive;
+                                } else {
+                                    fill_color = self.options.inline_chart.value_indicator.color.negative;
+                                }
+                                html += '<span class="'+css_class+'" aria-hidden="true" ';
+                                if(data[i]['label']){
+                                    html += 'data-toggle="tooltip" data-placement="bottom" title="'+data[i]['label']+'"';
+                                }
+
+                                html += ' style="color:'+fill_color+'"' ;
+                                html += '>';
+                                html += '</span>';
+                            }
+                            html += '</div>';
+                        }
+                        return html;
+                    };
+                    break;
+                case 'inline-indicator-tristate':
+                    window[formatter_function_name] = function (value, row, index){
+                        var data = self.parseDataList(value);
+                        var html = '';
+                        if(data.length > 0) {
+                            for (var i = 0; i < data.length; i++) {
+                                var fill_color = 'transparent';
+                                var offset = 0;
+                                if(data[i]['y_value'] > self.options.inline_chart.value_indicator.data.binarizationThreshold){
+                                    fill_color = self.options.inline_chart.value_indicator.color.positive;
+                                    offset = 0;
+                                }else if(data[i]['y_value'] < self.options.inline_chart.value_indicator.data.binarizationThreshold){
+                                    fill_color = self.options.inline_chart.value_indicator.color.negative;
+                                    offset = self.options.inline_chart.value_indicator.svg.size;
+                                }else{
+                                    fill_color = self.options.inline_chart.value_indicator.color.equal;
+                                    offset = self.options.inline_chart.value_indicator.svg.size / 2;
+                                }
+
+                                html += self.svgElement(
+                                    self.options.inline_chart.value_indicator.svg.type,
+                                    self.options.inline_chart.value_indicator.svg.size,
+                                    fill_color,
+                                    data[i]['label'],
+                                    true,
+                                    offset
+                                );
+                            }
+                        }
+                        return html;
+                    };
+                    break;
+                case 'inline-indicator-tristate-html':
+                    window[formatter_function_name] = function (value, row, index){
+                        var data = self.parseDataList(value);
+                        var html = '';
+                        if(data.length > 0) {
+                            html = '<div class="">';
+                            for (var i = 0; i < data.length; i++) {
+                                var css_class = self.options.inline_chart.value_indicator.html.css;
+
+                                var fill_color = 'transparent';
+                                var offset = null;
+                                if (data[i]['y_value'] > self.options.inline_chart.value_indicator.data.binarizationThreshold) {
+                                    fill_color = self.options.inline_chart.value_indicator.color.positive;
+                                    offset = 0;
+                                }else if(data[i]['y_value'] < self.options.inline_chart.value_indicator.data.binarizationThreshold){
+                                    fill_color = self.options.inline_chart.value_indicator.color.negative;
+                                    offset = 10;
+                                }else{
+                                    fill_color = self.options.inline_chart.value_indicator.color.equal;
+                                    offset = 5;
+                                }
+                                html += '<span class="'+css_class+'" aria-hidden="true" ';
+
+                                if(data[i]['label']){
+                                    html += 'data-toggle="tooltip" data-placement="bottom" title="'+data[i]['label']+'"';
+                                }
+
+                                html += ' style="color:'+fill_color+'; height:30px;top:'+offset+'px;"' ;
+                                html += '>';
+                                html += '</span>';
+                            }
+                            html += '</div>';
+                        }
+                        return html;
+                    };
+                    break;
+
+                // Boolean indicators
+                case 'inline-boolean-circle-svg':
+                    window[formatter_function_name] = function (value, row, index){
+                        var html = '';
+                        var fill_color = 'transparent';
+                        if(value == 1 || value == 'true') {
+                            fill_color = self.options.value_type.boolean.color.on;
+                        } else {
+                            fill_color = self.options.value_type.boolean.color.off;
+                        }
+                        html += self.svgElement(
+                            self.options.value_type.boolean.circle.svg.type,
+                            self.options.value_type.boolean.circle.svg.size,
+                            fill_color,
+                            undefined,
+                            false, 0
+                        );
+                        return html;
+                    };
+                    break;
+                case 'inline-boolean-rect-svg':
+                    window[formatter_function_name] = function (value, row, index){
+                        var html = '';
+                        var fill_color = 'transparent';
+                        if(value == 1 || value == 'true') {
+                            fill_color = self.options.value_type.boolean.color.on;
+                        } else {
+                            fill_color = self.options.value_type.boolean.color.off;
+                        }
+                        html += self.svgElement(
+                            self.options.value_type.boolean.rect.svg.type,
+                            self.options.value_type.boolean.rect.svg.size,
+                            fill_color,
+                            undefined,
+                            false, 0
+                        );
+                        return html;
+                    };
+                    break;
+                case 'inline-boolean-circle-html':
+                    window[formatter_function_name] = function (value, row, index){
+                        var fill_color;
+                        var css_class;
+                        if(value == 1 || value == 'true') {
+                            fill_color = self.options.value_type.boolean.color.on;
+                            css_class = self.options.value_type.boolean.circle.html.on.css;
+                        } else {
+                            fill_color = self.options.value_type.boolean.color.off;
+                            css_class = self.options.value_type.boolean.circle.html.off.css;
+                        }
+                        return '<span class="'+css_class+'" aria-hidden="true" style="color:'+fill_color+'"></span>';
+                    };
+                    break;
+                case 'inline-boolean-rect-html':
+                    window[formatter_function_name] = function (value, row, index){
+                        var fill_color;
+                        var css_class;
+                        if(value == 1 || value == 'true') {
+                            fill_color = self.options.value_type.boolean.color.on;
+                            css_class = self.options.value_type.boolean.rect.html.on.css;
+                        } else {
+                            fill_color = self.options.value_type.boolean.color.off;
+                            css_class = self.options.value_type.boolean.rect.html.off.css;
+                        }
+                        return '<span class="'+css_class+'" aria-hidden="true" style="color:'+fill_color+'"></span>';
+                    };
+                    break;
+
+                default:
+                    break;
+            }
+            return formatter_function_name;
+        },
         initValueFormatters: function(){
             var self = this;
 
-            $(this.element).find('thead tr th[data-value-type]').each(function(){
+            $(this.element).find('thead tr th[data-value-type]').each(function(index){
                 var that = this;
                 var value_type = $(this).data('value-type');
 
                 if(value_type.includes('percentage')){
                     $(this).attr('data-postfix','%');
                 }
+                if(value_type.startsWith('int') || value_type.startsWith('float')) {
+                    // Numeric values
+                    $(this).attr('data-formatter', self.createNumericValueFormatter(value_type, index));
 
-                switch(value_type){
-                    case 'int':
-                        $(this).attr('data-formatter','valueFormatter_int');
-                        break;
+                }else if(value_type.startsWith('inline')){
+                    // Inline visualization
+                    $(this).attr('data-formatter', self.createInlineValueFormatter(value_type, index, $(that)));
 
-                    case 'float1':
-                        $(this).attr('data-formatter','valueFormatter_float1');
-                        break;
-                    case 'float2':
-                        $(this).attr('data-formatter','valueFormatter_float2');
-                        break;
-                    case 'float3':
-                        $(this).attr('data-formatter','valueFormatter_float3');
-                        break;
-                    case 'float4':
-                        $(this).attr('data-formatter','valueFormatter_float4');
-                        break;
+                }else{
+                    switch(value_type){
+                        case 'numeric-unit':
+                            window['valueFormatter_numeric_unit'+self.uniqueId] = function (value, row, index){
+                                if(jQuery.isNumeric(value)){
+                                    value = parseFloat(value);
+                                    return self.addNumberPrefix(value);
 
-                    // Numbers with plus sign
-                    case 'int-plus':
-                        $(this).attr('data-formatter','valueFormatter_int_plus');
-                        break;
-                    case 'float1-plus':
-                        $(this).attr('data-formatter','valueFormatter_float1_plus');
-                        break;
-                    case 'float2-plus':
-                        $(this).attr('data-formatter','valueFormatter_float2_plus');
-                        break;
-                    case 'float3-plus':
-                        $(this).attr('data-formatter','valueFormatter_float3_plus');
-                        break;
-                    case 'float4-plus':
-                        $(this).attr('data-formatter','valueFormatter_float4_plus');
-                        break;
+                                }else{
+                                    return value;
+                                }
+                            };
 
-                    // Numbers with zero handling
-                    case 'int-nonzero':
-                        $(this).attr('data-formatter','valueFormatter_int_nonzero');
-                        break;
-                    case 'int-nonzero-dash':
-                        $(this).attr('data-formatter','valueFormatter_int_nonzero_dash');
-                        break;
-                    case 'int-nonzero-dash-muted':
-                        $(this).attr('data-formatter','valueFormatter_int_nonzero_dash_muted');
-                        break;
-                    case 'float1-nonzero':
-                        $(this).attr('data-formatter','valueFormatter_float1_nonzero');
-                        break;
-                    case 'float1-nonzero-dash':
-                        $(this).attr('data-formatter','valueFormatter_float1_nonzero_dash');
-                        break;
-                    case 'float1-nonzero-dash-muted':
-                        $(this).attr('data-formatter','valueFormatter_float1_nonzero_dash_muted');
-                        break;
-                    case 'float2-nonzero':
-                        $(this).attr('data-formatter','valueFormatter_float2_nonzero');
-                        break;
-                    case 'float2-nonzero-dash':
-                        $(this).attr('data-formatter','valueFormatter_float2_nonzero_dash');
-                        break;
-                    case 'float2-nonzero-dash-muted':
-                        $(this).attr('data-formatter','valueFormatter_float2_nonzero_dash_muted');
-                        break;
-                    case 'float3-nonzero':
-                        $(this).attr('data-formatter','valueFormatter_float3_nonzero');
-                        break;
-                    case 'float3-nonzero-dash':
-                        $(this).attr('data-formatter','valueFormatter_float3_nonzero_dash');
-                        break;
-                    case 'float4-nonzero':
-                        $(this).attr('data-formatter','valueFormatter_float4_nonzero');
-                        break;
-                    case 'float4-nonzero-dash':
-                        $(this).attr('data-formatter','valueFormatter_float4_nonzero_dash');
-                        break;
-                    case 'float4-nonzero-dash-muted':
-                        $(this).attr('data-formatter','valueFormatter_float4_nonzero_dash_muted');
-                        break;
+                            $(this).attr('data-formatter', 'valueFormatter_numeric_unit'+self.uniqueId);
+                            break;
 
-                    // Large integers
-                    case 'int-exp':
-                        $(this).attr('data-formatter','valueFormatter_int_exp');
-                        break;
-                    case 'float1-exp':
-                        $(this).attr('data-formatter','valueFormatter_float1_exp');
-                        break;
-                    case 'float2-exp':
-                        $(this).attr('data-formatter','valueFormatter_float2_exp');
-                        break;
-                    case 'float3-exp':
-                        $(this).attr('data-formatter','valueFormatter_float3_exp');
-                        break;
-                    case 'float4-exp':
-                        $(this).attr('data-formatter','valueFormatter_float4_exp');
-                        break;
+                        case 'html':
+                            $(this).attr('data-formatter','valueFormatter_html');
+                            break;
 
-                    case 'numeric-unit':
-                        window['valueFormatter_numeric_unit'+self.uniqueId] = function (value, row, index){
-                            if(jQuery.isNumeric(value)){
-                                value = parseFloat(value);
-                                return self.addNumberPrefix(value);
+                        case 'date':
+                            $(this).attr('data-formatter','valueFormatter_date');
+                            break;
 
-                            }else{
-                                return value;
-                            }
-                        };
+                        case 'list':
+                            $(this).attr('data-formatter','valueFormatter_list');
+                            break;
 
-                        $(this).attr('data-formatter', 'valueFormatter_numeric_unit'+self.uniqueId);
-                        break;
-
-                    // numeric with interval
-                    case 'int-interval':
-                        $(this).attr('data-formatter','valueFormatter_int_with_interval');
-                        break;
-                    case 'int-interval-muted':
-                        $(this).attr('data-formatter','valueFormatter_int_with_interval_muted');
-                        break;
-                    case 'float1-interval':
-                        $(this).attr('data-formatter','valueFormatter_float1_with_interval');
-                        break;
-                    case 'float1-interval-muted':
-                        $(this).attr('data-formatter','valueFormatter_float1_with_interval_muted');
-                        break;
-                    case 'float2-interval':
-                        $(this).attr('data-formatter','valueFormatter_float2_with_interval');
-                        break;
-                    case 'float2-interval-muted':
-                        $(this).attr('data-formatter','valueFormatter_float2_with_interval_muted');
-                        break;
-                    case 'float3-interval':
-                        $(this).attr('data-formatter','valueFormatter_float3_with_interval');
-                        break;
-                    case 'float3-interval-muted':
-                        $(this).attr('data-formatter','valueFormatter_float3_with_interval_muted');
-                        break;
-                    case 'float4-interval':
-                        $(this).attr('data-formatter','valueFormatter_float4_with_interval');
-                        break;
-                    case 'float4-interval-muted':
-                        $(this).attr('data-formatter','valueFormatter_float4_with_interval_muted');
-                        break;
-
-                    // numeric with plusminus
-                    case 'int-plusminus':
-                        $(this).attr('data-formatter','valueFormatter_int_plusminus');
-                        break;
-                    case 'int-plusminus-muted':
-                        $(this).attr('data-formatter','valueFormatter_int_plusminus_muted');
-                        break;
-                    case 'float1-plusminus':
-                        $(this).attr('data-formatter','valueFormatter_float1_plusminus');
-                        break;
-                    case 'float1-plusminus-muted':
-                        $(this).attr('data-formatter','valueFormatter_float1_plusminus_muted');
-                        break;
-                    case 'float2-plusminus':
-                        $(this).attr('data-formatter','valueFormatter_float2_plusminus');
-                        break;
-                    case 'float2-plusminus-muted':
-                        $(this).attr('data-formatter','valueFormatter_float2_plusminus_muted');
-                        break;
-                    case 'float3-plusminus':
-                        $(this).attr('data-formatter','valueFormatter_float3_plusminus');
-                        break;
-                    case 'float3-plusminus-muted':
-                        $(this).attr('data-formatter','valueFormatter_float3_plusminus_muted');
-                        break;
-                    case 'float4-plusminus':
-                        $(this).attr('data-formatter','valueFormatter_float4_plusminus');
-                        break;
-                    case 'float4-plusminus-muted':
-                        $(this).attr('data-formatter','valueFormatter_float4_plusminus_muted');
-                        break;
-
-                    // percentage
-                    case 'int-percentage':
-                        $(this).attr('data-formatter','valueFormatter_int_percentage');
-                        break;
-                    case 'int-percentage-muted':
-                        $(this).attr('data-formatter','valueFormatter_int_percentage_muted');
-                        break;
-                    case 'float1-percentage':
-                        $(this).attr('data-formatter','valueFormatter_float1_percentage');
-                        break;
-                    case 'float1-percentage-muted':
-                        $(this).attr('data-formatter','valueFormatter_float1_percentage_muted');
-                        break;
-                    case 'float2-percentage':
-                        $(this).attr('data-formatter','valueFormatter_float2_percentage');
-                        break;
-                    case 'float2-percentage-muted':
-                        $(this).attr('data-formatter','valueFormatter_float2_percentage_muted');
-                        break;
-                    case 'float3-percentage':
-                        $(this).attr('data-formatter','valueFormatter_float3_percentage');
-                        break;
-                    case 'float3-percentage-muted':
-                        $(this).attr('data-formatter','valueFormatter_float3_percentage_muted');
-                        break;
-                    case 'float4-percentage':
-                        $(this).attr('data-formatter','valueFormatter_float4_percentage');
-                        break;
-                    case 'float4-percentage-muted':
-                        $(this).attr('data-formatter','valueFormatter_float4_percentage_muted');
-                        break;
-
-                    // decibels
-                    case 'int-db':
-                        $(this).attr('data-formatter','valueFormatter_int_db');
-                        break;
-                    case 'int-db-muted':
-                        $(this).attr('data-formatter','valueFormatter_int_db_muted');
-                        break;
-                    case 'float1-db':
-                        $(this).attr('data-formatter','valueFormatter_float1_db');
-                        break;
-                    case 'float1-db-muted':
-                        $(this).attr('data-formatter','valueFormatter_float1_db_muted');
-                        break;
-                    case 'float2-db':
-                        $(this).attr('data-formatter','valueFormatter_float2_db');
-                        break;
-                    case 'float2-db-muted':
-                        $(this).attr('data-formatter','valueFormatter_float2_db_muted');
-                        break;
-                    case 'float3-db':
-                        $(this).attr('data-formatter','valueFormatter_float3_db');
-                        break;
-                    case 'float3-db-muted':
-                        $(this).attr('data-formatter','valueFormatter_float3_db_muted');
-                        break;
-                    case 'float4-db':
-                        $(this).attr('data-formatter','valueFormatter_float4_db');
-                        break;
-                    case 'float4-db-muted':
-                        $(this).attr('data-formatter','valueFormatter_float4_db_muted');
-                        break;
-
-                    // percentage with interval
-                    case 'int-percentage-interval':
-                        $(this).attr('data-formatter','valueFormatter_int_percentage_with_interval');
-                        break;
-                    case 'int-percentage-interval-muted':
-                        $(this).attr('data-formatter','valueFormatter_int_percentage_with_interval_muted');
-                        break;
-                    case 'float1-percentage-interval':
-                        $(this).attr('data-formatter','valueFormatter_float1_percentage_with_interval');
-                        break;
-                    case 'float1-percentage-interval-muted':
-                        $(this).attr('data-formatter','valueFormatter_float1_percentage_with_interval_muted');
-                        break;
-                    case 'float2-percentage-interval':
-                        $(this).attr('data-formatter','valueFormatter_float2_percentage_with_interval');
-                        break;
-                    case 'float2-percentage-interval-muted':
-                        $(this).attr('data-formatter','valueFormatter_float2_percentage_with_interval_muted');
-                        break;
-                    case 'float3-percentage-interval':
-                        $(this).attr('data-formatter','valueFormatter_float3_percentage_with_interval');
-                        break;
-                    case 'float3-percentage-interval-muted':
-                        $(this).attr('data-formatter','valueFormatter_float3_percentage_with_interval_muted');
-                        break;
-                    case 'float4-percentage-interval':
-                        $(this).attr('data-formatter','valueFormatter_float4_percentage_with_interval');
-                        break;
-                    case 'float4-percentage-interval-muted':
-                        $(this).attr('data-formatter','valueFormatter_float4_percentage_with_interval_muted');
-                        break;
-
-                    // percentage with plusminus
-                    case 'int-percentage-plusminus':
-                        $(this).attr('data-formatter','valueFormatter_int_percentage_plusminus');
-                        break;
-                    case 'int-percentage-plusminus-muted':
-                        $(this).attr('data-formatter','valueFormatter_int_percentage_plusminus_muted');
-                        break;
-                    case 'float1-percentage-plusminus':
-                        $(this).attr('data-formatter','valueFormatter_float1_percentage_plusminus');
-                        break;
-                    case 'float1-percentage-plusminus-muted':
-                        $(this).attr('data-formatter','valueFormatter_float1_percentage_plusminus_muted');
-                        break;
-                    case 'float2-percentage-plusminus':
-                        $(this).attr('data-formatter','valueFormatter_float2_percentage_plusminus');
-                        break;
-                    case 'float2-percentage-plusminus-muted':
-                        $(this).attr('data-formatter','valueFormatter_float2_percentage_plusminus_muted');
-                        break;
-                    case 'float3-percentage-plusminus':
-                        $(this).attr('data-formatter','valueFormatter_float3_percentage_plusminus');
-                        break;
-                    case 'float3-percentage-plusminus-muted':
-                        $(this).attr('data-formatter','valueFormatter_float3_percentage_plusminus_muted');
-                        break;
-                    case 'float4-percentage-plusminus':
-                        $(this).attr('data-formatter','valueFormatter_float4_percentage_plusminus');
-                        break;
-                    case 'float4-percentage-plusminus-muted':
-                        $(this).attr('data-formatter','valueFormatter_float4_percentage_plusminus_muted');
-                        break;
-
-                    // error
-                    case 'int-error':
-                        $(this).attr('data-formatter','valueFormatter_int_error');
-                        break;
-                    case 'float1-error':
-                        $(this).attr('data-formatter','valueFormatter_float1_error');
-                        break;
-                    case 'float2-error':
-                        $(this).attr('data-formatter','valueFormatter_float2_error');
-                        break;
-                    case 'float3-error':
-                        $(this).attr('data-formatter','valueFormatter_float3_error');
-                        break;
-                    case 'float4-error':
-                        $(this).attr('data-formatter','valueFormatter_float4_error');
-                        break;
-
-                    // Boolean indicators
-                    case 'boolean-circle-svg':
-                        window['valueFormatter_binary_circle_svg'+self.uniqueId] = function (value, row, index){
-                            var html = '';
-                            var fill_color = 'transparent';
-                            if(value == 1 || value == 'true') {
-                                fill_color = self.options.value_type.boolean.color.on;
-                            } else {
-                                fill_color = self.options.value_type.boolean.color.off;
-                            }
-                            html += self.svgElement(
-                                self.options.value_type.boolean.circle.svg.type,
-                                self.options.value_type.boolean.circle.svg.size,
-                                fill_color,
-                                undefined,
-                                false, 0
-                            );
-                            return html;
-                        };
-                        $(this).attr('data-formatter', 'valueFormatter_binary_circle_svg'+self.uniqueId);
-
-                        break;
-                    case 'boolean-rect-svg':
-                        window['valueFormatter_binary_rect_svg'+self.uniqueId] = function (value, row, index){
-                            var html = '';
-                            var fill_color = 'transparent';
-                            if(value == 1 || value == 'true') {
-                                fill_color = self.options.value_type.boolean.color.on;
-                            } else {
-                                fill_color = self.options.value_type.boolean.color.off;
-                            }
-                            html += self.svgElement(
-                                self.options.value_type.boolean.rect.svg.type,
-                                self.options.value_type.boolean.rect.svg.size,
-                                fill_color,
-                                undefined,
-                                false, 0
-                            );
-                            return html;
-                        };
-                        $(this).attr('data-formatter', 'valueFormatter_binary_rect_svg'+self.uniqueId);
-
-                        break;
-                    case 'boolean-circle-html':
-                        window['valueFormatter_binary_circle_html'+self.uniqueId] = function (value, row, index){
-                            var fill_color;
-                            var css_class;
-                            if(value == 1 || value == 'true') {
-                                fill_color = self.options.value_type.boolean.color.on;
-                                css_class = self.options.value_type.boolean.circle.html.on.css;
-                            } else {
-                                fill_color = self.options.value_type.boolean.color.off;
-                                css_class = self.options.value_type.boolean.circle.html.off.css;
-                            }
-                            return '<span class="'+css_class+'" aria-hidden="true" style="color:'+fill_color+'"></span>';
-                        };
-                        $(this).attr('data-formatter', 'valueFormatter_binary_circle_html'+self.uniqueId);
-                        break;
-                    case 'boolean-rect-html':
-                        window['valueFormatter_binary_rect_html'+self.uniqueId] = function (value, row, index){
-                            var fill_color;
-                            var css_class;
-                            if(value == 1 || value == 'true') {
-                                fill_color = self.options.value_type.boolean.color.on;
-                                css_class = self.options.value_type.boolean.rect.html.on.css;
-                            } else {
-                                fill_color = self.options.value_type.boolean.color.off;
-                                css_class = self.options.value_type.boolean.rect.html.off.css;
-                            }
-                            return '<span class="'+css_class+'" aria-hidden="true" style="color:'+fill_color+'"></span>';
-                        };
-                        $(this).attr('data-formatter', 'valueFormatter_binary_rect_html'+self.uniqueId);
-                        break;
-
-                    case 'html':
-                        $(this).attr('data-formatter','valueFormatter_html');
-                        break;
-
-                    case 'date':
-                        $(this).attr('data-formatter','valueFormatter_date');
-                        break;
-
-                    case 'list':
-                        $(this).attr('data-formatter','valueFormatter_list');
-                        break;
-
-                    case 'url':
-                        window['valueFormatter_url'+self.uniqueId] = function (value, row, index){
-                            var links = [];
-                            if(value.trim()){
-                                var items = value.split(',');
-                                if(items.length > 0){
-                                    for(var i=0;i<items.length;i++){
-                                        var current_link = items[i].trim();
-                                        var index = current_link.lastIndexOf(';');
-                                        if(index != -1){
-                                            var link = current_link.substring(0,index);
-                                            var link_title = current_link.substring(index+1);
-                                            links.push('<a class="datatable-link" href="' + link + '">'+link_title+'</a>');
-                                        }else{
-                                            links.push('<a class="datatable-icon" href="' + current_link + '">'+self.options.icon.url+'</a>');
+                        case 'url':
+                            window['valueFormatter_url'+self.uniqueId] = function (value, row, index){
+                                var links = [];
+                                if(value.trim()){
+                                    var items = value.split(',');
+                                    if(items.length > 0){
+                                        for(var i=0;i<items.length;i++){
+                                            var current_link = items[i].trim();
+                                            var index = current_link.lastIndexOf(';');
+                                            if(index != -1){
+                                                var link = current_link.substring(0,index);
+                                                var link_title = current_link.substring(index+1);
+                                                links.push('<a class="datatable-link" href="' + link + '">'+link_title+'</a>');
+                                            }else{
+                                                links.push('<a class="datatable-icon" href="' + current_link + '">'+self.options.icon.url+'</a>');
+                                            }
                                         }
                                     }
                                 }
-                            }
-                            return links.join('<br>');
-                        };
-                        $(this).attr('data-formatter','valueFormatter_url'+this.uniqueId);
-                        break;
+                                return links.join('<br>');
+                            };
+                            $(this).attr('data-formatter','valueFormatter_url'+self.uniqueId);
+                            break;
 
-                    case 'ref':
-                        window['valueFormatter_ref'+self.uniqueId] = function (value, row, index){
-                            var links = [];
-                            if(value.trim()){
-                                var items = value.split(',');
-                                if(items.length > 0){
-                                    for(var i=0;i<items.length;i++){
-                                        var current_link = items[i].trim();
-                                        var index = current_link.lastIndexOf(';');
-                                        if(index != -1){
-                                            var link = current_link.substring(0,index);
-                                            var link_title = current_link.substring(index+1);
-                                            links.push('<a class="datatable-link" href="' + link + '">['+link_title+']</a>');
-                                        }else{
-                                            links.push('<a class="datatable-icon" href="' + current_link + '">'+self.options.icon.ref+'</a>');
+                        case 'ref':
+                            window['valueFormatter_ref'+self.uniqueId] = function (value, row, index){
+                                var links = [];
+                                if(value.trim()){
+                                    var items = value.split(',');
+                                    if(items.length > 0){
+                                        for(var i=0;i<items.length;i++){
+                                            var current_link = items[i].trim();
+                                            var index = current_link.lastIndexOf(';');
+                                            if(index != -1){
+                                                var link = current_link.substring(0,index);
+                                                var link_title = current_link.substring(index+1);
+                                                links.push('<a class="datatable-link" href="' + link + '">['+link_title+']</a>');
+                                            }else{
+                                                links.push('<a class="datatable-icon" href="' + current_link + '">'+self.options.icon.ref+'</a>');
+                                            }
                                         }
                                     }
                                 }
-                            }
-                            return links.join('<br>');
-                        };
-                        $(this).attr('data-formatter','valueFormatter_ref'+self.uniqueId);
-                        break;
+                                return links.join('<br>');
+                            };
+                            $(this).attr('data-formatter','valueFormatter_ref'+self.uniqueId);
+                            break;
 
-                    case 'anchor':
-                        window['valueFormatter_anchor'+self.uniqueId] = function valueFormatter_anchor(value, row, index){
-                            if(value.trim()){
-                                return '<a class="datatable-icon" href="javascript:void(0)" onclick="$(\'#collapse-'+value+'\').collapse(\'show\');window.location.hash=\''+value+'\';return false;">'+self.options.icon.anchor+'</a>'
-                            }else{
-                                return value;
-                            }
-                        };
-
-                        $(this).attr('data-formatter', 'valueFormatter_anchor'+self.uniqueId);
-                        break;
-
-                    case 'inline-bar-horizontal-percentage':
-                        window['valueFormatter_inline_bar_horizontal_percentage'+self.uniqueId] = function (value, row, index){
-                            var value_formatter = 'valueFormatter_float1_percentage';
-                            var header = $(that);
-
-                            var dataset_labels = [];
-                            if(typeof header.data('dataset-labels') !== 'undefined'){
-                                dataset_labels = header.data('dataset-labels').split(',')
-                            }
-                            var dataset_colors = [];
-                            if(typeof header.data('dataset-colors') !== 'undefined'){
-                                dataset_colors = header.data('dataset-colors').split(',')
-                            }
-
-                            var data = self.parseDataList(value);
-
-                            var html = '';
-                            if(data.length > 0) {
-                                var value_sum = 0;
-                                for (var i = 0; i < data.length; i++) {
-                                    value_sum += data[i]['y_value'];
+                        case 'anchor':
+                            window['valueFormatter_anchor'+self.uniqueId] = function valueFormatter_anchor(value, row, index){
+                                if(value.trim()){
+                                    return '<a class="datatable-icon" href="javascript:void(0)" onclick="$(\'#collapse-'+value+'\').collapse(\'show\');window.location.hash=\''+value+'\';return false;">'+self.options.icon.anchor+'</a>'
+                                }else{
+                                    return value;
                                 }
+                            };
+                            $(this).attr('data-formatter', 'valueFormatter_anchor'+self.uniqueId);
+                            break;
 
-                                html += '<div class="progress datatable-horizontal-bar">';
-                                for (var i = 0; i < data.length; i++) {
-                                    var percentage = data[i]['y_value'];
-                                    if(value_sum > 100.0 && value_sum < 101.0){
-                                        percentage = percentage/value_sum * 100.0;
-                                    }
-
-                                    var value_string = self.stripHTML(window[value_formatter](percentage));
-
-                                    var current_color = null;
-                                    if(data[i]['color']){
-                                        current_color = data[i]['color'];
-                                    }else if(i < dataset_colors.length && dataset_colors[i]){
-                                        current_color = dataset_colors[i];
-                                    }else{
-                                        current_color = self.options.bar.colors.datasets[i % self.options.bar.colors.datasets.length];
-                                    }
-
-                                    html += '<div class="progress-bar" role="progressbar" data-percentage="100" aria-valuenow="'+percentage+'" aria-valuemin="0" aria-valuemax="100" style="width: '+percentage+'%;background-color:'+current_color+'" ';
-
-                                    var current_label = null;
-                                    if(data[i]['label']){
-                                        current_label = data[i]['label'];
-                                    }else if(i < dataset_labels.length && dataset_labels[i]){
-                                        current_label = dataset_labels[i];
-                                    }
-
-                                    if(current_label){
-                                        html += 'data-toggle="tooltip" data-placement="bottom" title="' + current_label + ': <strong>'+value_string+'</strong>" ';
-                                    }else{
-                                        html += 'data-toggle="tooltip" data-placement="bottom" title="<strong>' + value_string + '</strong>" ';
-                                    }
-                                    html += '>';
-                                    html += '</div>';
-                                }
-                                html += '</div>';
-                            }
-                            return html;
-                        };
-                        $(this).attr('data-formatter', 'valueFormatter_inline_bar_horizontal_percentage'+self.uniqueId);
-                        break;
-                    case 'inline-bar-horizontal-thin-percentage':
-                        window['valueFormatter_inline_bar_horizontal_thin_percentage'+self.uniqueId] = function (value, row, index){
-                            var value_formatter = 'valueFormatter_float1_percentage';
-                            var header = $(that);
-
-                            var dataset_labels = [];
-                            if(typeof header.data('dataset-labels') !== 'undefined'){
-                                dataset_labels = header.data('dataset-labels').split(',')
-                            }
-                            var dataset_colors = [];
-                            if(typeof header.data('dataset-colors') !== 'undefined'){
-                                dataset_colors = header.data('dataset-colors').split(',')
-                            }
-
-                            var data = self.parseDataList(value);
-
-                            var html = '';
-                            if(data.length > 0) {
-                                var value_sum = 0;
-                                for (var i = 0; i < data.length; i++) {
-                                    value_sum += data[i]['y_value'];
-                                }
-
-                                html += '<div class="progress datatable-horizontal-bar-thin">';
-                                for (var i = 0; i < data.length; i++) {
-                                    var percentage = data[i]['y_value'];
-
-                                    // Normalize percentage
-                                    if(value_sum > 100.0 && value_sum < 101.0){
-                                        percentage = percentage/value_sum * 100.0;
-                                    }
-
-                                    var value_string = self.stripHTML(window[value_formatter](percentage));
-
-                                    var current_color = null;
-                                    if(data[i]['color']){
-                                        current_color = data[i]['color'];
-                                    }else if(i < dataset_colors.length && dataset_colors[i]){
-                                        current_color = dataset_colors[i];
-                                    }else{
-                                        current_color = self.options.bar.colors.datasets[i % self.options.bar.colors.datasets.length];
-                                    }
-
-                                    html += '<div class="progress-bar" role="progressbar" data-percentage="100" aria-valuenow="'+percentage+'" aria-valuemin="0" aria-valuemax="100" style="width: '+percentage+'%;background-color:'+current_color+'" ';
-
-                                    var current_label = null;
-                                    if(data[i]['label']){
-                                        current_label = data[i]['label'];
-                                    }else if(i < dataset_labels.length && dataset_labels[i]){
-                                        current_label = dataset_labels[i];
-                                    }
-
-                                    if(current_label){
-                                        html += 'data-toggle="tooltip" data-placement="bottom" title="' + current_label + ': <strong>'+value_string+'</strong>" ';
-                                    }else{
-                                        html += 'data-toggle="tooltip" data-placement="bottom" title="<strong>' + value_string + '</strong>" ';
-                                    }
-
-                                    html += '>';
-                                    html += '</div>';
-                                }
-                                html += '</div>';
-                            }
-                            return html;
-                        };
-                        $(this).attr('data-formatter', 'valueFormatter_inline_bar_horizontal_thin_percentage'+self.uniqueId);
-                        break;
-
-                    case 'inline-bar-vertical':
-                        window['valueFormatter_inline_bar_vertical'+self.uniqueId] = function (value, row, index){
-                            var header = $(that);
-
-                            var items = value.split(',');
-                            var html = '';
-                            if(items.length > 0) {
-                                html += '<canvas class="datatable-inline-bar-vertical" data-value="'+value+'"';
-                                if(typeof header.data('dataset-labels') !== 'undefined'){
-                                    html += ' data-dataset-labels="' + header.data('dataset-labels') + '" '
-                                }
-                                if(typeof header.data('dataset-colors') !== 'undefined'){
-                                    html += ' data-dataset-colors="' + header.data('dataset-colors') + '" '
-                                }
-                                html += '></canvas>';
-                            }
-                            return html;
-                        };
-                        $(this).attr('data-formatter', 'valueFormatter_inline_bar_vertical'+self.uniqueId);
-                        //$(this).addClass('canvas-cell');
-                        break;
-                    case 'inline-bar-vertical-tristate':
-                        $(this).attr('data-formatter', 'valueFormatter_inline_bar_vertical_tristate');
-                        break;
-
-                    case 'inline-line':
-                        $(this).attr('data-formatter', 'valueFormatter_inline_line');
-                        break;
-                    case 'inline-line-steps':
-                        $(this).attr('data-formatter', 'valueFormatter_inline_line_steps');
-                        break;
-
-                    case 'inline-pie':
-                        $(this).attr('data-formatter', 'valueFormatter_inline_pie');
-                        break;
-
-                    case 'inline-indicator-value':
-                        window['valueFormatter_inline_indicator_value_svg'+self.uniqueId] = function (value, row, index){
-                            var data = self.parseDataList(value);
-                            var html = '';
-                            if(data.length > 0) {
-                                for (var i = 0; i < data.length; i++) {
-                                    var fill_color = 'transparent';
-                                    if(!!data[i]['color']){
-                                        fill_color = data[i]['color'];
-                                    }else{
-                                        fill_color = self.options.inline_chart.value_indicator.color.default;
-                                    }
-                                    html += self.svgElement(
-                                        self.options.inline_chart.value_indicator.svg.type,
-                                        self.options.inline_chart.value_indicator.svg.size,
-                                        fill_color,
-                                        data[i]['label'],
-                                        false, 0
-                                    );
-                                }
-                            }
-                            return html;
-                        };
-
-                        $(this).attr('data-formatter', 'valueFormatter_inline_indicator_value_svg'+self.uniqueId);
-                        //$(this).addClass('canvas-cell');
-                        break;
-                    case 'inline-indicator-value-html':
-                        window['valueFormatter_inline_indicator_value_html'+self.uniqueId] = function (value, row, index){
-                            var data = self.parseDataList(value);
-                            var html = '';
-                            if(data.length > 0) {
-                                html = '<div class="">';
-                                for (var i = 0; i < data.length; i++) {
-                                    var css_class = self.options.inline_chart.value_indicator.html.css;
-
-                                    var fill_color = 'transparent';
-                                    if(!!data[i]['color']) {
-                                        fill_color = data[i]['color'];
-                                    }else{
-                                        fill_color = self.options.inline_chart.value_indicator.color.default;
-                                    }
-
-                                    html += '<span class="'+css_class+'" aria-hidden="true" ';
-                                    if(data[i]['label']){
-                                        html += 'data-toggle="tooltip" data-placement="bottom" title="'+data[i]['label']+'"';
-                                    }
-
-                                    html += ' style="color:'+fill_color+'"' ;
-                                    html += '>';
-                                    html += '</span>';
-                                }
-                                html += '</div>';
-                            }
-                            return html;
-                        };
-
-                        $(this).attr('data-formatter', 'valueFormatter_inline_indicator_value_html'+self.uniqueId);
-                        //$(this).addClass('canvas-cell');
-                        break;
-
-                    case 'inline-indicator-binary':
-                        window['valueFormatter_inline_indicator_binary_svg'+self.uniqueId] = function (value, row, index){
-                            var data = self.parseDataList(value);
-                            var html = '';
-                            if(data.length > 0) {
-                                for (var i = 0; i < data.length; i++) {
-                                    var fill_color = null;
-                                    if(data[i]['y_value'] >= self.options.inline_chart.value_indicator.data.binarizationThreshold){
-                                        fill_color = self.options.inline_chart.value_indicator.color.positive;
-                                    }else{
-                                        fill_color = self.options.inline_chart.value_indicator.color.negative;
-                                    }
-
-                                    html += self.svgElement(
-                                        self.options.inline_chart.value_indicator.svg.type,
-                                        self.options.inline_chart.value_indicator.svg.size,
-                                        fill_color,
-                                        data[i]['label'],
-                                        false, 0
-                                    );
-                                }
-                            }
-                            return html;
-                        };
-
-                        $(this).attr('data-formatter', 'valueFormatter_inline_indicator_binary_svg'+self.uniqueId);
-                        //$(this).addClass('canvas-cell');
-                        break;
-                    case 'inline-indicator-binary-html':
-                        window['valueFormatter_inline_binary_html'+self.uniqueId] = function (value, row, index){
-                            var data = self.parseDataList(value);
-                            var html = '';
-                            if(data.length > 0) {
-                                html = '<div class="">';
-                                for (var i = 0; i < data.length; i++) {
-                                    var css_class = self.options.inline_chart.value_indicator.html.css;
-
-                                    var fill_color = 'transparent';
-
-                                    if (data[i]['y_value'] > self.options.inline_chart.value_indicator.data.binarizationThreshold) {
-                                        fill_color = self.options.inline_chart.value_indicator.color.positive;
-                                    } else {
-                                        fill_color = self.options.inline_chart.value_indicator.color.negative;
-                                    }
-                                    html += '<span class="'+css_class+'" aria-hidden="true" ';
-                                    if(data[i]['label']){
-                                        html += 'data-toggle="tooltip" data-placement="bottom" title="'+data[i]['label']+'"';
-                                    }
-
-                                    html += ' style="color:'+fill_color+'"' ;
-                                    html += '>';
-                                    html += '</span>';
-                                }
-                                html += '</div>';
-                            }
-                            return html;
-                        };
-
-                        $(this).attr('data-formatter', 'valueFormatter_inline_binary_html'+self.uniqueId);
-                        //$(this).addClass('canvas-cell');
-                        break;
-
-                    case 'inline-indicator-tristate':
-                        window['valueFormatter_inline_indicator_tristate_svg'+self.uniqueId] = function (value, row, index){
-                            var data = self.parseDataList(value);
-                            var html = '';
-                            if(data.length > 0) {
-                                for (var i = 0; i < data.length; i++) {
-                                    var fill_color = 'transparent';
-                                    var offset = 0;
-                                    if(data[i]['y_value'] > self.options.inline_chart.value_indicator.data.binarizationThreshold){
-                                        fill_color = self.options.inline_chart.value_indicator.color.positive;
-                                        offset = 0;
-                                    }else if(data[i]['y_value'] < self.options.inline_chart.value_indicator.data.binarizationThreshold){
-                                        fill_color = self.options.inline_chart.value_indicator.color.negative;
-                                        offset = self.options.inline_chart.value_indicator.svg.size;
-                                    }else{
-                                        fill_color = self.options.inline_chart.value_indicator.color.equal;
-                                        offset = self.options.inline_chart.value_indicator.svg.size / 2;
-                                    }
-
-                                    html += self.svgElement(
-                                        self.options.inline_chart.value_indicator.svg.type,
-                                        self.options.inline_chart.value_indicator.svg.size,
-                                        fill_color,
-                                        data[i]['label'],
-                                        true,
-                                        offset
-                                    );
-                                }
-                            }
-                            return html;
-                        };
-
-                        $(this).attr('data-formatter', 'valueFormatter_inline_indicator_tristate_svg'+self.uniqueId);
-                        //$(this).addClass('canvas-cell');
-                        break;
-                    case 'inline-indicator-tristate-html':
-                        window['valueFormatter_inline_tristate_html'+self.uniqueId] = function (value, row, index){
-                            var data = self.parseDataList(value);
-                            var html = '';
-                            if(data.length > 0) {
-                                html = '<div class="">';
-                                for (var i = 0; i < data.length; i++) {
-                                    var css_class = self.options.inline_chart.value_indicator.html.css;
-
-                                    var fill_color = 'transparent';
-                                    var offset = null;
-                                    if (data[i]['y_value'] > self.options.inline_chart.value_indicator.data.binarizationThreshold) {
-                                        fill_color = self.options.inline_chart.value_indicator.color.positive;
-                                        offset = 0;
-                                    }else if(data[i]['y_value'] < self.options.inline_chart.value_indicator.data.binarizationThreshold){
-                                        fill_color = self.options.inline_chart.value_indicator.color.negative;
-                                        offset = 10;
-                                    }else{
-                                        fill_color = self.options.inline_chart.value_indicator.color.equal;
-                                        offset = 5;
-                                    }
-                                    html += '<span class="'+css_class+'" aria-hidden="true" ';
-
-                                    if(data[i]['label']){
-                                        html += 'data-toggle="tooltip" data-placement="bottom" title="'+data[i]['label']+'"';
-                                    }
-
-                                    html += ' style="color:'+fill_color+'; height:30px;top:'+offset+'px;"' ;
-                                    html += '>';
-                                    html += '</span>';
-                                }
-                                html += '</div>';
-                            }
-                            return html;
-                        };
-
-                        $(this).attr('data-formatter', 'valueFormatter_inline_tristate_html'+self.uniqueId);
-                        //$(this).addClass('canvas-cell');
-                        break;
-
-                    default:
-                        window['valueFormatter_hide'+self.uniqueId] = function (value, row, index){
-                            return '<div class="text-muted" data-value="'+value+'">Invalid data-value-type</div>';
-                        };
-                        $(this).attr('data-formatter', 'valueFormatter_hide'+self.uniqueId);
-                        break;
+                        default:
+                            window['valueFormatter_hide'+self.uniqueId] = function (value, row, index){
+                                return '<div class="text-muted" data-value="'+value+'">Invalid data-value-type</div>';
+                            };
+                            $(this).attr('data-formatter', 'valueFormatter_hide'+self.uniqueId);
+                            break;
+                    }
                 }
             });
         },
@@ -4976,7 +5537,7 @@ jQuery( document ).ready(function() {
                     line: {
                         fields: undefined,
                         xaxis: {},
-                        yaxis: {},
+                        yaxis: {},
                         line: {},
                         point: {},
                         horizontal_highlights: {
@@ -9123,582 +9684,4 @@ jQuery( document ).ready(function() {
             return commands[arguments[0]].apply(element, args);
         }
     }
-
 }(jQuery, window, document));
-
-// ========================================
-// Helper functions for bootstrap-table.js
-// ========================================
-function valueFormatter_generic_fixed(value, row, index, precision=undefined, muted=undefined, prefix=undefined, postfix, plus=false, zeroReplacement = undefined){
-    if(typeof prefix === 'undefined') {
-        prefix = ''
-    }
-    if(typeof postfix === 'undefined') {
-        postfix = ''
-    }
-    if(muted){
-        if(postfix){
-            postfix = '<span class="text-muted">'+postfix+'</span>';
-        }
-    }
-    if(jQuery.isNumeric(value)){
-        value = parseFloat(value);
-        if(typeof precision !== 'undefined') {
-            value = value.toFixed(precision);
-        }
-        if(typeof zeroReplacement !== 'undefined' && value == 0){
-            if(muted){
-                value = '<span class="text-muted">'+zeroReplacement+'</span>';
-            }else{
-                value = zeroReplacement;
-            }
-
-        }else{
-            if(plus && value >= 0){
-                value = '+' + value;
-            }
-        }
-
-        return prefix + value + postfix;
-
-    }else{
-        return value;
-    }
-}
-
-function valueFormatter_binary(value, row, index){
-
-}
-
-function percentageFormatter(value, row, index){
-    return valueFormatter_generic_fixed(value, row, index, undefined, false, undefined, ' %');
-}
-
-function valueFormatter_int(value, row, index){
-    return valueFormatter_generic_fixed(value, row, index, 0);
-}
-
-function valueFormatter_float1(value, row, index){
-    return valueFormatter_generic_fixed(value, row, index, 1);
-}
-function valueFormatter_float2(value, row, index){
-    return valueFormatter_generic_fixed(value, row, index, 2);
-}
-function valueFormatter_float3(value, row, index){
-    return valueFormatter_generic_fixed(value, row, index, 3);
-}
-function valueFormatter_float4(value, row, index){
-    return valueFormatter_generic_fixed(value, row, index, 4);
-}
-
-function valueFormatter_int_plus(value, row, index){
-    return valueFormatter_generic_fixed(value, row, index, 0, false, undefined, undefined, true);
-}
-
-function valueFormatter_float1_plus(value, row, index){
-    return valueFormatter_generic_fixed(value, row, index, 1, false, undefined, undefined, true);
-}
-function valueFormatter_float2_plus(value, row, index){
-    return valueFormatter_generic_fixed(value, row, index, 2, false, undefined, undefined, true);
-}
-function valueFormatter_float3_plus(value, row, index){
-    return valueFormatter_generic_fixed(value, row, index, 3, false, undefined, undefined, true);
-}
-function valueFormatter_float4_plus(value, row, index){
-    return valueFormatter_generic_fixed(value, row, index, 4, false, undefined, undefined, true);
-}
-
-function valueFormatter_int_nonzero(value, row, index){
-    return valueFormatter_generic_fixed(value, row, index, 0, undefined, undefined, undefined, false, '');
-}
-function valueFormatter_int_nonzero_dash(value, row, index){
-    return valueFormatter_generic_fixed(value, row, index, 0, undefined, undefined, undefined, false, '-');
-}
-function valueFormatter_int_nonzero_dash_muted(value, row, index){
-    return valueFormatter_generic_fixed(value, row, index, 0, true, undefined, undefined, false, '-');
-}
-function valueFormatter_float1_nonzero(value, row, index){
-    return valueFormatter_generic_fixed(value, row, index, 1, undefined, undefined, undefined, false, '');
-}
-function valueFormatter_float1_nonzero_dash(value, row, index){
-    return valueFormatter_generic_fixed(value, row, index, 1, undefined, undefined, undefined, false, '-');
-}
-function valueFormatter_float1_nonzero_dash_muted(value, row, index){
-    return valueFormatter_generic_fixed(value, row, index, 1, true, undefined, undefined, false, '-');
-}
-function valueFormatter_float1_nonzero(value, row, index){
-    return valueFormatter_generic_fixed(value, row, index, 1, undefined, undefined, undefined, false, '');
-}
-function valueFormatter_float1_nonzero_dash(value, row, index){
-    return valueFormatter_generic_fixed(value, row, index, 1, undefined, undefined, undefined, false, '-');
-}
-function valueFormatter_float1_nonzero_dash_muted(value, row, index){
-    return valueFormatter_generic_fixed(value, row, index, 1, true, undefined, undefined, false, '-');
-}
-function valueFormatter_float2_nonzero(value, row, index){
-    return valueFormatter_generic_fixed(value, row, index, 2, undefined, undefined, undefined, false, '');
-}
-function valueFormatter_float2_nonzero_dash(value, row, index){
-    return valueFormatter_generic_fixed(value, row, index, 2, undefined, undefined, undefined, false, '-');
-}
-function valueFormatter_float2_nonzero_dash_muted(value, row, index){
-    return valueFormatter_generic_fixed(value, row, index, 2, true, undefined, undefined, false, '-');
-}
-function valueFormatter_float3_nonzero(value, row, index){
-    return valueFormatter_generic_fixed(value, row, index, 3, undefined, undefined, undefined, false, '');
-}
-function valueFormatter_float3_nonzero_dash(value, row, index){
-    return valueFormatter_generic_fixed(value, row, index, 3, undefined, undefined, undefined, false, '-');
-}
-function valueFormatter_float3_nonzero_dash_muted(value, row, index){
-    return valueFormatter_generic_fixed(value, row, index, 3, true, undefined, undefined, false, '-');
-}
-function valueFormatter_float4_nonzero(value, row, index){
-    return valueFormatter_generic_fixed(value, row, index, 4, undefined, undefined, undefined, false, '');
-}
-function valueFormatter_float4_nonzero_dash(value, row, index){
-    return valueFormatter_generic_fixed(value, row, index, 4, undefined, undefined, undefined, false, '-');
-}
-function valueFormatter_float4_nonzero_dash_muted(value, row, index){
-    return valueFormatter_generic_fixed(value, row, index, 4, true, undefined, undefined, false, '-');
-}
-
-function valueFormatter_generic_exponential(value, row, index, precision, muted, prefix, postfix){
-    if(typeof prefix === 'undefined') {
-        prefix = ''
-    }
-    if(typeof postfix === 'undefined') {
-        postfix = ''
-    }
-
-    if(jQuery.isNumeric(value)){
-        value = parseFloat(value);
-        if(typeof precision !== 'undefined') {
-            value = value.toExponential(precision);
-        }
-        return prefix + value + postfix;
-
-    }else{
-        return value;
-    }
-}
-function valueFormatter_int_exp(value, row, index) {
-    return valueFormatter_generic_exponential(value, row, index, 0);
-}
-function valueFormatter_float1_exp(value, row, index) {
-    return valueFormatter_generic_exponential(value, row, index, 1);
-}
-function valueFormatter_float2_exp(value, row, index) {
-    return valueFormatter_generic_exponential(value, row, index, 2);
-}
-function valueFormatter_float3_exp(value, row, index) {
-    return valueFormatter_generic_exponential(value, row, index, 3);
-}
-function valueFormatter_float4_exp(value, row, index) {
-    return valueFormatter_generic_exponential(value, row, index, 4);
-}
-
-// percentage values
-function valueFormatter_int_percentage(value, row, index){
-    return valueFormatter_generic_fixed(value, row, index, 0, false, undefined, ' %');
-}
-function valueFormatter_int_percentage_muted(value, row, index){
-    return valueFormatter_generic_fixed(value, row, index, 0, true, undefined, ' %');
-}
-function valueFormatter_float1_percentage(value, row, index){
-    return valueFormatter_generic_fixed(value, row, index, 1, false, undefined, ' %');
-}
-function valueFormatter_float1_percentage_muted(value, row, index){
-    return valueFormatter_generic_fixed(value, row, index, 1, true, undefined, ' %');
-}
-function valueFormatter_float2_percentage(value, row, index){
-    return valueFormatter_generic_fixed(value, row, index, 2, false, undefined, ' %');
-}
-function valueFormatter_float2_percentage_muted(value, row, index){
-    return valueFormatter_generic_fixed(value, row, index, 2, true, undefined, ' %');
-}
-function valueFormatter_float3_percentage(value, row, index){
-    return valueFormatter_generic_fixed(value, row, index, 3, false, undefined, ' %');
-}
-function valueFormatter_float3_percentage_muted(value, row, index){
-    return valueFormatter_generic_fixed(value, row, index, 3, true, undefined, ' %');
-}
-function valueFormatter_float4_percentage(value, row, index){
-    return valueFormatter_generic_fixed(value, row, index, 4, false, undefined, ' %');
-}
-function valueFormatter_float4_percentage_muted(value, row, index){
-    return valueFormatter_generic_fixed(value, row, index, 4, true, undefined, ' %');
-}
-
-// decibels
-function valueFormatter_int_db(value, row, index){
-    return valueFormatter_generic_fixed(value, row, index, 0, false, undefined, ' dB');
-}
-function valueFormatter_int_db_muted(value, row, index){
-    return valueFormatter_generic_fixed(value, row, index, 0, true, undefined, ' dB');
-}
-function valueFormatter_float1_db(value, row, index){
-    return valueFormatter_generic_fixed(value, row, index, 1, false, undefined, ' dB');
-}
-function valueFormatter_float1_db_muted(value, row, index){
-    return valueFormatter_generic_fixed(value, row, index, 1, true, undefined, ' dB');
-}
-function valueFormatter_float2_db(value, row, index){
-    return valueFormatter_generic_fixed(value, row, index, 2, false, undefined, ' dB');
-}
-function valueFormatter_float2_db_muted(value, row, index){
-    return valueFormatter_generic_fixed(value, row, index, 2, true, undefined, ' dB');
-}
-function valueFormatter_float3_db(value, row, index){
-    return valueFormatter_generic_fixed(value, row, index, 3, false, undefined, ' dB');
-}
-function valueFormatter_float3_db_muted(value, row, index){
-    return valueFormatter_generic_fixed(value, row, index, 3, true, undefined, ' dB');
-}
-function valueFormatter_float4_db(value, row, index){
-    return valueFormatter_generic_fixed(value, row, index, 4, false, undefined, ' dB');
-}
-function valueFormatter_float4_db_muted(value, row, index){
-    return valueFormatter_generic_fixed(value, row, index, 4, true, undefined, ' dB');
-}
-
-// error values
-function valueFormatter_int_error(value, row, index){
-    return valueFormatter_generic_fixed(value, row, index, 0, false, '±');
-}
-function valueFormatter_float1_error(value, row, index){
-    return valueFormatter_generic_fixed(value, row, index, 1, false, '±');
-}
-function valueFormatter_float2_error(value, row, index){
-    return valueFormatter_generic_fixed(value, row, index, 2, false, '±');
-}
-function valueFormatter_float3_error(value, row, index){
-    return valueFormatter_generic_fixed(value, row, index, 3, false, '±');
-}
-function valueFormatter_float4_error(value, row, index){
-    return valueFormatter_generic_fixed(value, row, index, 4, false, '±');
-}
-
-function valueFormatter_numeric_with_interval(value, row, index, precision, muted){
-    // Cell formatter for percentage values
-    if(isNumericWithInterval(value)){
-        // We have data in format [value] ([interval1] - [interval2])
-        var item = parseNumericErrorInterval(value, precision);
-        if(typeof muted !== 'undefined' && muted) {
-            return item.value + ' <small class="text-muted">(' + item.value_min + ' - ' + item.value_max + ')</small>';
-        }else{
-            return item.value + ' (' + item.value_min + ' - ' + item.value_max + ')';
-        }
-
-    }else if(jQuery.isNumeric(value)){
-        return parseFloat(value).toFixed(precision);
-
-    }else{
-        return value;
-    }
-}
-function valueFormatter_int_with_interval(value, row, index){
-    return valueFormatter_numeric_with_interval(value, row, index, 0, false);
-}
-function valueFormatter_int_with_interval_muted(value, row, index){
-    return valueFormatter_numeric_with_interval(value, row, index, 0, true);
-}
-function valueFormatter_float1_with_interval(value, row, index){
-    return valueFormatter_numeric_with_interval(value, row, index, 1, false);
-}
-function valueFormatter_float1_with_interval_muted(value, row, index){
-    return valueFormatter_numeric_with_interval(value, row, index, 1, true);
-}
-function valueFormatter_float2_with_interval(value, row, index){
-    return valueFormatter_numeric_with_interval(value, row, index, 2, false);
-}
-function valueFormatter_float2_with_interval_muted(value, row, index){
-    return valueFormatter_numeric_with_interval(value, row, index, 2, true);
-}
-function valueFormatter_float3_with_interval(value, row, index){
-    return valueFormatter_numeric_with_interval(value, row, index, 3, false);
-}
-function valueFormatter_float3_with_interval_muted(value, row, index){
-    return valueFormatter_numeric_with_interval(value, row, index, 3, true);
-}
-function valueFormatter_float4_with_interval(value, row, index){
-    return valueFormatter_numeric_with_interval(value, row, index, 4, false);
-}
-function valueFormatter_float4_with_interval_muted(value, row, index){
-    return valueFormatter_numeric_with_interval(value, row, index, 4, true);
-}
-
-// Value with plusminus interval
-function valueFormatter_plusminus(value, row, index, precision, muted){
-    // Cell formatter for percentage values
-    if(isNumericWithError(value)) {
-        var item = parseNumericErrorPlusminus(value, precision);
-        if(typeof muted !== 'undefined' && muted){
-            return item.value + ' <small class="text-muted">±' + item.value_plusminus + '</small>';
-        }else{
-            return item.value + ' ±' + item.value_plusminus;
-        }
-
-    }else if(jQuery.isNumeric(value)){
-        return parseFloat(value).toFixed(precision);
-
-    }else{
-        return value;
-    }
-}
-function valueFormatter_int_plusminus(value, row, index){
-    return valueFormatter_plusminus(value, row, index, 0, false);
-}
-function valueFormatter_int_plusminus_muted(value, row, index){
-    return valueFormatter_plusminus(value, row, index, 0, true);
-}
-function valueFormatter_float1_plusminus(value, row, index){
-    return valueFormatter_plusminus(value, row, index, 1, false);
-}
-function valueFormatter_float1_plusminus_muted(value, row, index){
-    return valueFormatter_plusminus(value, row, index, 1, true);
-}
-function valueFormatter_float2_plusminus(value, row, index){
-    return valueFormatter_plusminus(value, row, index, 2, false);
-}
-function valueFormatter_float2_plusminus_muted(value, row, index){
-    return valueFormatter_plusminus(value, row, index, 2, true);
-}
-function valueFormatter_float3_plusminus(value, row, index){
-    return valueFormatter_plusminus(value, row, index, 3, false);
-}
-function valueFormatter_float3_plusminus_muted(value, row, index){
-    return valueFormatter_plusminus(value, row, index, 3, true);
-}
-function valueFormatter_float4_plusminus(value, row, index){
-    return valueFormatter_plusminus(value, row, index, 4, false);
-}
-function valueFormatter_float4_plusminus_muted(value, row, index){
-    return valueFormatter_plusminus(value, row, index, 4, true);
-}
-
-// Value with interval and unit percentage
-function valueFormatter_percentage_with_interval(value, row, index, precision, muted){
-    // Cell formatter for percentage values
-    if(isNumericWithInterval(value)){
-        // We have data in format [value] ([interval1] - [interval2])
-        var item = parseNumericErrorInterval(value, precision);
-        if(typeof muted !== 'undefined' && muted) {
-            return item.value + ' % <small class="text-muted">(' + item.value_min + ' - ' + item.value_max + ')</small>';
-        }else{
-            return item.value + ' % (' + item.value_min + ' - ' + item.value_max + ')';
-        }
-
-    }else if(jQuery.isNumeric(value)){
-        return parseFloat(value).toFixed(precision) + ' %';
-
-    }else{
-        return value;
-    }
-}
-
-function valueFormatter_int_percentage_with_interval(value, row, index){
-    return valueFormatter_percentage_with_interval(value, row, index, 0, false);
-}
-function valueFormatter_int_percentage_with_interval_muted(value, row, index){
-    return valueFormatter_percentage_with_interval(value, row, index, 0, true);
-}
-function valueFormatter_float1_percentage_with_interval(value, row, index){
-    return valueFormatter_percentage_with_interval(value, row, index, 1, false);
-}
-function valueFormatter_float1_percentage_with_interval_muted(value, row, index){
-    return valueFormatter_percentage_with_interval(value, row, index, 1, true);
-}
-function valueFormatter_float2_percentage_with_interval(value, row, index){
-    return valueFormatter_percentage_with_interval(value, row, index, 2, false);
-}
-function valueFormatter_float2_percentage_with_interval_muted(value, row, index){
-    return valueFormatter_percentage_with_interval(value, row, index, 2, true);
-}
-function valueFormatter_float3_percentage_with_interval(value, row, index){
-    return valueFormatter_percentage_with_interval(value, row, index, 3, false);
-}
-function valueFormatter_float3_percentage_with_interval_muted(value, row, index){
-    return valueFormatter_percentage_with_interval(value, row, index, 3, true);
-}
-function valueFormatter_float4_percentage_with_interval(value, row, index){
-    return valueFormatter_percentage_with_interval(value, row, index, 4, false);
-}
-function valueFormatter_float4_percentage_with_interval_muted(value, row, index){
-    return valueFormatter_percentage_with_interval(value, row, index, 4, true);
-}
-
-// Value with plusminus interval and unit percentage
-function valueFormatter_percentage_plusminus(value, row, index, precision, muted){
-    // Cell formatter for percentage values
-    if(isNumericWithError(value)) {
-        var item = parseNumericErrorPlusminus(value, precision);
-        if(typeof muted !== 'undefined' && muted){
-            return item.value + ' % <small class="text-muted">±' + item.value_plusminus + '</small>';
-        }else{
-            return item.value + ' % ±' + item.value_plusminus;
-        }
-
-    }else if(jQuery.isNumeric(value)){
-        return parseFloat(value).toFixed(precision) + ' %';
-
-    }else{
-        return value;
-    }
-}
-function valueFormatter_int_percentage_plusminus(value, row, index){
-    return valueFormatter_percentage_plusminus(value, row, index, 0, false);
-}
-function valueFormatter_int_percentage_plusminus_muted(value, row, index){
-    return valueFormatter_percentage_plusminus(value, row, index, 0, true);
-}
-function valueFormatter_float1_percentage_plusminus(value, row, index){
-    return valueFormatter_percentage_plusminus(value, row, index, 1, false);
-}
-function valueFormatter_float1_percentage_plusminus_muted(value, row, index){
-    return valueFormatter_percentage_plusminus(value, row, index, 1, true);
-}
-function valueFormatter_float2_percentage_plusminus(value, row, index){
-    return valueFormatter_percentage_plusminus(value, row, index, 2, false);
-}
-function valueFormatter_float2_percentage_plusminus_muted(value, row, index){
-    return valueFormatter_percentage_plusminus(value, row, index, 2, true);
-}
-function valueFormatter_float3_percentage_plusminus(value, row, index){
-    return valueFormatter_percentage_plusminus(value, row, index, 3, false);
-}
-function valueFormatter_float3_percentage_plusminus_muted(value, row, index){
-    return valueFormatter_percentage_plusminus(value, row, index, 3, true);
-}
-function valueFormatter_float4_percentage_plusminus(value, row, index){
-    return valueFormatter_percentage_plusminus(value, row, index, 4, false);
-}
-function valueFormatter_float4_percentage_plusminus_muted(value, row, index){
-    return valueFormatter_percentage_plusminus(value, row, index, 4, true);
-}
-
-/*function valueFormatter_date(value, row, index){
-    var current_date = value.split("-");
-    return new Date(current_date[1]+","+current_date[0]+","+current_date[2]).getTime();
-}*/
-
-function valueFormatter_html(value, row, index){
-    return value.replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&amp;/g,'&');
-}
-
-function valueFormatter_list(value, row, index){
-    var items = value.split(',');
-    if(items.length > 0){
-        return items.join('<br>');
-    }else{
-        return value;
-    }
-}
-
-function valueFormatter_inline_bar_vertical_tristate(value, row, index){
-    var items = value.split(',');
-    var html = '';
-    if(items.length > 0) {
-        html += '<canvas class="datatable-inline-bar-vertical-tristate" data-value="'+value+'"></canvas>';
-    }
-    return html;
-}
-
-function valueFormatter_inline_line(value, row, index){
-    var items = value.split(',');
-    var html = '';
-    if(items.length > 0) {
-        html += '<canvas class="datatable-inline-line" data-value="'+value+'"></canvas>';
-    }
-    return html;
-}
-function valueFormatter_inline_line_steps(value, row, index){
-    var items = value.split(',');
-    var html = '';
-    if(items.length > 0) {
-        html += '<canvas class="datatable-inline-line-steps" data-value="'+value+'"></canvas>';
-    }
-    return html;
-}
-
-function valueFormatter_inline_pie(value, row, index){
-    var items = value.split(',');
-    var html = '';
-    if(items.length > 0) {
-        html += '<canvas class="datatable-inline-pie" data-value="'+value+'"></canvas>';
-    }
-    return html;
-}
-
-function runningFormatter(value, row, index){
-    // Cell formatter for normal ranking
-    return (index+1);
-}
-
-function isNumericWithInterval(value) {
-    // Check if value has format [value] ([interval1] - [interval2])
-    var regex = /[+-]?\d+(?:\.\d+)\s+\([+-]?\d+(?:\.\d+)\s+-\s+[+-]?\d+(?:\.\d+)\)/g;
-    var pattern = new RegExp(regex);
-    return pattern.test(value);
-}
-function isNumericWithError(value) {
-    var pattern_plusminus = new RegExp(/([+-]?([0-9]*[.])?[0-9]+)(\s+)?[±](\s+)?(([0-9]*[.])?[0-9]+)/);
-    return pattern_plusminus.test(value);
-}
-function numericToFloat(value, precision){
-    if (typeof value === 'string' || value instanceof String){
-        value = value.replace('%','');
-    }
-    var float_value = parseFloat(value);
-    if(!isNaN(float_value)){
-        // we have float
-        if(typeof precision !== 'undefined'){
-            return float_value.toFixed(precision);
-        }else {
-            return float_value;
-        }
-    }
-
-    return value;
-}
-
-// Value parsers
-function parseNumericErrorInterval(value, precision){
-    var pattern_interval = new RegExp(/([+-]?([0-9]*[.])?[0-9]+)(\s+)[(]([+-]?([0-9]*[.])?[0-9]+)(\s+)[-](\s+)([+-]?([0-9]*[.])?[0-9]+)[)]/);
-
-    var matches;
-    if ((matches = pattern_interval.exec(value)) !== null) {
-        return {
-            value: numericToFloat(matches[1], precision),
-            value_min: numericToFloat(matches[4], precision),
-            value_max: numericToFloat(matches[8], precision)
-        }
-
-    }else{
-        return {
-            value: numericToFloat(value, precision),
-            value_min: null,
-            value_max: null
-        }
-    }
-}
-function parseNumericErrorPlusminus(value, precision){
-    var pattern_plusminus = new RegExp(/([+-]?([0-9]*[.])?[0-9]+)(\s+)?[±](\s+)?(([0-9]*[.])?[0-9]+)/);
-
-    var matches;
-    if ((matches = pattern_plusminus.exec(value)) !== null) {
-        return {
-            value: numericToFloat(matches[1], precision),
-            value_plusminus: numericToFloat(matches[5], precision),
-            value_min: numericToFloat(numericToFloat(matches[1]) - numericToFloat(matches[5]), precision),
-            value_max: numericToFloat(numericToFloat(matches[1]) + numericToFloat(matches[5]), precision)
-        }
-    }else{
-        return {
-            value: numericToFloat(value, precision),
-            value_plusminus: null,
-            value_min: null,
-            value_max: null
-        }
-    }
-}
