@@ -830,9 +830,9 @@ jQuery( document ).ready(function() {
                 bar_horizontal_average:{
                     colors: {
                         background: 'transparent',
-                        center: "#000000",
-                        positive: "#5cb85c",
-                        negative: "#d9534f"
+                        center: '#000000',
+                        positive: '#5cb85c',
+                        negative: '#d9534f'
                     }
                 },
                 bar_vertical: {
@@ -846,7 +846,11 @@ jQuery( document ).ready(function() {
                         width: 0.5
                     },
                     colors:{
-                        default: 'rgba(220, 220, 220, 1.0)'
+                        default: 'rgba(220, 220, 220, 1.0)',
+                        background: 'transparent',
+                        center: '#000000',
+                        positive: '#5cb85c',
+                        negative: '#d9534f'
                     },
                     data:{
                         borderWidth: 1,
@@ -1301,23 +1305,58 @@ jQuery( document ).ready(function() {
                 $(element).find('.datatable-inline-bar-vertical').each(function(){
                     var dataset_labels = [];
                     if(typeof $(this).data('dataset-labels') !== 'undefined'){
-                        dataset_labels = $(this).data('dataset-labels').split(',')
+                        dataset_labels = $(this).data('dataset-labels').split(',');
                     }
                     var dataset_colors = [];
                     if(typeof $(this).data('dataset-colors') !== 'undefined'){
-                        dataset_colors = $(this).data('dataset-colors').split(',')
+                        dataset_colors = $(this).data('dataset-colors').split(',');
+                    }
+                    var mode = 'normal';
+                    if(typeof $(this).data('mode') !== 'undefined'){
+                        mode = $(this).data('mode');
+                    }
+                    var inline_width = null;
+                    if(typeof $(this).data('width') !== 'undefined'){
+                        inline_width = $(this).data('width');
+                    }
+                    var item_width = null;
+                    if(typeof $(this).data('item-width') !== 'undefined'){
+                        item_width = $(this).data('item-width');
+                    }
+
+                    var value_max = -Infinity;
+                    if(typeof $(this).data('value-max') !== 'undefined'){
+                        value_max = $(this).data('value-max');
+                    }
+                    var value_min = Infinity;
+                    if(typeof $(this).data('value-min') !== 'undefined'){
+                        value_min = $(this).data('value-min');
+                    }
+                    var value_color = null;
+                    if(typeof $(this).data('value-color') !== 'undefined'){
+                        value_color = $(this).data('value-color');
                     }
 
                     var data = self.parseDataList($(this).data('value'));
                     var width = self.options.inline_chart.max_width;
-                    if(self.options.inline_chart.bar_vertical.item_width){
-                        width = data.length * (self.options.inline_chart.bar_vertical.item_width + 3);
-                        self.options.inline_chart.bar_vertical.options.scales.xAxes[0].barThickness = self.options.inline_chart.bar_vertical.item_width
+                    if(inline_width){
+                        width = inline_width;
                     }
 
-                    if(width > self.options.inline_chart.max_width){
-                        width = self.options.inline_chart.max_width;
-                        self.options.inline_chart.bar_vertical.options.scales.xAxes[0].barThickness = (self.options.inline_chart.max_width-3) / data.length
+                    if(item_width){
+                        width = data.length * (item_width + 0);
+                        self.options.inline_chart.bar_vertical.options.scales.xAxes[0].barThickness = 'flex'; //1.0;
+
+                    }else if(self.options.inline_chart.bar_vertical.item_width){
+                        width = data.length * (self.options.inline_chart.bar_vertical.item_width + 3);
+                        self.options.inline_chart.bar_vertical.options.scales.xAxes[0].barThickness = self.options.inline_chart.bar_vertical.item_width;
+
+                    }
+                    if(!inline_width) {
+                        if (width > self.options.inline_chart.max_width) {
+                            width = self.options.inline_chart.max_width;
+                            self.options.inline_chart.bar_vertical.options.scales.xAxes[0].barThickness = (self.options.inline_chart.max_width - 3) / data.length
+                        }
                     }
 
                     $(this).attr("width", width );
@@ -1325,18 +1364,27 @@ jQuery( document ).ready(function() {
                     var values = [];
                     var labels = [];
                     var bg_colors = [];
-                    var min_y_value = Infinity;
-                    var max_y_value = -Infinity;
+                    var min_y_value = value_min; //Infinity;
+                    var max_y_value = value_max; //-Infinity;
                     for (var i = 0; i < data.length; i++) {
-                        values.push(parseFloat(data[i]['y_value']));
+                        var current_value = parseFloat(data[i]['y_value']);
+                        values.push(current_value);
 
                         var current_color = null;
-                        if(data[i]['color']){
-                            current_color = data[i]['color'];
-                        }else if(i < dataset_colors.length && dataset_colors[i]){
-                            current_color = dataset_colors[i];
+                        if(mode == 'average' && value_color){
+                            if(current_value >= 0){
+                                current_color = self.options.inline_chart.bar_horizontal_average.colors.positive;
+                            }else{
+                                current_color = self.options.inline_chart.bar_horizontal_average.colors.negative;
+                            }
                         }else{
-                            current_color = self.options.inline_chart.bar_vertical.colors.default;
+                            if(data[i]['color']){
+                                current_color = data[i]['color'];
+                            }else if(i < dataset_colors.length && dataset_colors[i]){
+                                current_color = dataset_colors[i];
+                            }else{
+                                current_color = self.options.inline_chart.bar_vertical.colors.default;
+                            }
                         }
                         bg_colors.push(current_color);
 
@@ -1358,6 +1406,7 @@ jQuery( document ).ready(function() {
                             min_y_value = data[i]['y_value'];
                         }
                     }
+
                     var hline = jQuery.extend(true, {}, self.options.inline_chart.bar_vertical.hline, {
                         enabled: false,
                         values: []
@@ -2855,18 +2904,8 @@ jQuery( document ).ready(function() {
                         return html;
                     };
                     break;
-                case 'inline-bar-vertical-tristate':
-                    window[formatter_function_name] = function (value, row, index){
-                        var items = value.split(',');
-                        var html = '';
-                        if(items.length > 0) {
-                            html += '<canvas class="datatable-inline-bar-vertical-tristate" data-value="'+value+'"></canvas>';
-                        }
-                        return html;
-                    }
-                    break;
 
-                case 'inline-bar-horizontal-average':
+                case 'inline-bar-vertical-html':
                     var value_formatter = null;
                     if(typeof header.data('inline-value-type') !== 'undefined'){
                         value_formatter = this.createNumericValueFormatter(header.data('inline-value-type'), index);
@@ -2875,8 +2914,40 @@ jQuery( document ).ready(function() {
                     }
 
                     window[formatter_function_name] = function (value, row, index){
-                        //var value_formatter = 'valueFormatter_float1_percentage';
-                        //console.log(value_formatter);
+                        var style_extra = '';
+                        if(typeof header.data('inline-width') !== 'undefined'){
+                            style_extra += 'width:'+header.data('inline-width')+'px;';
+                        }
+                        if(typeof header.data('inline-height') !== 'undefined'){
+                            style_extra += 'height:'+header.data('inline-height')+'px';
+                        }
+                        if(style_extra){
+                            style_extra = ' style="'+style_extra+'"';
+                        }
+
+                        // Labels
+                        var show_labels = false;
+                        if(typeof header.data('inline-show-labels') !== 'undefined'){
+                            show_labels = header.data('inline-show-labels');
+                        }
+                        var dataset_labels = [];
+                        if(typeof header.data('dataset-labels') !== 'undefined'){
+                            dataset_labels = header.data('dataset-labels').split(',')
+                        }
+
+                        // Tooltips
+                        var show_tooltips = true;
+                        if(typeof header.data('inline-show-tooltips') !== 'undefined'){
+                            show_tooltips = header.data('inline-show-tooltips');
+                        }
+
+                        // Colors
+                        var dataset_colors = [];
+                        if(typeof header.data('dataset-colors') !== 'undefined'){
+                            dataset_colors = header.data('dataset-colors').split(',')
+                        }
+
+                        // Values
                         var show_values = false;
                         if(typeof header.data('inline-show-values') !== 'undefined'){
                             show_values = header.data('inline-show-values');
@@ -2889,68 +2960,573 @@ jQuery( document ).ready(function() {
                         if(typeof header.data('inline-muted-values') !== 'undefined'){
                             muted_values = header.data('inline-muted-values');
                         }
+                        var value_mode = 'average';
+                        if(typeof header.data('inline-value-mode') !== 'undefined'){
+                            value_mode = header.data('inline-value-mode');
+                        }
+                        var value_average = 50;
+                        if(typeof header.data('inline-value-average') !== 'undefined'){
+                            value_average = header.data('inline-value-average');
+                        }
+                        var value_min = null;
+                        if(typeof header.data('inline-value-min') !== 'undefined'){
+                            value_min = header.data('inline-value-min');
+                        }
+                        var value_max = null;
+                        if(typeof header.data('inline-value-max') !== 'undefined'){
+                            value_max = header.data('inline-value-max');
+                        }
 
-                        var bar_type_thin = false;
+                        // Limits
+                        var show_limits = false;
+                        if(typeof header.data('inline-show-limits') !== 'undefined'){
+                            show_limits = header.data('inline-show-limits');
+                        }
+
+                        if(value_mode === 'global-scale' && (value_min==null || value_max==null)){
+                            var field_name = header.data('field');
+                            var field_index = self.field_meta.findIndex(x => x.field === field_name);
+                            var global_min = Infinity;
+                            var global_max = -Infinity;
+                            $(self.element).find('tbody tr').each(function(){
+                                var current_row_data = self.parseDataList($(this).find('td').eq(field_index).text().trim());
+                                for (var i = 0; i < current_row_data.length; i++) {
+                                    if(current_row_data[i]['y_value'] > global_max){
+                                        global_max = current_row_data[i]['y_value'];
+                                    }
+                                    if(current_row_data[i]['y_value'] < global_min){
+                                        global_min = current_row_data[i]['y_value'];
+                                    }
+                                }
+                            });
+                            if(value_min == null){
+                                value_min = global_min;
+                                header.data('inline-value-min',value_min);
+                            }
+                            if(value_max == null){
+                                value_max = global_max;
+                                header.data('inline-value-max',value_max);
+                            }
+                        }
+
+                        // Visualization
+                        var bar_type = 'normal';
                         if(typeof header.data('inline-bar-type') !== 'undefined'){
                             if(header.data('inline-bar-type') == 'thin'){
-                                bar_type_thin = true;
+                                bar_type = 'thin';
+                            }else if(header.data('inline-bar-type') == 'slim'){
+                                bar_type = 'slim';
                             }
+                        }
+
+                        var data = self.parseDataList(value);
+
+                        var html = '';
+                        html += '<div class="inline-vbar-container" '+style_extra+'>';
+                        if(data.length > 0) {
+                            if(value_mode === 'scale' && (value_min == null || value_max == null)){
+                                var min = Infinity;
+                                var max = -Infinity;
+                                for (var i = 0; i < data.length; i++) {
+                                    if (data[i]['y_value'] > max) {
+                                        max = data[i]['y_value'];
+                                    }
+                                    if (data[i]['y_value'] < min) {
+                                        min = data[i]['y_value'];
+                                    }
+                                }
+                                if (value_min == null) {
+                                    value_min = min;
+                                }
+                                if (value_max == null) {
+                                    value_max = max;
+                                }
+                            }
+                            if(value_mode.includes('scale')){
+                                for (var i = 0; i < data.length; i++) {
+                                    data[i]['y_value_scaled'] = (data[i]['y_value'] - value_min)/(value_max - value_min)*100.0;
+                                }
+                            }
+                            for (var i = 0; i < data.length; i++) {
+                                var current_value = data[i]['y_value'];
+                                var current_color = null;
+
+                                var value_string = window[value_formatter](current_value);
+                                if (bar_type === 'thin') {
+                                    html += '<div class="inline-vbar inline-vertical-thin">';
+                                }else if (bar_type === 'slim') {
+                                    html += '<div class="inline-vbar inline-vertical-slim">';
+                                }else{
+                                    html += '<div class="inline-vbar">';
+                                }
+
+                                var current_label = null;
+                                if(data[i]['label']){
+                                    current_label = data[i]['label'];
+                                }else if(i < dataset_labels.length && dataset_labels[i]){
+                                    current_label = dataset_labels[i];
+                                }
+
+                                if(show_labels){
+                                    html += '<div class="value-label">';
+                                    if(current_label){
+                                        html += '<strong class="small text-muted">'+current_label+'</strong>';
+                                    }
+                                    html += '</div>';
+                                }
+                                var tooltip = '';
+                                if(show_tooltips){
+                                    tooltip += ' data-toggle="tooltip" data-placement="bottom" title="';
+                                    if(current_label){
+                                        tooltip += current_label+': ';
+                                    }
+                                    tooltip+= self.stripHTML(value_string)+'" ';
+                                }
+
+                                if (bar_type === 'thin') {
+                                    html += '<div class="progress datatable-vertical-bar-thin"'+tooltip+'>'
+                                }else if (bar_type === 'slim') {
+                                    html += '<div class="progress datatable-vertical-bar-slim"'+tooltip+'>'
+                                } else {
+                                    html += '<div class="progress datatable-vertical-bar"'+tooltip+'>'
+                                }
+
+                                if(value_mode.includes('scale')){
+                                    current_value = data[i]['y_value_scaled'];
+                                }
+
+                                if(value_mode === 'average') {
+                                    if (current_value <= value_average) {
+                                        if (current_value > 0) {
+                                            html += '<div class="progress-bar progress-vertical-bar" role="progressbar" style="height: ' + current_value + '%;background-color:' + self.options.inline_chart.bar_horizontal_average.colors.background + '" ></div>';
+                                        }
+                                        html += '<div class="progress-bar progress-vertical-bar" role="progressbar" style="height: ' + (value_average - current_value) + '%;background-color:' + self.options.inline_chart.bar_horizontal_average.colors.negative + ';border-top: 1px solid ' + self.options.inline_chart.bar_horizontal_average.colors.center + ';" ></div>';
+                                        html += '<div class="progress-bar progress-vertical-bar" role="progressbar" style="height: ' + (100 - value_average) + '%;background-color:' + self.options.inline_chart.bar_horizontal_average.colors.background + ';border-bottom: 1px solid ' + self.options.inline_chart.bar_horizontal_average.colors.center + ';" ></div>';
+
+                                    } else if (current_value > value_average) {
+                                        html += '<div class="progress-bar progress-vertical-bar" role="progressbar" style="height: ' + value_average + '%;background-color:' + self.options.inline_chart.bar_horizontal_average.colors.background + ';border-top: 1px solid ' + self.options.inline_chart.bar_horizontal_average.colors.center + ';" ></div>';
+                                        html += '<div class="progress-bar progress-vertical-bar" role="progressbar" style="height: ' + (current_value - value_average) + '%;background-color:' + self.options.inline_chart.bar_horizontal_average.colors.positive + ';border-bottom: 1px solid ' + self.options.inline_chart.bar_horizontal_average.colors.center + ';" ></div>';
+                                        if (100 - current_value > 0) {
+                                            html += '<div class="progress-bar progress-vertical-bar" role="progressbar" style="height: ' + (100 - current_value) + '%;background-color:' + self.options.inline_chart.bar_horizontal_average.colors.background + ';" ></div>';
+                                        }
+
+                                    }
+
+                                }else if(value_mode === 'show-average'){
+                                    if(data[i]['color']){
+                                        current_color = data[i]['color'];
+                                    }else if(i < dataset_colors.length && dataset_colors[i]){
+                                        current_color = dataset_colors[i];
+                                    }else{
+                                        current_color = self.options.bar.colors.datasets[i % self.options.bar.colors.datasets.length];
+                                    }
+                                    if (current_value <= value_average) {
+                                        if (current_value > 0) {
+                                            html += '<div class="progress-bar progress-vertical-bar" role="progressbar" style="height: ' + current_value + '%;background-color:' + current_color + '" ></div>';
+                                        }
+                                        html += '<div class="progress-bar progress-vertical-bar" role="progressbar" style="height: ' + (value_average - current_value) + '%;background-color:' + self.options.inline_chart.bar_horizontal_average.colors.background + ';border-top: 1px solid ' + self.options.inline_chart.bar_horizontal_average.colors.center + ';" ></div>';
+                                        html += '<div class="progress-bar progress-vertical-bar" role="progressbar" style="height: ' + (100 - value_average) + '%;background-color:' + self.options.inline_chart.bar_horizontal_average.colors.background + ';border-bottom: 1px solid ' + self.options.inline_chart.bar_horizontal_average.colors.center + ';" ></div>';
+
+                                    } else if (current_value > value_average) {
+                                        html += '<div class="progress-bar progress-vertical-bar" role="progressbar" style="height: ' + value_average + '%;background-color:' + current_color + ';border-top: 1px solid ' + self.options.inline_chart.bar_horizontal_average.colors.center + ';" ></div>';
+                                        html += '<div class="progress-bar progress-vertical-bar" role="progressbar" style="height: ' + (current_value - value_average) + '%;background-color:' + current_color + ';border-bottom: 1px solid ' + self.options.inline_chart.bar_horizontal_average.colors.center + ';" ></div>';
+                                        if (100 - current_value > 0) {
+                                            html += '<div class="progress-bar progress-vertical-bar" role="progressbar" style="height: ' + (100 - current_value) + '%;background-color:' + self.options.inline_chart.bar_horizontal_average.colors.background + ';" ></div>';
+                                        }
+
+                                    }
+
+                                }else{
+                                    if(data[i]['color']){
+                                        current_color = data[i]['color'];
+                                    }else if(i < dataset_colors.length && dataset_colors[i]){
+                                        current_color = dataset_colors[i];
+                                    }else{
+                                        current_color = self.options.bar.colors.datasets[i % self.options.bar.colors.datasets.length];
+                                    }
+                                    html += '<div class="progress-bar progress-vertical-bar" role="progressbar" style="height: ' + (current_value) + '%;background-color:' + current_color + ';" ></div>';
+                                }
+                                html += '</div>';
+
+                                if (show_values) {
+                                    html += '<div class="value">';
+                                    if (small_values) {
+                                        if (muted_values) {
+                                            html += '<small class="text-muted">' + value_string + '</small>';
+                                        } else {
+                                            html += '<small>' + value_string + '</small>';
+                                        }
+
+                                    } else {
+                                        if (muted_values) {
+                                            html += '<span class="text-muted">' + value_string + '</span>';
+                                        } else {
+                                            html += value_string;
+                                        }
+                                    }
+                                    html += '</div>';
+                                }
+                                html += '</div>';
+                            }
+                            if(show_limits){
+                                html += '<div class="inline-vbar">';
+                                if(show_labels){
+                                    html += '<div class="value-label"></div>';
+                                }
+                                html += '<div class="value-limits">';
+                                html += '<div class="max"><em>'+value_max+'</em></div>';
+                                html += '<div class="min"><em>'+value_min+'</em></div>';
+                                html += '</div>';
+                                if (show_values) {
+                                    html += '<div class="value">&nbsp;</div>';
+                                }
+                                html += '</div>';
+                            }
+                        }
+                        html += '</div>';
+
+                        return html;
+                    }
+                    break;
+
+                case 'inline-bar-vertical-average':
+                    window[formatter_function_name] = function (value, row, index){
+                        var items = value.split(',');
+                        for (var i = 0; i < items.length; i++) {
+                            items[i] = items[i] - 50;
+                        }
+                        var item_width = null;
+                        if(typeof header.data('inline-item-width') !== 'undefined'){
+                            item_width = header.data('inline-item-width');
+                        }
+                        var width = null;
+                        if(typeof header.data('inline-width') !== 'undefined'){
+                            width = header.data('inline-width');
+                        }
+
+                        var value_processed = items.join(',');
+                        var html = '';
+                        if(items.length > 0) {
+                            html += '<canvas class="datatable-inline-bar-vertical" data-value="'+value_processed+'"';
+                            html += 'data-mode="average" ';
+                            html += 'data-value-max="50" data-value-min="-50" ';
+                            html += 'data-value-color="true" ';
+                            if(width){
+                                html += 'data-width="'+width+'" ';
+                            }
+                            if(item_width){
+                                html += 'data-item-width="'+item_width+'" ';
+                            }
+                            if(typeof header.data('dataset-labels') !== 'undefined'){
+                                html += ' data-dataset-labels="' + header.data('dataset-labels') + '" '
+                            }
+                            if(typeof header.data('dataset-colors') !== 'undefined'){
+                                html += ' data-dataset-colors="' + header.data('dataset-colors') + '" '
+                            }
+                            html += '></canvas>';
+                        }
+                        return html;
+                    };
+                    break;
+
+                case 'inline-bar-vertical-tristate':
+                    window[formatter_function_name] = function (value, row, index){
+                        var items = value.split(',');
+                        var html = '';
+                        if(items.length > 0) {
+                            html += '<canvas class="datatable-inline-bar-vertical-tristate" data-value="'+value+'"></canvas>';
+                        }
+                        return html;
+                    }
+                    break;
+
+                case 'inline-bar-horizontal-html':
+                    var value_formatter = null;
+                    if(typeof header.data('inline-value-type') !== 'undefined'){
+                        value_formatter = this.createNumericValueFormatter(header.data('inline-value-type'), index);
+                    }else{
+                        value_formatter = this.createNumericValueFormatter('int-percentile-muted', index);
+                    }
+
+                    window[formatter_function_name] = function (value, row, index){
+                        var style_extra = '';
+                        if(typeof header.data('inline-width') !== 'undefined'){
+                            style_extra += ' style="width:'+header.data('inline-width')+'px" ';
+                        }
+
+                        // Labels
+                        var show_labels = false;
+                        if(typeof header.data('inline-show-labels') !== 'undefined'){
+                            show_labels = header.data('inline-show-labels');
                         }
                         var dataset_labels = [];
                         if(typeof header.data('dataset-labels') !== 'undefined'){
                             dataset_labels = header.data('dataset-labels').split(',')
                         }
+
+                        // Tooltips
+                        var show_tooltips = true;
+                        if(typeof header.data('inline-show-tooltips') !== 'undefined'){
+                            show_tooltips = header.data('inline-show-tooltips');
+                        }
+
+                        // Colors
                         var dataset_colors = [];
                         if(typeof header.data('dataset-colors') !== 'undefined'){
                             dataset_colors = header.data('dataset-colors').split(',')
+                        }
+
+                        // Values
+                        var show_values = false;
+                        if(typeof header.data('inline-show-values') !== 'undefined'){
+                            show_values = header.data('inline-show-values');
+                        }
+                        var small_values = false;
+                        if(typeof header.data('inline-small-values') !== 'undefined'){
+                            small_values = header.data('inline-small-values');
+                        }
+                        var muted_values = false;
+                        if(typeof header.data('inline-muted-values') !== 'undefined'){
+                            muted_values = header.data('inline-muted-values');
+                        }
+                        var value_mode = 'average';
+                        if(typeof header.data('inline-value-mode') !== 'undefined'){
+                            value_mode = header.data('inline-value-mode');
+                        }
+                        var value_average = 50;
+                        if(typeof header.data('inline-value-average') !== 'undefined'){
+                            value_average = header.data('inline-value-average');
+                        }
+                        var value_min = null;
+                        if(typeof header.data('inline-value-min') !== 'undefined'){
+                            value_min = header.data('inline-value-min');
+                        }
+                        var value_max = null;
+                        if(typeof header.data('inline-value-max') !== 'undefined'){
+                            value_max = header.data('inline-value-max');
+                        }
+
+                        // Limits
+                        var show_limits = false;
+                        if(typeof header.data('inline-show-limits') !== 'undefined'){
+                            show_limits = header.data('inline-show-limits');
+                        }
+                        if(value_mode === 'global-scale' && (value_min==null || value_max==null)){
+                            var field_name = header.data('field');
+                            var field_index = self.field_meta.findIndex(x => x.field === field_name);
+                            var global_min = Infinity;
+                            var global_max = -Infinity;
+                            $(self.element).find('tbody tr').each(function(){
+                                var current_row_data = self.parseDataList($(this).find('td').eq(field_index).text().trim());
+                                for (var i = 0; i < current_row_data.length; i++) {
+                                    if(current_row_data[i]['y_value'] > global_max){
+                                        global_max = current_row_data[i]['y_value'];
+                                    }
+                                    if(current_row_data[i]['y_value'] < global_min){
+                                        global_min = current_row_data[i]['y_value'];
+                                    }
+                                }
+                            });
+                            if(value_min == null){
+                                value_min = global_min;
+                                header.data('inline-value-min',value_min);
+                            }
+                            if(value_max == null){
+                                value_max = global_max;
+                                header.data('inline-value-max',value_max);
+                            }
+                        }
+
+                        // Visualization
+                        var bar_type = 'normal';
+                        if(typeof header.data('inline-bar-type') !== 'undefined'){
+                            if(header.data('inline-bar-type') == 'thin'){
+                                bar_type = 'thin';
+                            }else if(header.data('inline-bar-type') == 'slim'){
+                                bar_type = 'slim';
+                            }
                         }
 
                         var data = self.parseDataList(value);
 
                         var html = '';
                         if(data.length > 0) {
-                            var current_value = data[0]['y_value'];
-                            var value_string = window[value_formatter](current_value);
-
-                            if(bar_type_thin){
-                                html += '<div class="progress datatable-horizontal-bar-thin">'
-                            }else{
-                                html += '<div class="progress datatable-horizontal-bar">'
-                            }
-
-                            if(current_value <= 50){
-                                html += '<div class="progress-bar" role="progressbar" style="width: '+current_value+'%;background-color:'+self.options.inline_chart.bar_horizontal_average.colors.background+'" ></div>';
-                                html += '<div class="progress-bar" role="progressbar" style="width: '+(50-current_value)+'%;background-color:'+self.options.inline_chart.bar_horizontal_average.colors.negative+';border-right: 1px solid '+self.options.inline_chart.bar_horizontal_average.colors.center+';" ></div>';
-                                html += '<div class="progress-bar" role="progressbar" style="width: 50%;background-color:'+self.options.inline_chart.bar_horizontal_average.colors.background+';border-left: 1px solid '+self.options.inline_chart.bar_horizontal_average.colors.center+';" ></div>';
-
-                            }else if(current_value > 50){
-                                html += '<div class="progress-bar" role="progressbar" style="width: 50%;background-color:'+self.options.inline_chart.bar_horizontal_average.colors.background+';border-right: 1px solid '+self.options.inline_chart.bar_horizontal_average.colors.center+';" ></div>';
-                                html += '<div class="progress-bar" role="progressbar" style="width: '+(current_value-50)+'%;background-color:'+self.options.inline_chart.bar_horizontal_average.colors.positive+';border-left: 1px solid '+self.options.inline_chart.bar_horizontal_average.colors.center+';" ></div>';
-                                html += '<div class="progress-bar" role="progressbar" style="width: '+(100-current_value)+'%;background-color:'+self.options.inline_chart.bar_horizontal_average.colors.background+';" ></div>';
-                            }
-                            html += '</div>';
-                            if(show_values){
-                                if(small_values){
-                                    if(muted_values){
-                                        html+='<small class="text-muted">'+value_string+'</small>';
-                                    }else{
-                                        html+='<small>'+value_string+'</small>';
+                            if(value_mode === 'scale' && (value_min == null || value_max == null)){
+                                var min = Infinity;
+                                var max = -Infinity;
+                                for (var i = 0; i < data.length; i++) {
+                                    if (data[i]['y_value'] > max) {
+                                        max = data[i]['y_value'];
                                     }
-
-                                }else{
-                                    if(muted_values){
-                                        html+='<span class="text-muted">'+value_string+'</span>';
-                                    }else{
-                                        html+=value_string;
+                                    if (data[i]['y_value'] < min) {
+                                        min = data[i]['y_value'];
                                     }
                                 }
+                                if (value_min == null) {
+                                    value_min = min;
+                                }
+                                if (value_max == null) {
+                                    value_max = max;
+                                }
+                            }
+                            if(value_mode.includes('scale')){
+                                for (var i = 0; i < data.length; i++) {
+                                    data[i]['y_value_scaled'] = (data[i]['y_value'] - value_min)/(value_max - value_min)*100.0;
+                                }
+                            }
 
+                            for (var i = 0; i < data.length; i++) {
+                                var current_value = data[i]['y_value'];
+
+                                var value_string = window[value_formatter](current_value);
+                                var current_label = null;
+                                if(data[i]['label']){
+                                    current_label = data[i]['label'];
+                                }else if(i < dataset_labels.length && dataset_labels[i]){
+                                    current_label = dataset_labels[i];
+                                }
+
+                                var tooltip = '';
+                                if(show_tooltips){
+                                    tooltip += ' data-toggle="tooltip" data-placement="bottom" title="';
+                                    if(current_label){
+                                        tooltip += current_label+': ';
+                                    }
+                                    tooltip+= self.stripHTML(value_string)+'" ';
+                                }
+
+                                if (bar_type == 'thin') {
+                                    html += '<div class="inline-hbar inline-hbar-thin" '+style_extra+tooltip+'>';
+                                }else if (bar_type == 'slim') {
+                                    html += '<div class="inline-hbar inline-hbar-slim" '+style_extra+tooltip+'>';
+                                }else{
+                                    html += '<div class="inline-hbar" '+style_extra+tooltip+'>';
+                                }
+
+                                if(show_labels){
+                                    html += '<div class="value-label">';
+                                    if(current_label){
+                                        html += '<strong class="small text-muted">'+current_label+'</strong>';
+                                    }
+                                    html += '</div>';
+                                }
+
+                                if (bar_type == 'thin') {
+                                    html += '<div class="progress datatable-horizontal-bar-thin">'
+                                }else if (bar_type == 'slim') {
+                                    html += '<div class="progress datatable-horizontal-bar-slim">'
+                                } else {
+                                    html += '<div class="progress datatable-horizontal-bar">'
+                                }
+
+                                if(value_mode.includes('scale')){
+                                    current_value = data[i]['y_value_scaled'];
+                                }
+
+                                if(value_mode == 'average'){
+                                    if (current_value <= value_average) {
+                                        if(current_value > 0 && current_value < value_average){
+                                            html += '<div class="progress-bar progress-horizontal-bar" role="progressbar" style="width: ' + current_value + '%;background-color:' + self.options.inline_chart.bar_horizontal_average.colors.background + '" ></div>';
+                                            html += '<div class="progress-bar progress-horizontal-bar" role="progressbar" style="width: ' + (value_average - current_value) + '%;background-color:' + self.options.inline_chart.bar_horizontal_average.colors.negative + ';border-right: 1px solid ' + self.options.inline_chart.bar_horizontal_average.colors.center + ';" ></div>';
+                                        }else if(current_value == 0){
+                                            html += '<div class="progress-bar progress-horizontal-bar" role="progressbar" style="width: ' + (value_average) + '%;background-color:' + self.options.inline_chart.bar_horizontal_average.colors.negative + ';border-right: 1px solid ' + self.options.inline_chart.bar_horizontal_average.colors.center + ';" ></div>';
+                                        }else if(current_value == value_average){
+                                            html += '<div class="progress-bar progress-horizontal-bar" role="progressbar" style="width: ' + (current_value) + '%;background-color:' + self.options.inline_chart.bar_horizontal_average.colors.background + ';border-right: 1px solid ' + self.options.inline_chart.bar_horizontal_average.colors.center + ';" ></div>';
+                                        }
+
+                                        html += '<div class="progress-bar progress-horizontal-bar" role="progressbar" style="width: '+(100-value_average)+'%;background-color:' + self.options.inline_chart.bar_horizontal_average.colors.background + ';border-left: 1px solid ' + self.options.inline_chart.bar_horizontal_average.colors.center + ';" ></div>';
+
+                                    } else if (current_value > value_average) {
+                                        html += '<div class="progress-bar progress-horizontal-bar" role="progressbar" style="width: '+value_average+'%;background-color:' + self.options.inline_chart.bar_horizontal_average.colors.background + ';border-right: 1px solid ' + self.options.inline_chart.bar_horizontal_average.colors.center + ';" ></div>';
+                                        html += '<div class="progress-bar progress-horizontal-bar" role="progressbar" style="width: ' + (current_value - value_average) + '%;background-color:' + self.options.inline_chart.bar_horizontal_average.colors.positive + ';border-left: 1px solid ' + self.options.inline_chart.bar_horizontal_average.colors.center + ';" ></div>';
+                                        if(100 - current_value > 0){
+                                            html += '<div class="progress-bar progress-horizontal-bar" role="progressbar" style="width: ' + (100 - current_value) + '%;background-color:' + self.options.inline_chart.bar_horizontal_average.colors.background + ';" ></div>';
+                                        }
+
+                                    }
+
+                                }else if(value_mode == 'show-average'){
+                                    var current_color = null;
+                                    if(data[i]['color']){
+                                        current_color = data[i]['color'];
+                                    }else if(i < dataset_colors.length && dataset_colors[i]){
+                                        current_color = dataset_colors[i];
+                                    }else{
+                                        current_color = self.options.bar.colors.datasets[i % self.options.bar.colors.datasets.length];
+                                    }
+
+                                    if (current_value <= value_average) {
+                                        if(current_value > 0 && current_value < value_average){
+                                            html += '<div class="progress-bar progress-horizontal-bar" role="progressbar" style="width: ' + current_value + '%;background-color:' + current_color + '" ></div>';
+                                            html += '<div class="progress-bar progress-horizontal-bar" role="progressbar" style="width: ' + (value_average - current_value) + '%;background-color:' + self.options.inline_chart.bar_horizontal_average.colors.background + ';border-right: 1px solid ' + self.options.inline_chart.bar_horizontal_average.colors.center + ';" ></div>';
+                                        }else if(current_value == 0){
+                                            html += '<div class="progress-bar progress-horizontal-bar" role="progressbar" style="width: ' + (value_average) + '%;background-color:' + self.options.inline_chart.bar_horizontal_average.colors.background + ';border-right: 1px solid ' + self.options.inline_chart.bar_horizontal_average.colors.center + ';" ></div>';
+                                        }else if(current_value == value_average){
+                                            html += '<div class="progress-bar progress-horizontal-bar" role="progressbar" style="width: ' + (current_value) + '%;background-color:' + current_color + ';border-right: 1px solid ' + self.options.inline_chart.bar_horizontal_average.colors.center + ';" ></div>';
+                                        }
+                                        html += '<div class="progress-bar progress-horizontal-bar" role="progressbar" style="width: '+(100-value_average)+'%;background-color:' + self.options.inline_chart.bar_horizontal_average.colors.background + ';border-left: 1px solid ' + self.options.inline_chart.bar_horizontal_average.colors.center + ';" ></div>';
+
+                                    } else if (current_value > value_average) {
+                                        html += '<div class="progress-bar progress-horizontal-bar" role="progressbar" style="width: '+value_average+'%;background-color:' + current_color+ ';border-right: 1px solid ' + self.options.inline_chart.bar_horizontal_average.colors.center + ';" ></div>';
+                                        html += '<div class="progress-bar progress-horizontal-bar" role="progressbar" style="width: ' + (current_value - value_average) + '%;background-color:' + current_color + ';border-left: 1px solid ' + self.options.inline_chart.bar_horizontal_average.colors.center + ';" ></div>';
+                                        if(100 - current_value > 0){
+                                            html += '<div class="progress-bar progress-horizontal-bar" role="progressbar" style="width: ' + (100 - current_value) + '%;background-color:' + self.options.inline_chart.bar_horizontal_average.colors.background + ';" ></div>';
+                                        }
+                                    }
+                                }else{
+                                    var current_color = null;
+                                    if(data[i]['color']){
+                                        current_color = data[i]['color'];
+                                    }else if(i < dataset_colors.length && dataset_colors[i]){
+                                        current_color = dataset_colors[i];
+                                    }else{
+                                        current_color = self.options.bar.colors.datasets[i % self.options.bar.colors.datasets.length];
+                                    }
+                                    html += '<div class="progress-bar progress-horizontal-bar" role="progressbar" style="width: ' + (current_value) + '%;background-color:' + current_color + ';" ></div>';
+                                }
+
+                                html += '</div>';
+                                //html += '</div>';
+
+                                if (show_values) {
+                                    html += '<div class="value">';
+                                    if (small_values) {
+                                        if (muted_values) {
+                                            html += '<small class="text-muted">' + value_string + '</small>';
+                                        } else {
+                                            html += '<small>' + value_string + '</small>';
+                                        }
+
+                                    } else {
+                                        if (muted_values) {
+                                            html += '<span class="text-muted">' + value_string + '</span>';
+                                        } else {
+                                            html += value_string;
+                                        }
+                                    }
+                                    html += '</div>';
+                                }
+                                html += '</div>';
+                            }
+
+                            if(show_limits){
+                                html += '<div class="inline-hbar" '+style_extra+'>';
+                                if(show_labels){
+                                    html += '<div class="value-label"></div>';
+                                }
+                                html += '<div class="value-limits">';
+                                html += '<div class="max"><em>'+value_max+'</em></div>';
+                                html += '<div class="min"><em>'+value_min+'</em></div>';
+                                html += '</div>';
+                                if (show_values) {
+                                    html += '<div class="value">&nbsp;</div>';
+                                }
+                                html += '</div>';
                             }
                         }
                         return html;
                     }
                     break;
-
                 case 'inline-bar-horizontal-percentage':
                     window[formatter_function_name] = function (value, row, index){
                         var value_formatter = 'valueFormatter_float1_percentage';
@@ -3368,7 +3944,6 @@ jQuery( document ).ready(function() {
         },
         initValueFormatters: function(){
             var self = this;
-
             $(this.element).find('thead tr th[data-value-type]').each(function(index){
                 var that = this;
                 var value_type = $(this).data('value-type');
@@ -5053,8 +5628,6 @@ jQuery( document ).ready(function() {
                 self.chart_mode = $(this).data('mode');
                 self.updateVisualizationVisibility(self.chart_mode);
             });
-
-            //console.log(this.options.custom_chart);
         },
         createBarHTML: function(){
             var bar_div = '<div id="bar_div'+this.uniqueId+'" style="display:none;"><canvas id="bar_chart'+this.uniqueId+'"></canvas></div>';
@@ -5295,7 +5868,6 @@ jQuery( document ).ready(function() {
             var custom_graph_div = '<div id="'+mode_name+'_div'+this.uniqueId+'" style="display:none;">';
             custom_graph_div += '<canvas id="'+mode_name+'_chart'+this.uniqueId+'"></canvas>';
             custom_graph_div += '</div>';
-            //console.log(options);
             this.options.custom_chart[mode_name] = {
                 'name': mode_name,
                 'type': options.type.split(':')[0],
@@ -6941,6 +7513,7 @@ jQuery( document ).ready(function() {
                                 data_min: [],
                                 data_max: [],
                                 data_string: [],
+                                data_extratitle: [],
 
                                 horizontal_line_value: [],
 
@@ -6966,10 +7539,22 @@ jQuery( document ).ready(function() {
                             };
 
                             for (var row_id = 0; row_id < table_data.length; row_id++) {
+                                var data_string = null;
                                 if(current_header_options.value.formatter){
-                                    dataset.data_string.push(self.stripHTML(window[current_header_options.value.formatter](table_data[row_id][current_header_options.field])));
+                                    data_string = self.stripHTML(
+                                        window[current_header_options.value.formatter](table_data[row_id][current_header_options.field])
+                                    );
+
                                 }else{
-                                    dataset.data_string.push(self.injectValuePostfix(table_data[row_id][current_header_options.field], current_header_options.value.postfix));
+                                    data_string = self.injectValuePostfix(
+                                        table_data[row_id][current_header_options.field],
+                                        current_header_options.value.postfix
+                                    );
+                                }
+                                dataset.data_string.push(data_string);
+
+                                if(options.line.tooltips.extraField){
+                                    dataset.data_extratitle.push(table_data[row_id][options.line.tooltips.extraField]);
                                 }
 
                                 dataset.data_uniqueid.push(table_data[row_id][table_options.idField]);
@@ -7207,6 +7792,14 @@ jQuery( document ).ready(function() {
                         bodyFontFamily: options.line.tooltips.bodyFontFamily,
 
                         callbacks: {
+                            title: function(tooltipItems, data){
+                                var title = tooltipItems[0].xLabel;
+                                var extra_title = data.datasets[tooltipItems[0].datasetIndex].data_extratitle[tooltipItems[0].index];
+                                if (extra_title){
+                                    title += ' ' + extra_title;
+                                }
+                                return  title;
+                            },
                             afterBody: function(tooltipItems, data){
                                 $(self.element).find('tr td').removeClass('row-hover');
                                 var table_options = $(self.element).bootstrapTable('getOptions');
@@ -7343,17 +7936,20 @@ jQuery( document ).ready(function() {
         getLineChartParameters: function(data) {
             var parameters = jQuery.extend(true, {}, this.defaults.line);
 
-            parameters.fields = this.getParameterItem(data, 'line-fields');
-            if(parameters.fields){
-                parameters.fields = parameters.fields.split(',').map(function(item) {
+            var fields = this.getParameterItem(data, 'line-fields');
+            if(fields){
+                fields = fields.split(',').map(function(item) {
                     return item.trim();
                 });
             }
-            parameters.fields = this.getParameterItem(data, 'line-extra-fields');
-            if(parameters.fields){
-                parameters.fields = parameters.fields.split(',').map(function(item) {
+            var extra_fields = this.getParameterItem(data, 'line-extra-fields');
+            if(extra_fields){
+                extra_fields = extra_fields.split(',').map(function(item) {
                     return item.trim();
                 });
+                parameters.fields = extra_fields;
+            }else{
+                parameters.fields = fields;
             }
 
             parameters.fill = this.getParameterItem(data, 'line-fill');
@@ -7425,6 +8021,7 @@ jQuery( document ).ready(function() {
             parameters.horizontal_line.enabled = this.getParameterItem(data, 'line-hline');
 
             parameters.tooltips.position = this.getParameterItem(data, 'line-tooltip-position');
+            parameters.tooltips.extraField = this.getParameterItem(data, 'line-tooltip-extra-field');
 
             parameters.legend.enabled = this.getParameterItem(data, 'line-show-legend');
             parameters.legend.position = this.getParameterItem(data, 'line-legend-position');
@@ -8306,8 +8903,6 @@ jQuery( document ).ready(function() {
 
         // Custom
         updateCustomChart: function(name){
-            //console.log('------------------');
-            //console.log('updateCustomChart', name, this.options.custom_chart[name].type);
             var self = this;
 
             var stacked_chart = false;
@@ -8346,7 +8941,6 @@ jQuery( document ).ready(function() {
                 header_options[type].fields = [yaxis_field];
             }
 
-            console.log(header_options);
             var xaxis_field = this.options.custom_chart[name].options.x;
             if(typeof xaxis_field === 'undefined'){
                 if(typeof header_options[type].xaxis.field !== 'undefined') {
@@ -8363,7 +8957,6 @@ jQuery( document ).ready(function() {
                 }
             }
 
-            //console.log(xaxis_field, yaxis_field);
             // Destroy existing chart
             if (this.options.custom_chart[name].chart){
                 this.options.custom_chart[name].chart.destroy();
@@ -8401,7 +8994,6 @@ jQuery( document ).ready(function() {
                 }
                 labels.push(label);
             }
-            //console.log(labels);
             var time_mode = false;
             if((new Date(labels[0])).getTime() > 0){
                 time_mode = true;
@@ -8458,9 +9050,7 @@ jQuery( document ).ready(function() {
             var dataset_id = 0;
 
             $.each(field_sub_columns, function(field, value){
-                //console.log(value);
                 var current_header_options = self.getHeaderOptions(field);
-                //console.log(field, current_header_options.beginatzero);
                 for(var id = 0; id < value.count; id++){
                     var label = '';
 
@@ -8669,7 +9259,6 @@ jQuery( document ).ready(function() {
 
 
             if(datasets.length > 0){
-                //console.log(labels, datasets);
                 $(this.options.custom_chart[name].div).show(0);
                 var chart_data = {labels: labels, datasets: datasets};
 
@@ -8707,7 +9296,6 @@ jQuery( document ).ready(function() {
                 /*if(subtype.includes('timeline')){
                     var barThickness = 15;
                 }*/
-                //console.log(datasets);
 
                 // Chart options
                 var chart_options = {
@@ -9023,8 +9611,6 @@ jQuery( document ).ready(function() {
 
                 this.options.custom_chart[name].data = chart_data;
 
-                //console.log(chart_options);
-
             }else{
                 if($(this.options.custom_chart[name].div).is(":visible")){
                     $(this.options.custom_chart[name].div).hide(0);
@@ -9032,7 +9618,6 @@ jQuery( document ).ready(function() {
             }
         },
         showCustomChart: function(name){
-            //console.log('showCustomChart', name);
             var self = this;
 
             if($(this.options.custom_chart[name].div).is(":hidden")){
@@ -9046,11 +9631,8 @@ jQuery( document ).ready(function() {
             }
         },
         hideCustomChart: function(name){
-            //console.log('hideCustomChart', name);
             if($(this.options.custom_chart[name].div).is(":visible")){
                 $('#datatable_visualization'+this.uniqueId).height($(this.options.custom_chart[name].div).height());
-                //console.log($('#datatable_visualization'+this.uniqueId).height());
-                //console.log($(this.options.custom_chart[name].div).height());
                 $(this.options.custom_chart[name].div).slideUp(this.options.animation.hide_speed, function(){});
             }
         },

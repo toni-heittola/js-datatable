@@ -15,6 +15,8 @@
         "feature3": "<span class='hidden'>1</span>A",
         "row_css": "danger",
         "bar": "20;labelA,30;labelB,40;labelC,10;labelD",
+        "bar2": "0,50,100",
+        "bar3": "0,5,10",
         "line": "10,-12,44,22,-5,55,-32,21",
         "binary": "1,0,0,1,0,1,1,0,0,0,1,1,1",
         "timeline": "(1:10),(2:20),(3:30),(4:24),(5:40),(6:65),(7:70),(8:90)",
@@ -22,8 +24,7 @@
         "html": "value",
         "bool": "1",
         "percentile": "30",
-        "comparison_value": "-20",
-        "url": "www.google.com;Google"
+        "comparison_value": "-20"
     },
     {
         "code": "Blue",
@@ -39,6 +40,8 @@
         "feature3": "<span class='hidden'>2</span>B",
         "row_css": "warning",
         "bar": "20;labelA",
+        "bar2": "3,80,60",
+        "bar3": "1.2,8.3,6.5",
         "line": "10,12,-44,22,5,-55,32,21",
         "binary": "1,0,0,1,0,1,1,0,0,0,1,1,1",
         "timeline": "(1:10),(2:20),(3:30),(4:24),(5:40),(6:65),(7:70),(8:90)",
@@ -62,6 +65,8 @@
         "feature3": "<span class='hidden'>3</span>C",
         "row_css": "success",
         "bar": "80;labelA,20;labelB",
+        "bar2": "50,70,20",
+        "bar3": "5.5,7.2,2.1",
         "line": "10,12,-44,0,5,-55,32,21",
         "binary": "1,0,0,1,0,1,1,0,0,0,1,1,1",
         "timeline": "(1:10),(2:20),(3:30),(4:24),(5:40),(6:65),(7:70),(8:90)",
@@ -87,6 +92,8 @@
         "feature3": "<span class='hidden'>4</span>A,B",
         "row_css": "info",
         "bar": "80;labelA",
+        "bar2": "80,70,60",
+        "bar3": "8.5,7.3,6.8",
         "line": "10,-12,0,22,5,-55,32,-21",
         "binary": "1,0,0,1,0,1,1,0,0,0,1,1,1",
         "timeline": "(1:10),(2:20),(3:30),(4:24),(5:40),(6:65),(7:70),(8:90)",
@@ -94,8 +101,7 @@
         "html": "<strong>value</strong>",
         "bool": "1",
         "percentile": "20",
-        "comparison_value": "-30",
-        "url": "www.google.com;Google"
+        "comparison_value": "-30"
     },
     {
         "code": "Purple",
@@ -111,6 +117,8 @@
         "feature2": "circle",
         "feature3": "<span class='hidden'>8</span>AAA",
         "bar": "10;labelA,10;labelB,20;labelC",
+        "bar2": "60,20,30",
+        "bar3": "6.8,2.3,3.8",
         "line": "10,12,44,-22,5,55,-32,21,40,12,-44,0,35,-35,32,51",
         "binary": "1,0,0,1,0,1,1,0,0,0,1,1,1",
         "timeline": "(1:10),(2:20),(3:30),(4:24),(5:40),(6:65),(7:70),(8:90)",
@@ -118,8 +126,7 @@
         "html": "<strong>value</strong>",
         "bool": "1",
         "percentile": "50",
-        "comparison_value": "0",
-        "url": "www.google.com;Google"
+        "comparison_value": "0"
     },
     {
         "code": "Brown",
@@ -136,6 +143,8 @@
         "feature3": "<span class='hidden'>10</span>BB",
         "hline": "true",
         "bar": "13;labelA,50;labelB,-10;labelC,-50;labelD,10;labelE,20;labelF",
+        "bar2": "20,30,70",
+        "bar3": "2.8,3.3,7.9",
         "line": "40;#AA0000,12,44;#AA0000,52,35,35;#AA0000,32,51",
         "binary": "1,0,0,1,0,1,1,0,0,0,1,1,1",
         "timeline": "(1:10),(2:20),(3:30),(4:24),(5:40),(6:65),(7:70),(8:90)",
@@ -143,8 +152,7 @@
         "html": "<strong>value</strong>",
         "bool": "0",
         "percentile": "80",
-        "comparison_value": "30",
-        "url": "www.google.com;Google"
+        "comparison_value": "30"
     },
     {
         "code": "Baseline",
@@ -161,6 +169,8 @@
         "feature3": "<span class='hidden'>12</span>CA",
         "row_css": "active",
         "bar": "62.3;labelA,22.1;labelB,12.1;labelB,54.1;labelB,24.1;labelB,43.2;labelB,12;A,32;B",
+        "bar2": "70,20,80",
+        "bar3": "7.3,2.5,8.7",
         "line": "10;#AA0000;A,42;B,74;#AA0000;C,52;D,5,55;E;#AA0000,32;F,21;G",
         "binary": "1,0,0,1,0,1,1,0,0,0,1,1,1",
         "timeline": "(1:10),(2:20),(3:30),(4:24),(5:40),(6:65),(7:70),(8:90)",
@@ -168,8 +178,7 @@
         "html": "<strong>value</strong>",
         "bool": "0",
         "percentile": "90",
-        "comparison_value": "40",
-        "url": "www.google.com;Google"
+        "comparison_value": "40"
     },
     {
         "code": "Yellow",
@@ -186,6 +195,8 @@
         "feature3": "<span class='hidden'>30</span>ABC",
         "row_css": "active",
         "bar": "62.3;labelA,22.1;labelB,12.1;labelB,54.1;labelB,24.1;labelB,43.2;labelB,12;A,32;B",
+        "bar2": "10,40,70",
+        "bar3": "1.5,4.4,7.6",
         "line": "10,42,74,52,5,55,32,21",
         "binary": "1,0,0,1,0,1,1,0,0,0,1,1,1",
         "timeline": "(1:10),(2:20),(3:30),(4:24),(5:40),(6:65),(7:70),(8:90),(13:30),(24:24),(25:70),(30:27)",
@@ -193,8 +204,7 @@
         "html": "<strong>value</strong>",
         "bool": "1",
         "percentile": "40",
-        "comparison_value": "-10",
-        "url": "www.google.com;Google"
+        "comparison_value": "-10"
 
     },
     {
@@ -212,6 +222,8 @@
         "feature3": "<span class='hidden'>30</span>CCC",
         "row_css": "active",
         "bar": "62.3;labelA,22.1;labelB,12.1;labelB;#AA0000,54.1;labelB;#AA0000,24.1;labelB,43.2;labelB;#AA0000,12;A,32;B",
+        "bar2": "90,90,10",
+        "bar3": "9.2,9.4,11.2",
         "line": "10,42,74;#AA0000,52,5,55,32,21",
         "binary": "#0085ff,#99FFFF,#0085ff,#99FFFF,#99FFFF,#0085ff,#0085ff,#333,#0085ff,#AAA,#0085ff,#0085ff,#AAA",
         "timeline": "(1:10),(2:20),(3:-30),(4:24),(5:40),(6:65),(7:70),(8:90),(15:-40),(16:65),(17:70),(18:90)",
@@ -219,8 +231,7 @@
         "html": "<strong>value</strong>",
         "bool": "0",
         "percentile": "10",
-        "comparison_value": "-40",
-        "url": "www.google.com;Google"
+        "comparison_value": "-40"
     },
     {
         "code": "Green",
@@ -233,10 +244,12 @@
         "anchor": "parameters",
         "url": "www.google.com;Google",
         "feature1": "triangle",
-        "feature2": "circle,pyramid",
+        "feature2": "circle,pyramid, test!test",
         "feature3": "",
         "row_css": "active",
         "bar": "62.3;labelA,22.1;labelB;#AA0000,12.1;labelB,54.1;labelB,24.1;labelB,43.2;labelB,12;A,32;B",
+        "bar2": "70,30,100",
+        "bar3": "7.6,3.3,10.3",
         "line": "10,42;#AA0000,74,52;#AA0000,5,55,32,21",
         "binary": "1;#229922,1;#4455FF,1;#99FFFF,1;#222222,0;#222222,1,1,0,0,0,1,1,1",
         "timeline": "(1:30),(4:20),(3:30),(4:24),(5:-40),(16:65),(7:70),(28:90)",
@@ -244,8 +257,7 @@
         "html": "<strong>value</strong>",
         "bool": "1",
         "percentile": "3",
-        "comparison_value": "-47",
-        "url": "www.google.com;Google"
+        "comparison_value": "-47"
     },
     {
         "code": "Light green",
@@ -262,6 +274,8 @@
         "feature3": "",
         "row_css": "active",
         "bar": "62.3,22.1,-12.1,-54.1,24.1,43.2,12,0,32",
+        "bar2": "30,90,20",
+        "bar3": "3.8,9.3,2.1",
         "line": "10;#AA0000,-42;#AA0000,-74;#AA0000,52,0,55;#AA0000,32;#AA0000,21;#777",
         "binary": "1;text 1<strong>A</strong>,0;text 2,0;text 3,1;text 4,0;text 5,1;text 6,1;text 7,0;text 8,0;text 9,0,1,1,1",
         "timeline": "(1.4:10.2),(2.5:20.3),(3.6:30.4),(5.4:-24.7),(7.5:40.34),(9.6:35.32),(31.3:40.2),(62.4:30.2)",
@@ -269,8 +283,7 @@
         "html": "value",
         "bool": "0",
         "percentile": "100",
-        "comparison_value": "50",
-        "url": "www.google.com;Google"
+        "comparison_value": "50"
     },
     {
         "code": "Grey",
@@ -283,10 +296,12 @@
         "anchor": "parameters",
         "url": "www.google.com;Google",
         "feature1": "triangle",
-        "feature2": "circle",
+        "feature2": "circle !test",
         "feature3": "<span class='hidden'>35</span>CAA,B",
         "row_css": "active",
         "bar": "62.3,22.1,-12.1,-54.1,24.1,43.2,12,0,32",
+        "bar2": "60,30,40",
+        "bar3": "6.9,3.7,4.8",
         "line": "10;#AA0000,-42;#AA0000,-74;#AA0000,52,0,55;#AA0000,32;#AA0000,21;#777",
         "binary": "1;text 1<strong>A</strong>,0;text 2,0;text 3,1;text 4,0;text 5,1;text 6,1;text 7,0;text 8,0;text 9,0,1,1,1",
         "timeline": "(1.4:10.2),(2.5:20.3),(3.6:30.4),(5.4:-24.7),(7.5:40.34),(9.6:35.32),(31.3:40.2),(62.4:30.2)",
@@ -294,8 +309,7 @@
         "html": "value",
         "bool": "0",
         "percentile": "71",
-        "comparison_value": "21",
-        "url": "www.google.com;Google"
+        "comparison_value": "21"
     },
     {
         "code": "Dark blue",
@@ -312,6 +326,8 @@
         "feature3": "<span class='hidden'>100</span>ABB,<span class='hidden'>1</span>A",
         "row_css": "active",
         "bar": "62.3,22.1,-12.1,-54.1,24.1,43.2,12,0,32",
+        "bar2": "40,80,20",
+        "bar3": "4.0,8.7,2.3",
         "line": "10;#AA0000,-42;#AA0000,-74;#AA0000,52,0,55;#AA0000,32;#AA0000,21;#777",
         "binary": "1;text 1<strong>A</strong>,0;text 2,0;text 3,1;text 4,0;text 5,1;text 6,1;text 7,0;text 8,0;text 9,0,1,1,1",
         "timeline": "(1.4:10.2),(2.5:20.3),(3.6:30.4),(5.4:-24.7),(7.5:40.34),(9.6:35.32),(31.3:40.2),(62.4:30.2)",
@@ -319,7 +335,6 @@
         "html": "value",
         "bool": "1",
         "percentile": "32",
-        "comparison_value": "-18",
-        "url": "www.google.com;Google"
+        "comparison_value": "-18"
     }
 ]

@@ -209,11 +209,17 @@
                     //Added a new value
                     // FIX DATATABLE Added for js-datatable
                     var fieldValue = data[i][field].trim();
-                    var $fieldValue = $(fieldValue);
-                    $fieldValue.find('.hidden').remove();
+
+                    //var $fieldValue = $("<span></span>").text(fieldValue);
+                    var $fieldValue = $(fieldValue.replace("!", " "));
+                    //console.log($fieldValue);
+                    //var $fieldValue = $(fieldValue.replace("!", "&excl;"));
+                    //$fieldValue.find('.hidden').remove();
 
                     var fieldValueArray = [];
                     if($fieldValue.length){
+                        $fieldValue = $(fieldValue);
+                        $fieldValue.find('.hidden').remove();
                         $fieldValue.each(function( index ) {
                             fieldValueArray.push($(this).text().trim());
                         });

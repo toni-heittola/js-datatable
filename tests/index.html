@@ -175,22 +175,34 @@
             <table
                     class="datatable table"
                     data-show-chart="true"
-                    data-chart-position="bottom"
+                    data-chart-position="top"
                     data-id-field="code"
                     data-rank-mode="grouped_muted"
+
                     data-chart-modes="bar,scatter,line"
-                    data-chart-default-mode="bar"
-                    data-bar-hline="true"
-                    data-bar-show-horizontal-indicator="true"
-                    data-bar-show-vertical-indicator="false"
-                    data-scatter-x="value1"
-                    data-scatter-y="value2"
+                    data-chart-default-mode="line"
 
                     data-sort-name="value1"
                     data-sort-order="desc"
                     data-pagination="false"
                     data-show-pagination-switch="false"
                     data-column-hover="true"
+
+                    data-bar-hline="true"
+                    data-bar-show-horizontal-indicator="true"
+                    data-bar-show-vertical-indicator="false"
+
+                    data-line-xaxis-field="date"
+                    data-line-xaxis-sorted="true"
+                    data-line-xaxis-timeunit="day"
+                    data-line-xaxis-timestepsize="14"
+                    data-line-yaxis-label="Date"
+                    data-line-xaxis-gridlines="false"
+                    data-line-yaxis-gridlines="true"
+
+                    data-scatter-x="value1"
+                    data-scatter-y="value2"
+
 
                     data-bar-show-legend="true"
                     data-bar-legend-position="bottom"
@@ -202,8 +214,15 @@
                         </th>
                         <th class="sep-left-cell"
                             data-chartable="false"
-                            data-field="code"
+                            data-field="date"
                             data-sortable="true">
+                            Date
+                        </th>
+                        <th class="sep-left-cell"
+                            data-chartable="false"
+                            data-field="code"
+                            data-sortable="true"
+                            data-visible="true">
                             System
                         </th>
                         <th class="sep-left-cell"
@@ -267,6 +286,7 @@
                 <tbody>
                     <tr>
                         <td></td>
+                        <td>2020-02-03</td>
                         <td>A</td>
                         <td><a href="#2">Link1</a></td>
                         <td>1.2</td>
@@ -274,6 +294,7 @@
                     </tr>
                     <tr>
                         <td></td>
+                        <td>2020-02-05</td>
                         <td>B</td>
                         <td><a href="#1">Link2</a></td>
                         <td>4.8</td>
@@ -281,10 +302,19 @@
                     </tr>
                     <tr>
                         <td></td>
+                        <td>2020-02-04</td>
                         <td>C</td>
                         <td><a href="#3">Link3</a></td>
                         <td>3.4</td>
                         <td>6.2</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>2020-02-02</td>
+                        <td>D</td>
+                        <td><a href="#3">Link3</a></td>
+                        <td>5.3</td>
+                        <td>7.3</td>
                     </tr>
                 </tbody>
             </table>
@@ -307,7 +337,7 @@
                     data-line-yaxis-gridlines="false"
                     data-line-show-line="true"
                     data-line-show-point="true"
-                    data-sort-name="value5"
+                    data-sort-name="value2"
                     data-sort-order="desc"
                     data-pagination="false"
                     data-show-pagination-switch="false"
@@ -334,6 +364,16 @@
                         data-chartable="true"
                         data-axis-scale="log10_unit"
                         data-field="value5"
+                        data-sortable="true"
+                        data-value-type="numeric-unit"
+                        data-visible="true">
+                        Value Y
+                    </th>
+                    <th class="sep-left-cell"
+                        data-align="center"
+                        data-beginatzero="false"
+                        data-chartable="true"
+                        data-field="value2"
                         data-sortable="true"
                         data-value-type="numeric-unit"
                         data-visible="true">
@@ -451,7 +491,7 @@
                         data-value-type="float1-percentage"
                         data-axis-label="Label B"
                         data-chart-mode="line"
-                        data-line-show-xaxis="true"
+                        data-line-show-xaxis="false"
                         data-line-xaxis-field="code"
                         data-line-xaxis-sorted="true"
                         data-line-horizontal-highlights="40;Baseline;#333"
@@ -946,6 +986,50 @@
                 </tr>
                 </thead>
             </table>
+
+
+            <h2 id="zeros">Zeros</h2>
+            <p>Handling zero values.</p>
+            <table class="table datatable"
+                   data-json="data4.json"
+                   data-id-field="code"
+                   data-sort-name="value2"
+                   data-sort-order="desc"
+                   data-rank-mode="grouped_muted"
+                   data-show-chart="true"
+                   data-chart-modes="bar,scatter"
+                   data-chart-default-mode="bar"
+                   data-show-bar-chart-xaxis="true"
+                   data-filter-control="true"
+                   data-filter-show-clear="true"
+                   data-tag-mode="column"
+                   data-scatter-x="value1"
+                   data-scatter-y="value2">
+                <thead>
+                <tr>
+                    <th data-field="code"
+                        data-sortable="true">
+                        Name
+                    </th>
+                    <th data-align="center"
+                        data-field="value1"
+                        data-chartable="true"
+                        data-value-type="float1-interval-muted"
+                        data-sortable="true">
+                        Value 1
+                    </th>
+                    <th data-align="center"
+                        data-field="value2"
+                        data-reversed="true"
+                        data-chartable="true"
+                        data-value-type="int"
+                        data-sortable="true">
+                        Value 2
+                    </th>
+                </tr>
+                </thead>
+            </table>
+
 
         </div>
     </div>

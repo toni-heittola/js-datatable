@@ -133,15 +133,6 @@ table.datatable .hidden{
     margin: 0 2px 2px 2px;
 }
 
-.datatable-horizontal-bar{}
-
-.datatable-horizontal-bar-thin{
-    height: 10px !important;
-    margin-bottom: 5px !important;
-}
-
-.datatable-inline-vertical-bar{}
-
 .canvas-cell{
     padding-top: 4px !important;
     padding-bottom: 4px !important;
@@ -252,4 +243,179 @@ table.datatable tr.danger > td.row-hover {
     height: 200%;
     left: 0;
     top: 0;
+}
+
+.inline-hbar {
+    clear:both;
+    display: inline-flex;
+    align-content: center;
+    justify-content: space-between;
+    margin: 0;
+    padding: 0;
+    margin-bottom: 2px;
+    vertical-align: top;
+    height: 20px;
+}
+
+.inline-hbar .progress{
+    flex-grow: 1;
+}
+.inline-hbar .value-label{
+    padding-right: 4px;
+    width: 20%;
+    max-width:30px;
+    text-align: right;
+}
+
+
+.inline-hbar-slim{
+    height: 15px !important;
+}
+.inline-hbar-slim .value-label, .inline-hbar-slim .value{
+    height: 15px !important;
+    font-size: 75%;
+}
+
+.inline-hbar-thin{
+    height: 12px !important;
+}
+.inline-hbar-thin .value-label, .inline-hbar-thin .value{
+    height: 12px !important;
+    /*
+    line-height: 14px !important;*/
+    font-size: 80%;
+}
+
+.inline-vbar-container {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    flex-wrap: nowrap;
+    margin: 0;
+    padding: 0;
+    /*margin-bottom: 1px;
+    vertical-align: top;
+    height: 20px;*/
+    /*width:20px;*/
+}
+.inline-vbar {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+    margin-right: 5px;
+}
+.inline-vbar .value-label{
+    padding-bottom: 1px;
+    /*height: 10%;*/
+    height: 18px;
+    text-align: center;
+}
+.inline-vbar .value-limits{
+    position: relative;
+    height: 100%;
+    font-size: 60%;
+    color: #878787;
+    min-width: 10px;
+}
+.inline-vbar .value-limits .max{
+    position: absolute;
+    top: 0px;
+    vertical-align: top;
+}
+.inline-vbar .value-limits .min{
+    position: absolute;
+    bottom: 0px;
+    vertical-align: bottom;
+}
+
+.inline-hbar .value{
+    padding: 0;
+    padding-left: 2px;
+    margin: 0;
+    vertical-align: middle;
+    width: 12%;
+    min-width: 28px;
+    /*max-width: 30px;*/
+    vertical-align: middle;
+    height: 18px;
+    text-align: left;
+}
+.inline-vbar .progress{
+    flex-grow: 1;
+    margin: 0;
+    padding: 0;
+}
+
+.inline-hbar .value-limits{
+    position: relative;
+    font-size: 60%;
+    color: #878787;
+    height: 10px;
+    flex-grow: 1
+}
+.inline-hbar .value-limits .max{
+    position: absolute;
+    right: 0px;
+    text-align: left;
+}
+.inline-hbar .value-limits .min{
+    position: absolute;
+    left: 0px;
+    text-align: right;
+}
+.datatable-horizontal-bar-thin{
+    height: 10px !important;
+    margin-bottom: 5px !important;
+}
+.datatable-horizontal-bar-slim{
+    height: 15px !important;
+    margin-bottom: 5px !important;
+}
+
+.datatable-vertical-bar, .datatable-vertical-bar-thin, .datatable-vertical-bar-slim {
+    width: 20px;
+    height: 100%;
+    min-height: 30px;
+    display: flex;
+    flex-direction: column-reverse;;
+    align-items: flex-end;
+    margin-right: 0px;
+    float: left;
+}
+.datatable-vertical-bar-slim{
+    width: 15px;
+}
+.datatable-vertical-bar-thin{
+    width: 10px;
+}
+
+.progress-vertical-bar {
+    width: 100% !important;
+    height: 0;
+    -webkit-transition: height 0.6s ease;
+    -o-transition: height 0.6s ease;
+    transition: height 0.6s ease;
+}
+
+.progress-horizontal-bar {
+    -webkit-transition: width 0.6s ease;
+    -o-transition: width 0.6s ease;
+    transition: width 0.6s ease;
+}
+
+/*
+.fixed-table-container .table-slim > tbody > tr > td,
+.fixed-table-container .table-slim > tbody > tr > th,
+.fixed-table-container .table-slim > tfoot > tr > td,
+.fixed-table-container .table-slim > tfoot > tr > th,
+.fixed-table-container .table-slim > thead > tr > td,
+.fixed-table-container .table-slim > thead > tr > th {
+    padding: 3px !important;
+}*/
+.fixed-table-container .table-slim thead th .th-inner, .fixed-table-container .table-slim tbody td .th-inner{
+    padding: 4px !important;
+}
+.fixed-table-container .table-slim thead th .sortable {
+    padding-right: 15px !important;
 }
