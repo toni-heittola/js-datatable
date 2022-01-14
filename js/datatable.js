@@ -6579,8 +6579,11 @@ jQuery( document ).ready(function() {
             for (var row_id = 0; row_id < table_data.length; row_id++) {
                 // Go through the table data and collect values and colors for bar plot.
                 var label = '';
+
                 if(sort_name != value_name){
                     label = $("<div/>").html(table_data[row_id][sort_name]).text().trim().replace(/<(?:.|\n)*?>/gm, '').replace('_',' ');
+                }else{
+                    label = $("<div/>").html(table_data[row_id][this.options.table.id_field]).text().trim().replace(/<(?:.|\n)*?>/gm, '').replace('_',' ');
                 }
 
                 // Make sure labels are unique, if overlapping labels add whitespaces at the end.

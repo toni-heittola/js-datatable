@@ -5,8 +5,6 @@ JS and CSS minification
 ============================
 Author: Toni Heittola (toni.heittola@gmail.com)
 
-This plugin will create dynamic datatable with charting features from given yaml-datafile.
-
 """
 
 import os
@@ -29,6 +27,7 @@ def main(argv):
                 Author:  Toni Heittola ( toni.heittola@gmail.com )
 
         '''))
+
     parser.add_argument('-v', '--version', action='version', version='%(prog)s ' + __version__)
     args = parser.parse_args()
     print("JS and CSS minification")
