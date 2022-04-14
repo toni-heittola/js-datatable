@@ -3960,98 +3960,104 @@ jQuery( document ).ready(function() {
                     $(this).attr('data-formatter', self.createInlineValueFormatter(value_type, index, $(that)));
 
                 }else{
-                    switch(value_type){
-                        case 'numeric-unit':
-                            window['valueFormatter_numeric_unit'+self.uniqueId] = function (value, row, index){
-                                if(jQuery.isNumeric(value)){
-                                    value = parseFloat(value);
-                                    return self.addNumberPrefix(value);
+                    // If a data formatter is already specified, do not override it
+                    if(! $(this).attr('data-formatter')){
+                        switch(value_type){
+                            case 'numeric-unit':
+                                window['valueFormatter_numeric_unit'+self.uniqueId] = function (value, row, index){
+                                    if(jQuery.isNumeric(value)){
+                                        value = parseFloat(value);
+                                        return self.addNumberPrefix(value);
 
-                                }else{
-                                    return value;
-                                }
-                            };
+                                    }else{
+                                        return value;
+                                    }
+                                };
 
-                            $(this).attr('data-formatter', 'valueFormatter_numeric_unit'+self.uniqueId);
-                            break;
+                                $(this).attr('data-formatter', 'valueFormatter_numeric_unit'+self.uniqueId);
+                                break;
 
-                        case 'html':
-                            $(this).attr('data-formatter','valueFormatter_html');
-                            break;
+                            case 'html':
+                                $(this).attr('data-formatter','valueFormatter_html');
+                                break;
 
-                        case 'date':
-                            $(this).attr('data-formatter','valueFormatter_date');
-                            break;
+                            case 'date':
+                                $(this).attr('data-formatter','valueFormatter_date');
+                                break;
 
-                        case 'list':
-                            $(this).attr('data-formatter','valueFormatter_list');
-                            break;
+                            case 'list':
+                                $(this).attr('data-formatter','valueFormatter_list');
+                                break;
 
-                        case 'url':
-                            window['valueFormatter_url'+self.uniqueId] = function (value, row, index){
-                                var links = [];
-                                if(value.trim()){
-                                    var items = value.split(',');
-                                    if(items.length > 0){
-                                        for(var i=0;i<items.length;i++){
-                                            var current_link = items[i].trim();
-                                            var index = current_link.lastIndexOf(';');
-                                            if(index != -1){
-                                                var link = current_link.substring(0,index);
-                                                var link_title = current_link.substring(index+1);
-                                                links.push('<a class="datatable-link" href="' + link + '">'+link_title+'</a>');
-                                            }else{
-                                                links.push('<a class="datatable-icon" href="' + current_link + '">'+self.options.icon.url+'</a>');
+                            case 'url':
+                                window['valueFormatter_url'+self.uniqueId] = function (value, row, index){
+                                    var links = [];
+                                    if(value.trim()){
+                                        var items = value.split(',');
+                                        if(items.length > 0){
+                                            for(var i=0;i<items.length;i++){
+                                                var current_link = items[i].trim();
+                                                var index = current_link.lastIndexOf(';');
+                                                if(index != -1){
+                                                    var link = current_link.substring(0,index);
+                                                    var link_title = current_link.substring(index+1);
+                                                    links.push('<a class="datatable-link" href="' + link + '">'+link_title+'</a>');
+                                                }else{
+                                                    links.push('<a class="datatable-icon" href="' + current_link + '">'+self.options.icon.url+'</a>');
+                                                }
                                             }
                                         }
                                     }
-                                }
-                                return links.join('<br>');
-                            };
-                            $(this).attr('data-formatter','valueFormatter_url'+self.uniqueId);
-                            break;
+                                    return links.join('<br>');
+                                };
+                                $(this).attr('data-formatter','valueFormatter_url'+self.uniqueId);
+                                break;
 
-                        case 'ref':
-                            window['valueFormatter_ref'+self.uniqueId] = function (value, row, index){
-                                var links = [];
-                                if(value.trim()){
-                                    var items = value.split(',');
-                                    if(items.length > 0){
-                                        for(var i=0;i<items.length;i++){
-                                            var current_link = items[i].trim();
-                                            var index = current_link.lastIndexOf(';');
-                                            if(index != -1){
-                                                var link = current_link.substring(0,index);
-                                                var link_title = current_link.substring(index+1);
-                                                links.push('<a class="datatable-link" href="' + link + '">['+link_title+']</a>');
-                                            }else{
-                                                links.push('<a class="datatable-icon" href="' + current_link + '">'+self.options.icon.ref+'</a>');
+                            case 'ref':
+                                window['valueFormatter_ref'+self.uniqueId] = function (value, row, index){
+                                    var links = [];
+                                    if(value.trim()){
+                                        var items = value.split(',');
+                                        if(items.length > 0){
+                                            for(var i=0;i<items.length;i++){
+                                                var current_link = items[i].trim();
+                                                var index = current_link.lastIndexOf(';');
+                                                if(index != -1){
+                                                    var link = current_link.substring(0,index);
+                                                    var link_title = current_link.substring(index+1);
+                                                    links.push('<a class="datatable-link" href="' + link + '">['+link_title+']</a>');
+                                                }else{
+                                                    links.push('<a class="datatable-icon" href="' + current_link + '">'+self.options.icon.ref+'</a>');
+                                                }
                                             }
                                         }
                                     }
-                                }
-                                return links.join('<br>');
-                            };
-                            $(this).attr('data-formatter','valueFormatter_ref'+self.uniqueId);
-                            break;
+                                    return links.join('<br>');
+                                };
+                                $(this).attr('data-formatter','valueFormatter_ref'+self.uniqueId);
+                                break;
 
-                        case 'anchor':
-                            window['valueFormatter_anchor'+self.uniqueId] = function valueFormatter_anchor(value, row, index){
-                                if(value.trim()){
-                                    return '<a class="datatable-icon" href="javascript:void(0)" onclick="$(\'#collapse-'+value+'\').collapse(\'show\');window.location.hash=\''+value+'\';return false;">'+self.options.icon.anchor+'</a>'
-                                }else{
-                                    return value;
-                                }
-                            };
-                            $(this).attr('data-formatter', 'valueFormatter_anchor'+self.uniqueId);
-                            break;
+                            case 'anchor':
+                                window['valueFormatter_anchor'+self.uniqueId] = function valueFormatter_anchor(value, row, index){
+                                    if(value.trim()){
+                                        return '<a class="datatable-icon" href="javascript:void(0)" onclick="$(\'#collapse-'+value+'\').collapse(\'show\');window.location.hash=\''+value+'\';return false;">'+self.options.icon.anchor+'</a>'
+                                    }else{
+                                        return value;
+                                    }
+                                };
+                                $(this).attr('data-formatter', 'valueFormatter_anchor'+self.uniqueId);
+                                break;
+                            case 'str':
+                                // Allow the str data format to specify its own data formatter function
+                                break;
 
-                        default:
-                            window['valueFormatter_hide'+self.uniqueId] = function (value, row, index){
-                                return '<div class="text-muted" data-value="'+value+'">Invalid data-value-type</div>';
-                            };
-                            $(this).attr('data-formatter', 'valueFormatter_hide'+self.uniqueId);
-                            break;
+                            default:
+                                window['valueFormatter_hide'+self.uniqueId] = function (value, row, index){
+                                    return '<div class="text-muted" data-value="'+value+'">Invalid data-value-type</div>';
+                                };
+                                $(this).attr('data-formatter', 'valueFormatter_hide'+self.uniqueId);
+                                break;
+                        }
                     }
                 }
             });
