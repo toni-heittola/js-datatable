@@ -1219,15 +1219,17 @@ jQuery( document ).ready(function() {
             }
 
             // Add default sorter for columns marked sortable
-            $(this.element).find('thead tr th[data-sortable="true"]').each(function(){
+            // Do not add a default sorter if one is already specified !
+            $(this.element).find('thead tr th[data-sortable="true"]:not([data-sorter])').each(function(){
                 window['valueSorter'+self.uniqueId] = function (a, b){
                     return self.valueSorter(a, b, 'asc');
                 };
                 $(this).attr('data-sorter', 'valueSorter'+self.uniqueId);
             });
 
-            // Add default sorter for columns marked sortable
-            $(this.element).find('thead tr th[data-reversed="true"]').each(function(){
+            // Add default reverse sorter for columns marked sortable
+            // Do not add a default reverse sorter if one is already specified !
+            $(this.element).find('thead tr th[data-reversed="true"]:not([data-sorter])').each(function(){
                 window['valueSorterReverse'+self.uniqueId] = function (a, b){
                     return self.valueSorter(a, b, 'desc');
                 };
